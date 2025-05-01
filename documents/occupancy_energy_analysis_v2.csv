@@ -1,0 +1,151 @@
+Date,City,Occupancy%,OverThreshold,DailyEnergyCost($)
+2025-04-01,Philadelphia,65.0,No,333.9
+2025-04-02,Philadelphia,65.0,No,333.9
+2025-04-03,Philadelphia,65.0,No,333.9
+2025-04-04,Philadelphia,65.0,No,333.9
+2025-04-05,Philadelphia,65.0,No,333.9
+2025-04-06,Philadelphia,65.0,No,333.9
+2025-04-07,Philadelphia,65.0,No,333.9
+2025-04-08,Philadelphia,65.0,No,333.9
+2025-04-09,Philadelphia,65.0,No,333.9
+2025-04-10,Philadelphia,65.0,No,333.9
+2025-04-11,Philadelphia,65.0,No,333.9
+2025-04-12,Philadelphia,65.0,No,333.9
+2025-04-13,Philadelphia,65.0,No,333.9
+2025-04-14,Philadelphia,65.0,No,333.9
+2025-04-15,Philadelphia,65.0,No,333.9
+2025-04-16,Philadelphia,65.0,No,333.9
+2025-04-17,Philadelphia,65.0,No,333.9
+2025-04-18,Philadelphia,65.0,No,333.9
+2025-04-19,Philadelphia,65.0,No,333.9
+2025-04-20,Philadelphia,65.0,No,333.9
+2025-04-21,Philadelphia,65.0,No,333.9
+2025-04-22,Philadelphia,65.0,No,333.9
+2025-04-23,Philadelphia,65.0,No,333.9
+2025-04-24,Philadelphia,65.0,No,333.9
+2025-04-25,Philadelphia,65.0,No,333.9
+2025-04-26,Philadelphia,65.0,No,333.9
+2025-04-27,Philadelphia,65.0,No,333.9
+2025-04-28,Philadelphia,65.0,No,333.9
+2025-04-29,Philadelphia,65.0,No,333.9
+2025-04-30,Philadelphia,65.0,No,333.9
+2025-04-01,Los Angeles,54.67,No,56.84
+2025-04-02,Los Angeles,54.67,No,56.84
+2025-04-03,Los Angeles,54.67,No,56.84
+2025-04-04,Los Angeles,54.67,No,56.84
+2025-04-05,Los Angeles,54.67,No,56.84
+2025-04-06,Los Angeles,54.67,No,56.84
+2025-04-07,Los Angeles,54.67,No,56.84
+2025-04-08,Los Angeles,54.67,No,56.84
+2025-04-09,Los Angeles,54.67,No,56.84
+2025-04-10,Los Angeles,54.67,No,56.84
+2025-04-11,Los Angeles,54.67,No,56.84
+2025-04-12,Los Angeles,54.67,No,56.84
+2025-04-13,Los Angeles,54.67,No,56.84
+2025-04-14,Los Angeles,54.67,No,56.84
+2025-04-15,Los Angeles,54.67,No,56.84
+2025-04-16,Los Angeles,54.67,No,56.84
+2025-04-17,Los Angeles,54.67,No,56.84
+2025-04-18,Los Angeles,54.67,No,56.84
+2025-04-19,Los Angeles,54.67,No,56.84
+2025-04-20,Los Angeles,54.67,No,56.84
+2025-04-21,Los Angeles,54.67,No,56.84
+2025-04-22,Los Angeles,54.67,No,56.84
+2025-04-23,Los Angeles,54.67,No,56.84
+2025-04-24,Los Angeles,54.67,No,56.84
+2025-04-25,Los Angeles,54.67,No,56.84
+2025-04-26,Los Angeles,54.67,No,56.84
+2025-04-27,Los Angeles,54.67,No,56.84
+2025-04-28,Los Angeles,54.67,No,56.84
+2025-04-29,Los Angeles,54.67,No,56.84
+2025-04-30,Los Angeles,54.67,No,56.84
+2025-04-01,Miami,59.09,No,11.97
+2025-04-02,Miami,59.09,No,11.97
+2025-04-03,Miami,59.09,No,11.97
+2025-04-04,Miami,59.09,No,11.97
+2025-04-05,Miami,59.09,No,11.97
+2025-04-06,Miami,59.09,No,11.97
+2025-04-07,Miami,59.09,No,11.97
+2025-04-08,Miami,59.09,No,11.97
+2025-04-09,Miami,59.09,No,11.97
+2025-04-10,Miami,59.09,No,11.97
+2025-04-11,Miami,59.09,No,11.97
+2025-04-12,Miami,59.09,No,11.97
+2025-04-13,Miami,59.09,No,11.97
+2025-04-14,Miami,59.09,No,11.97
+2025-04-15,Miami,59.09,No,11.97
+2025-04-16,Miami,59.09,No,11.97
+2025-04-17,Miami,59.09,No,11.97
+2025-04-18,Miami,59.09,No,11.97
+2025-04-19,Miami,59.09,No,11.97
+2025-04-20,Miami,59.09,No,11.97
+2025-04-21,Miami,59.09,No,11.97
+2025-04-22,Miami,59.09,No,11.97
+2025-04-23,Miami,59.09,No,11.97
+2025-04-24,Miami,59.09,No,11.97
+2025-04-25,Miami,59.09,No,11.97
+2025-04-26,Miami,59.09,No,11.97
+2025-04-27,Miami,59.09,No,11.97
+2025-04-28,Miami,59.09,No,11.97
+2025-04-29,Miami,59.09,No,11.97
+2025-04-30,Miami,59.09,No,11.97
+2025-04-01,Chicago,60.42,No,29.24
+2025-04-02,Chicago,60.42,No,29.24
+2025-04-03,Chicago,60.42,No,29.24
+2025-04-04,Chicago,60.42,No,29.24
+2025-04-05,Chicago,60.42,No,29.24
+2025-04-06,Chicago,60.42,No,29.24
+2025-04-07,Chicago,60.42,No,29.24
+2025-04-08,Chicago,60.42,No,29.24
+2025-04-09,Chicago,60.42,No,29.24
+2025-04-10,Chicago,60.42,No,29.24
+2025-04-11,Chicago,60.42,No,29.24
+2025-04-12,Chicago,60.42,No,29.24
+2025-04-13,Chicago,60.42,No,29.24
+2025-04-14,Chicago,60.42,No,29.24
+2025-04-15,Chicago,60.42,No,29.24
+2025-04-16,Chicago,60.42,No,29.24
+2025-04-17,Chicago,60.42,No,29.24
+2025-04-18,Chicago,60.42,No,29.24
+2025-04-19,Chicago,60.42,No,29.24
+2025-04-20,Chicago,60.42,No,29.24
+2025-04-21,Chicago,60.42,No,29.24
+2025-04-22,Chicago,60.42,No,29.24
+2025-04-23,Chicago,60.42,No,29.24
+2025-04-24,Chicago,60.42,No,29.24
+2025-04-25,Chicago,60.42,No,29.24
+2025-04-26,Chicago,60.42,No,29.24
+2025-04-27,Chicago,60.42,No,29.24
+2025-04-28,Chicago,60.42,No,29.24
+2025-04-29,Chicago,60.42,No,29.24
+2025-04-30,Chicago,60.42,No,29.24
+2025-04-01,New York City,55.28,No,114.76
+2025-04-02,New York City,55.28,No,114.76
+2025-04-03,New York City,55.28,No,114.76
+2025-04-04,New York City,55.28,No,114.76
+2025-04-05,New York City,55.28,No,114.76
+2025-04-06,New York City,55.28,No,114.76
+2025-04-07,New York City,55.28,No,114.76
+2025-04-08,New York City,55.28,No,114.76
+2025-04-09,New York City,55.28,No,114.76
+2025-04-10,New York City,55.28,No,114.76
+2025-04-11,New York City,55.28,No,114.76
+2025-04-12,New York City,55.28,No,114.76
+2025-04-13,New York City,55.28,No,114.76
+2025-04-14,New York City,55.28,No,114.76
+2025-04-15,New York City,55.28,No,114.76
+2025-04-16,New York City,55.28,No,114.76
+2025-04-17,New York City,55.28,No,114.76
+2025-04-18,New York City,55.28,No,114.76
+2025-04-19,New York City,55.28,No,114.76
+2025-04-20,New York City,55.28,No,114.76
+2025-04-21,New York City,55.28,No,114.76
+2025-04-22,New York City,55.28,No,114.76
+2025-04-23,New York City,55.28,No,114.76
+2025-04-24,New York City,55.28,No,114.76
+2025-04-25,New York City,55.28,No,114.76
+2025-04-26,New York City,55.28,No,114.76
+2025-04-27,New York City,55.28,No,114.76
+2025-04-28,New York City,55.28,No,114.76
+2025-04-29,New York City,55.28,No,114.76
+2025-04-30,New York City,55.28,No,114.76

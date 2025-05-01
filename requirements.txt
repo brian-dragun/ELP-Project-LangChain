@@ -1,0 +1,22 @@
+# LangChain core
+langchain
+langchain_community
+langchain_core
+langgraph
+langchain-chroma
+langchain-huggingface
+langchain-openai
+
+# Vector storage and embeddings
+sentence-transformers
+chromadb
+
+# Data processing
+pydantic
+requests
+
+# Data visualization and analysis (new)
+pandas
+numpy
+matplotlib
+plotly

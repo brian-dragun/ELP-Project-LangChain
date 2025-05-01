@@ -1,0 +1,2 @@
+City,NumberOfEmployees,BadgeUtilizationRate%,MeetingRoomUtilizationWeekdays%,MeetingRoomUtilizationWeekends%,EnergyConsumptionkWhPerSeatPerYear,LEEDCertification,WasteRecyclingRate%,WaterUsageGallonsPerSeatPerYear,WorkforceDiversity%,EthicsTrainingCompletionRate%,VolunteerHoursPerEmployee,EmployeeTurnoverRate%,BoardDiversity%,WhistleblowerProgram,DataPrivacyCompliance%,ExecutiveCompensationRatio,BuildOutCostPerSF,OfficeSpaceCostPerSF
+Miami,22,60,60,8,2400,None,27.34,1400,65,90,24,14,50,Yes,95,20:1,75,61.76

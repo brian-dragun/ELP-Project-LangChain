@@ -1,0 +1,345 @@
+[
+  {
+    "fact": "Chicago has an occupancy rate of 85%.**",
+    "source": "Office City VacancyRate OccupancyRate document",
+    "confidence": 1.0,
+    "timestamp": "2025-04-30T23:24:21.771653",
+    "verified": false
+  },
+  {
+    "fact": "Chicago's lease terms are set to end in 2031, with a total square feet of 8400 and a rent per SF of $38.69.**",
+    "source": "City LeaseStartYear LeaseEndYear TotalSquareFeet RentPerSF document for Chicago",
+    "confidence": 1.0,
+    "timestamp": "2025-04-30T23:24:21.771671",
+    "verified": false
+  },
+  {
+    "fact": "Philadelphia has an occupancy rate of 75%.**",
+    "source": "Office City VacancyRate OccupancyRate document",
+    "confidence": 1.0,
+    "timestamp": "2025-04-30T23:24:21.771675",
+    "verified": false
+  },
+  {
+    "fact": "Philadelphia's lease is set to end in 2030, with a large total square feet of 87,500 and a relatively low rent per SF of $38.25.**",
+    "source": "City LeaseStartYear LeaseEndYear TotalSquareFeet RentPerSF document for Philadelphia",
+    "confidence": 1.0,
+    "timestamp": "2025-04-30T23:24:21.771677",
+    "verified": false
+  },
+  {
+    "fact": "Los Angeles has an occupancy rate of 70%.**",
+    "source": "Office City VacancyRate OccupancyRate document",
+    "confidence": 1.0,
+    "timestamp": "2025-04-30T23:24:21.771680",
+    "verified": false
+  },
+  {
+    "fact": "Los Angeles's lease terms end in 2031, with a total square feet of 13,125 and a rent per SF of $48.72.**",
+    "source": "City LeaseStartYear LeaseEndYear TotalSquareFeet RentPerSF document for Los Angeles",
+    "confidence": 1.0,
+    "timestamp": "2025-04-30T23:24:21.771683",
+    "verified": false
+  },
+  {
+    "fact": "New York has an occupancy rate of 60%.**",
+    "source": "Office City VacancyRate OccupancyRate document",
+    "confidence": 1.0,
+    "timestamp": "2025-04-30T23:24:21.771685",
+    "verified": false
+  },
+  {
+    "fact": "Chicago has the highest occupancy rate among the listed cities at 85%.**",
+    "source": "Office City VacancyRate OccupancyRate document",
+    "confidence": 1.0,
+    "timestamp": "2025-04-30T23:27:30.191950",
+    "verified": false
+  },
+  {
+    "fact": "Chicago's lease term ends in 2031, with a lease start year of 2021.**",
+    "source": "City LeaseStartYear LeaseEndYear document for Chicago",
+    "confidence": 1.0,
+    "timestamp": "2025-04-30T23:27:30.191967",
+    "verified": false
+  },
+  {
+    "fact": "Philadelphia has a high occupancy rate of 75%.**",
+    "source": "Office City VacancyRate OccupancyRate document",
+    "confidence": 1.0,
+    "timestamp": "2025-04-30T23:27:30.191971",
+    "verified": false
+  },
+  {
+    "fact": "Philadelphia has a large total square feet of 87,500.**",
+    "source": "City LeaseStartYear LeaseEndYear document for Philadelphia",
+    "confidence": 1.0,
+    "timestamp": "2025-04-30T23:27:30.191974",
+    "verified": false
+  },
+  {
+    "fact": "Los Angeles has a relatively stable lease term ending in 2031 and a moderate occupancy rate of 70%.**",
+    "source": "Combination of Office City VacancyRate OccupancyRate and City LeaseStartYear LeaseEndYear documents for Los Angeles",
+    "confidence": 0.95,
+    "timestamp": "2025-04-30T23:27:30.191977",
+    "verified": false
+  },
+  {
+    "fact": "New York has a lower occupancy rate of 60% and a lease term ending in 2032.**",
+    "source": "Combination of Office City VacancyRate OccupancyRate and City LeaseStartYear LeaseEndYear documents for New York",
+    "confidence": 0.95,
+    "timestamp": "2025-04-30T23:27:30.191980",
+    "verified": false
+  },
+  {
+    "fact": "Chicago has a relatively low rent per square foot of $38.69.**",
+    "source": "City LeaseStartYear LeaseEndYear document for Chicago",
+    "confidence": 1.0,
+    "timestamp": "2025-04-30T23:27:30.191982",
+    "verified": false
+  },
+  {
+    "fact": "The total square feet of a property in Miami is 3850.",
+    "source": "City LeaseStartYear LeaseEndYear TotalSquareFeet RentPerSF VacancyRate% Forecast6MonthGrowth% Miami 2022 2032 3850 61.76 13.2 2.5",
+    "confidence": 1.0,
+    "timestamp": "2025-04-30T23:54:14.268404",
+    "verified": false
+  },
+  {
+    "fact": "The number of employees in an office in Miami is 22.",
+    "source": "City NumberOfEmployees BadgeUtilizationRate% MeetingRoomUtilizationWeekdays% MeetingRoomUtilizationWeekends% EnergyConsumptionkWhPerSeatPerYear LEEDCertification WasteRecyclingRate% WaterUsageGallonsPerSeatPerYear WorkforceDiversity% EthicsTrainingCompletionRate% VolunteerHoursPerEmployee EmployeeTurnoverRate% BoardDiversity% WhistleblowerProgram DataPrivacyCompliance% ExecutiveCompensationRatio BuildOutCostPerSF OfficeSpaceCostPerSF Miami 22 60 60 8 2400 27.34 1400 65 90 24 14 50 Yes 95 20:1 75 61.76",
+    "confidence": 1.0,
+    "timestamp": "2025-04-30T23:54:14.268421",
+    "verified": false
+  },
+  {
+    "fact": "The occupancy rate of Delta Point in Miami is 50%.",
+    "source": "Office City VacancyRate OccupancyRate Alpha Tower Philadelphia 25 75 Beta Center New York 40 60 Gamma Plaza Chicago 15 85 Delta Point Miami 50 50 Epsilon Hub Los Angeles 30 70",
+    "confidence": 1.0,
+    "timestamp": "2025-04-30T23:54:14.268425",
+    "verified": false
+  },
+  {
+    "fact": "The vacancy rate in Miami is 13.2%.",
+    "source": "City LeaseStartYear LeaseEndYear TotalSquareFeet RentPerSF VacancyRate% Forecast6MonthGrowth% Miami 2022 2032 3850 61.76 13.2 2.5",
+    "confidence": 1.0,
+    "timestamp": "2025-04-30T23:54:14.268428",
+    "verified": false
+  },
+  {
+    "fact": "The rent per square foot in Miami is $61.76.",
+    "source": "City LeaseStartYear LeaseEndYear TotalSquareFeet RentPerSF VacancyRate% Forecast6MonthGrowth% Miami 2022 2032 3850 61.76 13.2 2.5",
+    "confidence": 1.0,
+    "timestamp": "2025-04-30T23:54:14.268430",
+    "verified": false
+  },
+  {
+    "fact": "The build-out cost per square foot in Miami is $61.76.",
+    "source": "City NumberOfEmployees BadgeUtilizationRate% MeetingRoomUtilizationWeekdays% MeetingRoomUtilizationWeekends% EnergyConsumptionkWhPerSeatPerYear LEEDCertification WasteRecyclingRate% WaterUsageGallonsPerSeatPerYear WorkforceDiversity% EthicsTrainingCompletionRate% VolunteerHoursPerEmployee EmployeeTurnoverRate% BoardDiversity% WhistleblowerProgram DataPrivacyCompliance% ExecutiveCompensationRatio BuildOutCostPerSF OfficeSpaceCostPerSF Miami 22 60 60 8 2400 27.34 1400 65 90 24 14 50 Yes 95 20:1 75 61.76",
+    "confidence": 1.0,
+    "timestamp": "2025-04-30T23:54:14.268433",
+    "verified": false
+  },
+  {
+    "fact": "A certain value (11.97 or 29.24) is associated with Miami and Chicago on various dates, but the context or unit is unclear.",
+    "source": "The first two documents",
+    "confidence": 0.0,
+    "timestamp": "2025-04-30T23:54:14.268437",
+    "verified": false
+  },
+  {
+    "fact": "The Miami office has 22 employees.",
+    "source": "First document, row starting with \"Miami\"",
+    "confidence": 1.0,
+    "timestamp": "2025-04-30T23:55:27.880010",
+    "verified": false
+  },
+  {
+    "fact": "The Delta Point office in Miami has a 50% occupancy rate.",
+    "source": "Second document, row starting with \"Delta Point Miami\"",
+    "confidence": 1.0,
+    "timestamp": "2025-04-30T23:55:27.880025",
+    "verified": false
+  },
+  {
+    "fact": "The badge utilization rate in the Miami office is 59.09%.",
+    "source": "Third document, multiple rows with \"Miami\"",
+    "confidence": 1.0,
+    "timestamp": "2025-04-30T23:55:27.880028",
+    "verified": false
+  },
+  {
+    "fact": "The number of employees in the Miami office is directly stated as 22.",
+    "source": "First document",
+    "confidence": 1.0,
+    "timestamp": "2025-04-30T23:55:27.880031",
+    "verified": false
+  },
+  {
+    "fact": "There is no other direct information about the number of people in the Miami office besides the 22 employees stated.",
+    "source": "All documents",
+    "confidence": 1.0,
+    "timestamp": "2025-04-30T23:55:27.880034",
+    "verified": false
+  },
+  {
+    "fact": "The occupancy rate of the Delta Point office in Miami is 50%, which could imply that the office is not fully utilized.",
+    "source": "Second document",
+    "confidence": 0.8,
+    "timestamp": "2025-04-30T23:55:27.880037",
+    "verified": false
+  },
+  {
+    "fact": "The badge utilization rate of 59.09% in Miami might indicate that not all employees are present or using their badges on the dates listed.",
+    "source": "Third document",
+    "confidence": 0.9,
+    "timestamp": "2025-04-30T23:55:27.880039",
+    "verified": false
+  },
+  {
+    "fact": "The occupancy rate in Chicago is 85%",
+    "source": "Office City VacancyRate OccupancyRate document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T00:25:34.128411",
+    "verified": false
+  },
+  {
+    "fact": "The occupancy rate in Philadelphia is 75%",
+    "source": "Office City VacancyRate OccupancyRate document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T00:25:34.128425",
+    "verified": false
+  },
+  {
+    "fact": "The occupancy rate in Los Angeles is 70%",
+    "source": "Office City VacancyRate OccupancyRate document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T00:25:34.128429",
+    "verified": false
+  },
+  {
+    "fact": "The occupancy rate in New York is 60%",
+    "source": "Office City VacancyRate OccupancyRate document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T00:25:34.128431",
+    "verified": false
+  },
+  {
+    "fact": "The occupancy rate in Miami is 50%",
+    "source": "Office City VacancyRate OccupancyRate document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T00:25:34.128434",
+    "verified": false
+  },
+  {
+    "fact": "Philadelphia has a lease end year of 2030, which is relatively soon compared to other cities like Los Angeles (2031), Chicago (2031), and New York City (2032)",
+    "source": "City LeaseStartYear LeaseEndYear documents",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T00:25:34.128436",
+    "verified": false
+  },
+  {
+    "fact": "Chicago has a relatively short lease term remaining (9 years as of 2022, since it started in 2021 and ends in 2031), but it has a high occupancy rate of 85%",
+    "source": "City LeaseStartYear LeaseEndYear documents and Office City VacancyRate OccupancyRate document",
+    "confidence": 0.95,
+    "timestamp": "2025-05-01T00:25:34.128438",
+    "verified": false
+  },
+  {
+    "fact": "New York City has a vacancy rate of 9.8%.**",
+    "source": "First document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T00:30:08.480783",
+    "verified": false
+  },
+  {
+    "fact": "Beta Center in New York has a vacancy rate of 40%.**",
+    "source": "Second document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T00:30:08.480797",
+    "verified": false
+  },
+  {
+    "fact": "New York City's total square feet for a particular lease is 21525.**",
+    "source": "First document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T00:30:08.480800",
+    "verified": false
+  },
+  {
+    "fact": "There is significant entry and exit activity in various buildings in New York City.**",
+    "source": "Third and subsequent documents",
+    "confidence": 0.8,
+    "timestamp": "2025-05-01T00:30:08.480802",
+    "verified": false
+  },
+  {
+    "fact": "New York City's forecast 6-month growth is 3.5%.**",
+    "source": "First document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T00:30:08.480804",
+    "verified": false
+  },
+  {
+    "fact": "The rent per square foot in New York City is $75.**",
+    "source": "First document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T00:30:08.480806",
+    "verified": false
+  },
+  {
+    "fact": "The lease for the mentioned property in New York City runs from 2022 to 2032.**",
+    "source": "First document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T00:30:08.480809",
+    "verified": false
+  },
+  {
+    "fact": "The vacancy rate for Gamma Plaza in Chicago is 15%.**",
+    "source": "Office City VacancyRate OccupancyRate Document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T00:31:20.583767",
+    "verified": false
+  },
+  {
+    "fact": "The occupancy rate for Gamma Plaza in Chicago is 85%.**",
+    "source": "Office City VacancyRate OccupancyRate Document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T00:31:20.583781",
+    "verified": false
+  },
+  {
+    "fact": "The total square feet for a lease in Chicago is 8400.**",
+    "source": "City LeaseStartYear LeaseEndYear TotalSquareFeet RentPerSF VacancyRate% Forecast6MonthGrowth% Document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T00:31:20.583784",
+    "verified": false
+  },
+  {
+    "fact": "The rent per square foot in Chicago is $38.69.**",
+    "source": "City LeaseStartYear LeaseEndYear TotalSquareFeet RentPerSF VacancyRate% Forecast6MonthGrowth% Document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T00:31:20.583786",
+    "verified": false
+  },
+  {
+    "fact": "The vacancy rate in Chicago is 11.0%.**",
+    "source": "City LeaseStartYear LeaseEndYear TotalSquareFeet RentPerSF VacancyRate% Forecast6MonthGrowth% Document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T00:31:20.583789",
+    "verified": false
+  },
+  {
+    "fact": "The forecasted 6-month growth in Chicago is 2.8%.**",
+    "source": "City LeaseStartYear LeaseEndYear TotalSquareFeet RentPerSF VacancyRate% Forecast6MonthGrowth% Document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T00:31:20.583791",
+    "verified": false
+  },
+  {
+    "fact": "A lease in Chicago started in 2021 and ends in 2031.**",
+    "source": "City LeaseStartYear LeaseEndYear TotalSquareFeet RentPerSF VacancyRate% Forecast6MonthGrowth% Document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T00:31:20.583793",
+    "verified": false
+  }
+]
