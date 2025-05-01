@@ -1288,11 +1288,200 @@ class DocumentChatV3(DocumentChatV2):
             logger.exception(f"Error tracking run in LangSmith: {str(e)}")
             return None
     
-    # Method to detect visualization opportunities
+    # Method to get conversation feedback
+    def get_feedback(self, user_query, assistant_response, user_rating):
+        """Record user feedback on a conversation turn"""
+        if not self.langsmith_enabled or not self.langsmith_client:
+            return
+        
+        try:
+            # Try to find the most recent run ID
+            if self.run_ids:
+                run_id = self.run_ids[-1]
+                self.langsmith_client.create_feedback(
+                    run_id=run_id,
+                    key="user_rating",
+                    value=user_rating,  # 1-5 scale or thumbs up/down
+                    comment=f"Query: {user_query}"
+                )
+                logger.info(f"Added feedback for run {run_id}: {user_rating}")
+        except Exception as e:
+            logger.exception(f"Error adding feedback: {str(e)}")
+    
+    # Override process_query from parent class to handle special commands
+    def process_query(self, query):
+        """Enhanced query processing with document intelligence and LangSmith tracking"""
+        try:
+            # Process special commands
+            if query.lower() == 'runs':
+                if self.langsmith_enabled and self.run_ids:
+                    runs_info = {"answer": f"\nRecent LangSmith Runs:\n"}
+                    
+                    run_links = []
+                    for i, run_id in enumerate(self.run_ids[-5:]):  # Show last 5 runs
+                        run_links.append(f"{i+1}. {Config.LANGSMITH_ENDPOINT}/runs/{run_id}")
+                    
+                    runs_info["answer"] += "\n".join(run_links)
+                    return runs_info
+                else:
+                    return {"answer": "No LangSmith runs available or LangSmith is disabled."}
+                    
+            elif query.lower().startswith("insights") and query.lower() != "insights on" and query.lower() != "insights off":
+                # Handle the insights command - show generated insights
+                if not self.insights:
+                    return {"answer": "No insights have been generated yet. Ask some questions about the data first!"}
+                
+                insights_response = {"answer": f"\n{Colors.GREEN}Generated Insights:{Colors.ENDC}\n"}
+                for i, insight in enumerate(self.insights[:5]):  # Show top 5 insights
+                    insights_response["answer"] += f"\n{i+1}. {insight['description']}"
+                    insights_response["answer"] += f"\n   {Colors.YELLOW}Confidence:{Colors.ENDC} {insight['confidence']}%"
+                    insights_response["answer"] += f"\n   {Colors.CYAN}Suggested Action:{Colors.ENDC} {insight['action']}\n"
+                
+                return insights_response
+                
+            elif query.lower() == "insights on":
+                self.auto_insights_mode = True
+                return {"answer": "Automatic insights generation enabled."}
+                
+            elif query.lower() == "insights off":
+                self.auto_insights_mode = False
+                return {"answer": "Automatic insights generation disabled."}
+                
+            elif query.lower().startswith("visualize "):
+                # Handle visualization requests
+                data_text = query[10:]  # Remove "visualize " prefix
+                base64_img, viz_path = self.data_visualizer.generate_visualization(data_text)
+                
+                if base64_img:
+                    self.charts_generated.append(viz_path)
+                    return {
+                        "answer": f"Visualization created and saved to {viz_path}",
+                        "visualization": base64_img
+                    }
+                else:
+                    return {"answer": f"Failed to create visualization: {viz_path}"}
+                    
+            elif query.lower().startswith("summarize "):
+                # Handle document summarization
+                doc_name = query[10:]  # Remove "summarize " prefix
+                # Find the document in context
+                context_docs = self.get_relevant_context(doc_name)
+                if not context_docs:
+                    return {"answer": f"Could not find a document matching '{doc_name}'"}
+                
+                # Get the most relevant document
+                doc_text = context_docs[0].page_content
+                summary = self.document_summarizer.summarize_document(doc_text)
+                return {"answer": f"Summary of '{doc_name}':\n\n{summary}"}
+                
+            elif query.lower().startswith("extract "):
+                # Handle pattern extraction
+                command = query[8:].strip()  # Remove "extract " prefix
+                
+                # Parse the command to get pattern type and text
+                if " from " in command:
+                    pattern_type, text = command.split(" from ", 1)
+                    pattern_type = pattern_type.strip().lower()
+                    
+                    # Get relevant documents if needed
+                    if not text or text.isspace():
+                        context_docs = self.get_relevant_context(pattern_type)
+                        text = "\n\n".join([doc.page_content for doc in context_docs])
+                    
+                    # Do the extraction
+                    if pattern_type in self.pattern_extractor.patterns:
+                        matches = self.pattern_extractor.extract_pattern(text, pattern_type)
+                        if matches:
+                            result = {"answer": f"Extracted {pattern_type}s:\n"}
+                            for i, match in enumerate(matches):
+                                result["answer"] += f"{i+1}. {match}\n"
+                            return result
+                        else:
+                            return {"answer": f"No {pattern_type} patterns found in the text."}
+                    else:
+                        return {"answer": f"Unknown pattern type: {pattern_type}. Available patterns: {', '.join(self.pattern_extractor.patterns.keys())}"}
+                else:
+                    return {"answer": "Invalid extract command format. Use 'extract [pattern] from [text]'"}
+                    
+            elif query.lower().startswith("compare "):
+                # Handle document comparison
+                doc_names = query[8:].strip()  # Remove "compare " prefix
+                doc_list = [name.strip() for name in doc_names.split(',')]
+                
+                all_docs = []
+                for doc_name in doc_list:
+                    context_docs = self.get_relevant_context(doc_name)
+                    if context_docs:
+                        all_docs.extend(context_docs)
+                
+                if len(all_docs) < 2:
+                    return {"answer": "Could not find enough documents to compare. Please specify document names separated by commas."}
+                
+                comparison = self.cross_doc_analyzer.compare_documents(all_docs)
+                return {"answer": comparison["comparison"]}
+            
+            # For regular queries, use the parent implementation but with added features
+            result = super().process_query(query)
+            
+            if "error" in result:
+                return result
+            
+            # Get context documents for additional features
+            context_docs = self.get_relevant_context(query)
+            
+            # Add automatic insights if enabled
+            if self.auto_insights_mode:
+                new_insights = self.insight_generator.generate_insights(context_docs, top_k=1)
+                if new_insights:
+                    self.insights.extend(new_insights)
+                    # Add insight preview to response
+                    insight = new_insights[0]
+                    result["insight"] = f"\n{Colors.GREEN}New Insight:{Colors.ENDC} {insight['description']}"
+            
+            # Check for visualization opportunity
+            should_visualize = self.detect_visualization_opportunity(query, context_docs)
+            
+            if should_visualize and self.visualization_mode:
+                # Extract tabular data from context
+                context_text = "\n\n".join([doc.page_content for doc in context_docs])
+                
+                # Check if we have enough data to visualize
+                has_data = bool(re.search(r"(\d+[,.]?)+", context_text)) and len(context_text) > 100
+                
+                if has_data:
+                    # Try to generate a visualization
+                    try:
+                        base64_img, viz_path = self.data_visualizer.generate_visualization(
+                            context_text, 
+                            title=f"Visualization for: {query[:30]}..."
+                        )
+                        
+                        if base64_img:
+                            self.charts_generated.append(viz_path)
+                            result["visualization_note"] = f"\n{Colors.CYAN}A visualization was automatically generated at: {viz_path}{Colors.ENDC}"
+                            result["visualization"] = base64_img
+                    except Exception as e:
+                        logger.exception(f"Error generating visualization: {str(e)}")
+            
+            # Track the run in LangSmith
+            if self.langsmith_enabled:
+                run_id = self.track_run(query, result)
+                if run_id:
+                    result["langsmith_run_id"] = run_id
+            
+            return result
+            
+        except Exception as e:
+            logger.exception("Error in enhanced query processing")
+            return {
+                "answer": f"Error processing your question: {str(e)}",
+                "error": str(e)
+            }
+
     def detect_visualization_opportunity(self, query, context_docs):
         """Determine if a query would benefit from visualization"""
         # Skip if visualization mode is disabled
-        if not self.visualization_mode:
+        if not hasattr(self, 'visualization_mode') or not self.visualization_mode:
             return False
             
         # Simple keyword detection

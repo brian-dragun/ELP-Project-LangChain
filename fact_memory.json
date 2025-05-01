@@ -887,5 +887,96 @@
     "confidence": 1.0,
     "timestamp": "2025-05-01T15:57:10.373893",
     "verified": false
+  },
+  {
+    "fact": "The number of employees in the Los Angeles office is 75.",
+    "source": "Document 1 (City NumberOfEmployees ...)",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T16:00:46.642944",
+    "verified": false
+  },
+  {
+    "fact": "The occupancy rate of Epsilon Hub in Los Angeles is 70%.",
+    "source": "Document 2 (Office City VacancyRate OccupancyRate ...)",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T16:00:46.642957",
+    "verified": false
+  },
+  {
+    "fact": "The Los Angeles office has a workforce diversity of 60%.",
+    "source": "Document 1 (City NumberOfEmployees ...)",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T16:00:46.642961",
+    "verified": false
+  },
+  {
+    "fact": "The employee turnover rate in the Los Angeles office is 12%.",
+    "source": "Document 1 (City NumberOfEmployees ...)",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T16:00:46.642963",
+    "verified": false
+  },
+  {
+    "fact": "There are other cities with offices, such as New York City with 123 employees, Chicago with 48 employees, and Miami with 22 employees.",
+    "source": "Documents 3, 4, and 1 (City NumberOfEmployees ...)",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T16:00:46.642966",
+    "verified": false
+  },
+  {
+    "fact": "The number of employees is a direct count, not an estimate or projection.",
+    "source": "Document 1 (City NumberOfEmployees ...)",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T16:00:46.642969",
+    "verified": false
+  },
+  {
+    "fact": "The LA office data is part of a larger dataset that includes various office metrics, such as badge utilization rate, meeting room utilization, and energy consumption.",
+    "source": "Document 1 (City NumberOfEmployees ...)",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T16:00:46.642971",
+    "verified": false
+  },
+  {
+    "fact": "The NYC office has 123 employees.",
+    "source": "First document, \"City NumberOfEmployees...\" row",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T16:03:30.101342",
+    "verified": false
+  },
+  {
+    "fact": "On April 17, 2025, there were at least 17 entries/exits recorded at the NYC office.",
+    "source": "Second document, \"Executive Lobby 09:46:00 Entry 2025-04-17...\"",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T16:03:30.101354",
+    "verified": false
+  },
+  {
+    "fact": "On April 23, 2025, there were at least 16 entries/exits recorded at the NYC office.",
+    "source": "Fourth document, \"NYC760615 Front Entrance 14:19:00 Entry 2025-04-23...\"",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T16:03:30.101358",
+    "verified": false
+  },
+  {
+    "fact": "On April 5, 2025, there were at least 16 entries/exits recorded at the NYC office.",
+    "source": "Fifth document, \"NYC653377 Executive Lobby 11:37:00 Entry 2025-04-05...\"",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T16:03:30.101361",
+    "verified": false
+  },
+  {
+    "fact": "The occupancy rate of the Beta Center in New York is 60%.",
+    "source": "Third document, \"Office City VacancyRate OccupancyRate...\" row",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T16:03:30.101364",
+    "verified": false
+  },
+  {
+    "fact": "The NYC office has 123 employees.",
+    "source": "First document, \"City NumberOfEmployees...\" row",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T16:03:30.101367",
+    "verified": false
   }
 ]
