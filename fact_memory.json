@@ -740,5 +740,152 @@
     "confidence": 1.0,
     "timestamp": "2025-05-01T15:09:38.496999",
     "verified": false
+  },
+  {
+    "fact": "Los Angeles office has an energy consumption of 2200 kWh per seat per year.",
+    "source": "Los Angeles data point",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:25:29.279348",
+    "verified": false
+  },
+  {
+    "fact": "Philadelphia office has an energy consumption of 2500 kWh per seat per year.",
+    "source": "Philadelphia data point",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:25:29.279364",
+    "verified": false
+  },
+  {
+    "fact": "Chicago office has an energy consumption of 2300 kWh per seat per year.",
+    "source": "Chicago data point",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:25:29.279368",
+    "verified": false
+  },
+  {
+    "fact": "Miami office has an energy consumption of 2400 kWh per seat per year.",
+    "source": "Miami data point",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:25:29.279371",
+    "verified": false
+  },
+  {
+    "fact": "New York City office has an energy consumption of 2800 kWh per seat per year.",
+    "source": "New York City data point",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:25:29.279373",
+    "verified": false
+  },
+  {
+    "fact": "The office with the highest energy consumption per seat per year among the given cities is New York City.",
+    "source": "Comparative analysis of all data points",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:25:29.279376",
+    "verified": false
+  },
+  {
+    "fact": "The office with the lowest energy consumption per seat per year among the given cities is Los Angeles.",
+    "source": "Comparative analysis of all data points",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:25:29.279379",
+    "verified": false
+  },
+  {
+    "fact": "Multiple individuals entered through the Main Entrance on 2025-04-27.**",
+    "source": "Document 1",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:54:30.134640",
+    "verified": false
+  },
+  {
+    "fact": "The Loading Dock was frequently used for entries on 2025-04-27.**",
+    "source": "Document 1",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:54:30.134653",
+    "verified": false
+  },
+  {
+    "fact": "Some individuals had multiple entries across different days.**",
+    "source": "Documents 1, 2, 3, 4",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:54:30.134656",
+    "verified": false
+  },
+  {
+    "fact": "The Main Entrance was the most commonly used entry point across the observed dates.**",
+    "source": "Documents 1, 2, 3, 4",
+    "confidence": 0.9,
+    "timestamp": "2025-05-01T15:54:30.134659",
+    "verified": false
+  },
+  {
+    "fact": "There were instances of exits without corresponding entries being recorded in the same document.**",
+    "source": "Document 1",
+    "confidence": 0.8,
+    "timestamp": "2025-05-01T15:54:30.134662",
+    "verified": false
+  },
+  {
+    "fact": "Some locations like the East Side Entry and Loading Dock were used for both entries and exits.**",
+    "source": "Documents 1, 2, 3",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:54:30.134665",
+    "verified": false
+  },
+  {
+    "fact": "The data suggests a varied pattern of entry and exit times across different individuals and locations.**",
+    "source": "Documents 1, 2, 3, 4",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:54:30.134667",
+    "verified": false
+  },
+  {
+    "fact": "The Miami office has 22 employees.",
+    "source": "First document, row starting with \"Miami\"",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:57:10.373870",
+    "verified": false
+  },
+  {
+    "fact": "The Delta Point office in Miami has a 50% occupancy rate.",
+    "source": "Second document, row starting with \"Delta Point Miami\"",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:57:10.373879",
+    "verified": false
+  },
+  {
+    "fact": "The average badge utilization rate in the Miami office is 59.09%.",
+    "source": "Third document, multiple rows for Miami",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:57:10.373882",
+    "verified": false
+  },
+  {
+    "fact": "The energy consumption per seat per year in the Miami office is 2400 kWh.",
+    "source": "First document, row starting with \"Miami\"",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:57:10.373885",
+    "verified": false
+  },
+  {
+    "fact": "The waste recycling rate in the Miami office is 65%.",
+    "source": "First document, row starting with \"Miami\"",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:57:10.373888",
+    "verified": false
+  },
+  {
+    "fact": "The Miami office is not LEED certified (has a value of 27.34, possibly a different certification level).",
+    "source": "First document, row starting with \"Miami\"",
+    "confidence": 0.8,
+    "timestamp": "2025-05-01T15:57:10.373891",
+    "verified": false
+  },
+  {
+    "fact": "The office space cost per square foot in the Miami office is $61.76.",
+    "source": "First document, row starting with \"Miami\"",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:57:10.373893",
+    "verified": false
   }
 ]

@@ -20,6 +20,12 @@ class Config:
     # LangChain settings
     LANGCHAIN_API_KEY = os.getenv("LANGCHAIN_API_KEY")
     
+    # LangSmith settings
+    LANGSMITH_PROJECT = os.getenv("LANGCHAIN_PROJECT")
+    LANGSMITH_ENDPOINT = os.getenv("LANGSMITH_ENDPOINT")
+    LANGSMITH_TRACING_ENABLED = os.getenv("LANGSMITH_TRACING_ENABLED", "true").lower() == "true"
+    
+    
     # Lambda Labs settings
     LAMBDA_API_KEY = os.getenv("LAMBDA_API_KEY")
     LAMBDA_API_BASE = os.getenv("LAMBDA_API_BASE")

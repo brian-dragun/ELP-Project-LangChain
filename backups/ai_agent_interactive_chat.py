@@ -696,22 +696,7 @@ class DocumentChatV2:
         
         # Start background document monitoring thread
         if auto_refresh:
-            self._start_document_monitor()
-        
-        # Welcome message
-        print(f"\n{Colors.HEADER}" + "="*50 + Colors.ENDC)
-        print(f"{Colors.BOLD}🤖 Document-Aware Chat System v2{Colors.ENDC}")
-        print(f"{Colors.HEADER}" + "="*50 + Colors.ENDC)
-        print("Ask questions about your office data across Chicago, LA, Miami, NYC, and Philadelphia.")
-        print(f"{Colors.CYAN}Enhanced with: Memory, Reasoning, Self-Questioning, Fact Checking, and Confidence Scoring{Colors.ENDC}")
-        print(f"{Colors.YELLOW}Commands:{Colors.ENDC}")
-        print("  exit/quit - End the session")
-        print("  help - Show sample questions")
-        print("  clear - Clear chat history")
-        print("  refresh - Manually refresh document database")
-        print("  facts - Show learned facts")
-        print("  reasoning on/off - Toggle reasoning steps visibility")
-        print(f"{Colors.HEADER}" + "="*50 + Colors.ENDC + "\n")
+            self._start_document_monitor()        
 
     # [File monitoring methods remain the same]
     def _start_document_monitor(self):

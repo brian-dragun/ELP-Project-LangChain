@@ -19,6 +19,12 @@ from config import Config
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+# Configure LangSmith tracing
+os.environ["LANGCHAIN_API_KEY"] = Config.LANGCHAIN_API_KEY
+os.environ["LANGCHAIN_PROJECT"] = Config.LANGSMITH_PROJECT
+os.environ["LANGCHAIN_ENDPOINT"] = Config.LANGSMITH_ENDPOINT
+os.environ["LANGCHAIN_TRACING_V2"] = "true" if Config.LANGSMITH_TRACING_ENABLED else "false"
+
 # Define the state schema
 class GraphState(TypedDict):
     question: str

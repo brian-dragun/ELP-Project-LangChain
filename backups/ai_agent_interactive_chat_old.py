@@ -37,24 +37,12 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.document_loaders import DirectoryLoader, CSVLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
-# LangSmith imports
-from langsmith import Client
-from langsmith.run_trees import RunTree
-from langsmith.evaluation import StringEvaluator
-from langchain.smith import RunEvalConfig, run_on_dataset
-
 # pydantic imports
 from pydantic import Field, field_validator, BaseModel
 
 # Local imports
 from ai_agent import llm, logger, prompt
-from config import Config
 
-# Initialize LangSmith client
-langsmith_client = Client(
-    api_key=Config.LANGCHAIN_API_KEY,
-    api_url=Config.LANGSMITH_ENDPOINT
-)
 
 # Define colors for terminal output
 class Colors:
@@ -708,7 +696,22 @@ class DocumentChatV2:
         
         # Start background document monitoring thread
         if auto_refresh:
-            self._start_document_monitor()        
+            self._start_document_monitor()
+        
+        # Welcome message
+        print(f"\n{Colors.HEADER}" + "="*50 + Colors.ENDC)
+        print(f"{Colors.BOLD}🤖 Document-Aware Chat System v2{Colors.ENDC}")
+        print(f"{Colors.HEADER}" + "="*50 + Colors.ENDC)
+        print("Ask questions about your office data across Chicago, LA, Miami, NYC, and Philadelphia.")
+        print(f"{Colors.CYAN}Enhanced with: Memory, Reasoning, Self-Questioning, Fact Checking, and Confidence Scoring{Colors.ENDC}")
+        print(f"{Colors.YELLOW}Commands:{Colors.ENDC}")
+        print("  exit/quit - End the session")
+        print("  help - Show sample questions")
+        print("  clear - Clear chat history")
+        print("  refresh - Manually refresh document database")
+        print("  facts - Show learned facts")
+        print("  reasoning on/off - Toggle reasoning steps visibility")
+        print(f"{Colors.HEADER}" + "="*50 + Colors.ENDC + "\n")
 
     # [File monitoring methods remain the same]
     def _start_document_monitor(self):
@@ -1039,38 +1042,26 @@ Format your response with clear STEP 1, STEP 2, etc. headings."""
             print(f"\n{Colors.BLUE}Reasoning Steps (hidden by default, 'reasoning on' to show){Colors.ENDC}")
 
     def show_help(self):
-        """Enhanced help display with Document Intelligence capabilities"""
+        """Show sample questions the user can ask"""
         help_text = f"""
 {Colors.GREEN}Sample questions you can ask:{Colors.ENDC}
 {Colors.YELLOW}-----------------------------{Colors.ENDC}
 1. "How many employees work in the Los Angeles office?"
 2. "What is the badge utilization rate in Chicago compared to NYC?"
 3. "Which city has the highest meeting room utilization on weekends?"
-4. "What's the trend in energy usage across all offices over time?"
-5. "Create a visualization of meeting room utilization by city"
-6. "Compare the sustainability metrics of Chicago and Miami offices"
-7. "Extract all dates from the NYC lease document"
-8. "Summarize the ESG metrics across all locations"
+4. "What is the LEED certification level for the Chicago office?"
+5. "When does the Los Angeles office lease end?"
+6. "Based on current trends, what will the meeting room utilization in NYC be by the end of 2025?"
+7. "Which office has the best balance of sustainability and financial efficiency?"
+8. "How does our office space cost in LA compare to predicted market rates for 2026?"
 
 {Colors.CYAN}Advanced Commands:{Colors.ENDC}
-- "visualize [data]": Create visualization from data
-- "summarize [document]": Generate summary of document
-- "extract [pattern] from [text]": Extract patterns (dates, numbers, etc.)
-- "compare [docs]": Compare multiple documents
-- "insights": Show generated insights
-- "insights on/off": Toggle automatic insights
-- "reasoning on/off": Toggle display of reasoning steps
+- "reasoning on" or "reasoning off": Toggle display of reasoning steps
 - "facts": Show facts the system has learned
 - "refresh": Manually refresh document database
 - "clear": Clear conversation history
 - "help": Show this help message
 - "exit" or "quit": End the session
-
-{Colors.CYAN}LangSmith Commands:{Colors.ENDC}
-- "runs": View links to recent LangSmith runs
-- You can rate responses 1-5 when prompted for feedback
-
-{Colors.YELLOW}Pattern Types:{Colors.ENDC} currency, percentage, date, email, phone, time, numeric
 
 For more sample questions, check SAMPLE_QUESTIONS.md
 """
@@ -1174,17 +1165,6 @@ For more sample questions, check SAMPLE_QUESTIONS.md
                 result = self.process_query(user_input)
                 self.display_response(result)
                 
-                # Add feedback collection feature
-                if self.langsmith_enabled:
-                    try:
-                        feedback_input = input(f"\n{Colors.CYAN}Rate this response (1-5, or skip):{Colors.ENDC} ")
-                        if feedback_input.strip() and feedback_input.strip() in "12345":
-                            rating = int(feedback_input.strip())
-                            self.get_feedback(user_input, result["answer"], rating)
-                            print(f"{Colors.GREEN}Thank you for your feedback!{Colors.ENDC}")
-                    except Exception as e:
-                        logger.exception(f"Error collecting feedback: {str(e)}")
-                
                 # Show reasoning if enabled and available
                 if self.reasoning_mode and "reasoning" in result and result["reasoning"]:
                     print(f"\n{Colors.BLUE}Reasoning Process:{Colors.ENDC}")
@@ -1220,11 +1200,6 @@ class DocumentChatV3(DocumentChatV2):
         self.insight_generator = InsightGenerator()
         self.cross_doc_analyzer = CrossDocumentAnalyzer()
         
-        # Initialize LangSmith components
-        self.langsmith_enabled = Config.LANGSMITH_TRACING_ENABLED
-        self.langsmith_client = langsmith_client if self.langsmith_enabled else None
-        self.run_ids = []  # Store run IDs for tracking
-        
         # Track insights and visualizations
         self.insights = []
         self.auto_insights_mode = True  # Automatically suggest insights
@@ -1243,14 +1218,12 @@ class DocumentChatV3(DocumentChatV2):
         print(f"  {Colors.YELLOW}✓{Colors.ENDC} Cross-Document Analysis")
         print(f"  {Colors.YELLOW}✓{Colors.ENDC} Auto-Summarization")
         print(f"  {Colors.YELLOW}✓{Colors.ENDC} Regular Expression Pattern Extraction")
-        print(f"  {Colors.YELLOW}✓{Colors.ENDC} LangSmith Tracking & Feedback")
         print(f"{Colors.YELLOW}Commands:{Colors.ENDC}")
         print("  exit/quit - End the session")
         print("  help - Show sample questions")
         print("  clear - Clear chat history")
         print("  refresh - Manually refresh document database")
         print("  facts - Show learned facts")
-        print("  runs - View LangSmith run links")
         print("  insights - Show generated insights")
         print("  insights on/off - Toggle automatic insights")
         print("  visualize [data] - Create visualization from data")
@@ -1259,62 +1232,510 @@ class DocumentChatV3(DocumentChatV2):
         print("  extract [pattern] - Extract patterns from text")
         print("  reasoning on/off - Toggle reasoning steps visibility")
         print(f"{Colors.HEADER}" + "="*60 + Colors.ENDC + "\n")
-
-    # Track a run in LangSmith
-    def track_run(self, query, result):
-        """Track a query and response in LangSmith"""
-        if not self.langsmith_enabled or not self.langsmith_client:
+    
+    def generate_auto_insights(self, context_docs):
+        """Generate automatic insights from document context"""
+        if not self.auto_insights_mode:
+            return []
+        
+        try:
+            new_insights = self.insight_generator.generate_insights(context_docs)
+            if new_insights:
+                # Filter out insights we've already seen
+                existing_descriptions = {insight.get('description') for insight in self.insights}
+                unique_insights = [insight for insight in new_insights 
+                                  if insight.get('description') not in existing_descriptions]
+                
+                # Add unique insights to our collection
+                self.insights.extend(unique_insights)
+                return unique_insights
+                
+        except Exception as e:
+            logger.exception(f"Error generating insights: {str(e)}")
+        
+        return []
+    
+    def detect_visualization_opportunity(self, query, context_docs):
+        """Detect if the query could benefit from visualization"""
+        if not self.visualization_mode:
+            return False
+        
+        # Keywords that suggest visualization would be helpful
+        viz_keywords = ["trend", "compare", "visualization", "chart", "graph", "plot", 
+                       "distribution", "percentage", "proportion", "show me", "visual"]
+        
+        # Check if query contains visualization keywords
+        if any(keyword in query.lower() for keyword in viz_keywords):
+            return True
+        
+        # Check if contexts contain tabular data that could be visualized
+        context_text = "\n\n".join([doc.page_content for doc in context_docs])
+        
+        # Simple heuristic: multiple numeric values and potential labels
+        numbers = re.findall(r'\b\d+(?:\.\d+)?\b', context_text)
+        if len(numbers) > 5:  # Enough numbers to plot
+            return True
+            
+        return False
+    
+    def create_visualization(self, data_text, chart_type=None, title=None):
+        """Create visualization from data text"""
+        try:
+            base64_img, viz_path = self.data_visualizer.generate_visualization(
+                data_text=data_text,
+                chart_type=chart_type,
+                title=title
+            )
+            
+            if base64_img and viz_path:
+                self.charts_generated.append({
+                    "path": viz_path,
+                    "title": title or "Generated Chart",
+                    "timestamp": datetime.now().isoformat()
+                })
+                return {"path": viz_path, "base64": base64_img}
+            else:
+                return None
+        except Exception as e:
+            logger.exception(f"Error creating visualization: {str(e)}")
+            return None
+    
+    def extract_patterns(self, text, pattern_type=None):
+        """Extract patterns from text using regular expressions"""
+        try:
+            if pattern_type and pattern_type in self.pattern_extractor.patterns:
+                return {
+                    pattern_type: self.pattern_extractor.extract_pattern(text, pattern_type)
+                }
+            else:
+                return self.pattern_extractor.extract_all_patterns(text)
+        except Exception as e:
+            logger.exception(f"Error extracting patterns: {str(e)}")
+            return {}
+    
+    def analyze_cross_document_connections(self, query, context_docs):
+        """Find connections between documents relevant to query"""
+        if len(context_docs) <= 1:
             return None
         
         try:
-            # Create a run tree to track the conversation
-            run_tree = RunTree(
-                name="document_chat_interaction",
-                serialized={
-                    "name": "document_chat_interaction",
-                    "run_type": "chain",
-                    "inputs": {"query": query},
-                    "outputs": {"result": result}
-                },
-                client=self.langsmith_client,
-                project_name=Config.LANGSMITH_PROJECT
+            connections = self.cross_doc_analyzer.find_connections(
+                docs=context_docs,
+                query=query
             )
-            
-            # Execute the run
-            run_id = run_tree.end()
-            self.run_ids.append(run_id)
-            return run_id
+            return connections
         except Exception as e:
-            logger.exception(f"Error tracking run in LangSmith: {str(e)}")
+            logger.exception(f"Error finding connections: {str(e)}")
             return None
     
-    # Method to detect visualization opportunities
-    def detect_visualization_opportunity(self, query, context_docs):
-        """Determine if a query would benefit from visualization"""
-        # Skip if visualization mode is disabled
-        if not self.visualization_mode:
-            return False
-            
-        # Simple keyword detection
-        viz_keywords = ['chart', 'graph', 'plot', 'visualize', 'visualization', 'trend', 
-                       'compare', 'distribution', 'percentage', 'proportion']
+    def format_prompt_with_history(self, query, context_docs, self_questions=None, facts=None):
+        """Enhanced prompt formatting with document intelligence"""
+        # Get the base prompt from the parent class
+        base_prompt = super().format_prompt_with_history(query, context_docs, self_questions, facts)
         
-        # Check for keywords in the query
-        if any(keyword in query.lower() for keyword in viz_keywords):
-            return True
+        # Extract patterns that might be useful for the query
+        context_text = "\n\n".join([doc.page_content for doc in context_docs])
+        extracted_patterns = self.extract_patterns(context_text)
+        
+        # Find cross-document connections
+        connections = self.analyze_cross_document_connections(query, context_docs)
+        
+        # Add pattern and connection information if relevant
+        patterns_str = ""
+        if extracted_patterns:
+            patterns_str = "\nExtracted Data Patterns:\n"
+            for pattern_type, matches in extracted_patterns.items():
+                if matches and len(matches) <= 5:  # Only show if there are matches but not too many
+                    patterns_str += f"- {pattern_type.capitalize()}: {', '.join(matches[:5])}\n"
+        
+        connections_str = ""
+        if connections and len(connections) > 0:
+            connections_str = "\nCross-Document Connections:\n"
+            for i, connection in enumerate(connections[:2]):  # Limit to top 2
+                desc = connection.get('description', 'Connection found')
+                strength = connection.get('strength', 0)
+                connections_str += f"- {desc} (Confidence: {strength}%)\n"
+        
+        # Insert patterns and connections before the "Before providing your final answer" part
+        if patterns_str or connections_str:
+            insert_point = base_prompt.find("Before providing your final answer:")
+            if insert_point > 0:
+                enhanced_prompt = (
+                    base_prompt[:insert_point] + 
+                    patterns_str + 
+                    connections_str + 
+                    base_prompt[insert_point:]
+                )
+                return enhanced_prompt
+        
+        return base_prompt
+    
+    def process_query(self, query):
+        """Enhanced query processing with document intelligence features"""
+        # Process special commands
+        if query.lower().startswith("visualize "):
+            data_text = query[10:].strip()
+            if not data_text:
+                return {"answer": "Please provide data to visualize.", "error": "No data provided"}
             
-        # Check if query is asking for numerical comparisons
-        comparison_patterns = ['compare', 'difference between', 'versus', 'vs', 
-                              'higher', 'lower', 'most', 'least', 'ranking']
-        if any(pattern in query.lower() for pattern in comparison_patterns):
-            # Check if we have numerical data in the context
-            context_text = "\n".join([doc.page_content for doc in context_docs])
-            # Simple heuristic: If we have multiple numbers and comparison keywords, visualization might help
-            numbers = re.findall(r'\d+(?:\.\d+)?%?', context_text)
-            if len(numbers) > 5:  # Arbitrary threshold
-                return True
+            viz_result = self.create_visualization(data_text)
+            if viz_result:
+                return {
+                    "answer": f"Visualization created and saved to {viz_result['path']}.",
+                    "visualization": viz_result
+                }
+            else:
+                return {"answer": "Could not create visualization from the provided data.", "error": "Visualization failed"}
+        
+        elif query.lower().startswith("summarize "):
+            doc_name = query[10:].strip()
+            if not doc_name:
+                return {"answer": "Please specify which document to summarize.", "error": "No document specified"}
+            
+            # Retrieve document by name pattern
+            context_docs = self.get_relevant_context(doc_name)
+            if not context_docs:
+                return {"answer": f"Could not find document matching '{doc_name}'.", "error": "Document not found"}
+            
+            doc_text = "\n\n".join([doc.page_content for doc in context_docs])
+            summary = self.document_summarizer.summarize_document(doc_text)
+            
+            return {
+                "answer": f"Summary of '{doc_name}':\n\n{summary}",
+                "summary": summary
+            }
+        
+        elif query.lower().startswith("extract "):
+            pattern_info = query[8:].strip()
+            if not pattern_info:
+                return {"answer": "Please specify what patterns to extract.", "error": "No pattern specified"}
+            
+            # Try to determine if pattern name or custom pattern
+            pattern_parts = pattern_info.split(" from ", 1)
+            if len(pattern_parts) == 2:
+                pattern_type, text = pattern_parts
+                pattern_type = pattern_type.lower()
+            else:
+                pattern_type = "all"
+                text = pattern_info
                 
-        return False
+            # If "all" or "patterns" is specified, extract all patterns from the text
+            if pattern_type in ["all", "patterns"]:
+                # Get context to extract from
+                context_docs = self.get_relevant_context(text)
+                context_text = "\n\n".join([doc.page_content for doc in context_docs])
+                patterns = self.extract_patterns(context_text)
+                
+                pattern_results = []
+                for p_type, matches in patterns.items():
+                    if matches:
+                        pattern_results.append(f"{p_type.capitalize()}: {', '.join(matches[:10])}")
+                
+                result_text = "\n".join(pattern_results) if pattern_results else "No patterns found."
+                return {
+                    "answer": f"Extracted Patterns:\n\n{result_text}",
+                    "patterns": patterns
+                }
+            else:
+                # Try to extract specific pattern type
+                context_docs = self.get_relevant_context(text)
+                context_text = "\n\n".join([doc.page_content for doc in context_docs])
+                
+                if pattern_type in self.pattern_extractor.patterns:
+                    matches = self.pattern_extractor.extract_pattern(context_text, pattern_type)
+                    result_text = ", ".join(matches) if matches else "No matches found."
+                    
+                    return {
+                        "answer": f"Extracted {pattern_type}:\n{result_text}",
+                        "patterns": {pattern_type: matches}
+                    }
+                else:
+                    # Try as custom pattern
+                    try:
+                        matches = self.pattern_extractor.extract_custom_pattern(context_text, pattern_type)
+                        result_text = ", ".join(matches) if matches else "No matches found."
+                        
+                        return {
+                            "answer": f"Extracted using custom pattern:\n{result_text}",
+                            "patterns": {"custom": matches}
+                        }
+                    except:
+                        return {"answer": f"Invalid pattern type or custom pattern.", "error": "Invalid pattern"}
+        
+        elif query.lower().startswith("compare "):
+            doc_names = query[8:].strip()
+            if not doc_names:
+                return {"answer": "Please specify which documents to compare.", "error": "No documents specified"}
+            
+            # Get docs to compare, either explicit list or search query
+            docs_to_compare = self.get_relevant_context(doc_names)
+            if len(docs_to_compare) < 2:
+                return {"answer": "Comparison requires at least 2 documents. Could not find enough documents matching your query.", 
+                       "error": "Not enough documents"}
+            
+            comparison = self.cross_doc_analyzer.compare_documents(docs_to_compare)
+            
+            return {
+                "answer": f"Document Comparison:\n\n{comparison['comparison']}",
+                "comparison": comparison
+            }
+                
+        # Process regular query with Document Intelligence enhancements
+        try:
+            # Get base result from parent class
+            result = super().process_query(query)
+            
+            if "error" in result:
+                return result
+            
+            # Check for visualization opportunity
+            context_docs = self.get_relevant_context(query)
+            should_visualize = self.detect_visualization_opportunity(query, context_docs)
+            
+            if should_visualize and self.visualization_mode:
+                # Prepare data for visualization
+                context_text = "\n\n".join([doc.page_content for doc in context_docs])
+                
+                # Extract the most relevant portion for visualization
+                viz_prompt = f"""Extract the most important tabular or numerical data from the following context that would be helpful to visualize for this query: "{query}"
+                
+                Format the data as a clean CSV with headers, like this:
+                category,value1,value2
+                item1,10,20
+                item2,15,25
+                
+                Only return the CSV data, nothing else.
+                
+                Context:
+                {context_text[:3000]}
+                """
+                
+                visualization_data = llm.invoke(viz_prompt)
+                viz_result = self.create_visualization(visualization_data)
+                
+                if viz_result:
+                    result["visualization"] = viz_result
+                    
+                    # Add visualization mention to the response
+                    viz_note = f"\n\nI've created a visualization based on the data to help illustrate this information. The chart has been saved to {viz_result['path']}."
+                    result["answer"] += viz_note
+            
+            # Generate automatic insights
+            if self.auto_insights_mode:
+                auto_insights = self.generate_auto_insights(context_docs)
+                
+                if auto_insights and len(auto_insights) > 0:
+                    # Add top insight to the answer
+                    top_insight = auto_insights[0]
+                    insight_note = f"\n\nINSIGHT: {top_insight['description']} (Confidence: {top_insight['confidence']}%)"
+                    
+                    if len(auto_insights) > 1:
+                        insight_note += f"\n(Type 'insights' to see {len(auto_insights)} more insights)"
+                    
+                    result["answer"] += insight_note
+                    result["insights"] = auto_insights
+            
+            return result
+            
+        except Exception as e:
+            logger.exception("Error in enhanced query processing")
+            return {
+                "answer": f"Error processing your question: {str(e)}",
+                "error": str(e)
+            }
+    
+    def display_response(self, result):
+        """Enhanced response display with Document Intelligence features"""
+        if "error" in result:
+            print(f"{Colors.RED}{result['answer']}{Colors.ENDC}")
+            return
+        
+        # Display the main answer
+        print(f"{result['answer']}\n")
+        
+        # Show visualization reference if available
+        if "visualization" in result:
+            print(f"\n{Colors.GREEN}📊 Chart saved to: {result['visualization']['path']}{Colors.ENDC}")
+        
+        # Show verification if available
+        if "verification" in result and result["verification"]:
+            print(f"{Colors.YELLOW}Verification:{Colors.ENDC}")
+            verification_lines = result["verification"].split("\n")
+            for line in verification_lines[:5]:  # Limit to first 5 lines for brevity
+                print(f"{Colors.YELLOW}{line}{Colors.ENDC}")
+            print()
+        
+        # Show confidence scores if available
+        if "confidence" in result and result["confidence"] and "overall" in result["confidence"]:
+            confidence = result["confidence"]["overall"]
+            confidence_color = Colors.RED if confidence < 60 else Colors.YELLOW if confidence < 80 else Colors.GREEN
+            print(f"{confidence_color}Overall Confidence: {confidence:.0f}%{Colors.ENDC}")
+            
+        # Show document sources if available
+        if "context_sources" in result and result["context_sources"]:
+            unique_sources = set(source for source in result["context_sources"] if source != 'unknown')
+            if unique_sources:
+                print(f"{Colors.CYAN}Sources: {', '.join(unique_sources)}{Colors.ENDC}")
+        
+        # Show reasoning steps if enabled and available
+        if self.reasoning_mode and "reasoning" in result and result["reasoning"]:
+            print(f"\n{Colors.BLUE}Reasoning Steps (hidden by default, 'reasoning on' to show){Colors.ENDC}")
+    
+    def show_help(self):
+        """Enhanced help display with Document Intelligence capabilities"""
+        help_text = f"""
+{Colors.GREEN}Sample questions you can ask:{Colors.ENDC}
+{Colors.YELLOW}-----------------------------{Colors.ENDC}
+1. "How many employees work in the Los Angeles office?"
+2. "What is the badge utilization rate in Chicago compared to NYC?"
+3. "Which city has the highest meeting room utilization on weekends?"
+4. "What's the trend in energy usage across all offices over time?"
+5. "Create a visualization of meeting room utilization by city"
+6. "Compare the sustainability metrics of Chicago and Miami offices"
+7. "Extract all dates from the NYC lease document"
+8. "Summarize the ESG metrics across all locations"
+
+{Colors.CYAN}Advanced Commands:{Colors.ENDC}
+- "visualize [data]": Create visualization from data
+- "summarize [document]": Generate summary of document
+- "extract [pattern] from [text]": Extract patterns (dates, numbers, etc.)
+- "compare [docs]": Compare multiple documents
+- "insights": Show generated insights
+- "insights on/off": Toggle automatic insights
+- "reasoning on/off": Toggle display of reasoning steps
+- "facts": Show facts the system has learned
+- "refresh": Manually refresh document database
+- "clear": Clear conversation history
+- "help": Show this help message
+- "exit" or "quit": End the session
+
+{Colors.YELLOW}Pattern Types:{Colors.ENDC} currency, percentage, date, email, phone, time, numeric
+
+For more sample questions, check SAMPLE_QUESTIONS.md
+"""
+        print(help_text)
+    
+    def show_insights(self):
+        """Show insights that have been generated"""
+        if not self.insights:
+            print(f"{Colors.YELLOW}No insights have been generated yet.{Colors.ENDC}")
+            return
+        
+        print(f"\n{Colors.GREEN}Generated Insights:{Colors.ENDC}")
+        print(f"{Colors.YELLOW}-------------------{Colors.ENDC}")
+        
+        for i, insight in enumerate(self.insights[:10]):  # Limit to 10 insights for readability
+            confidence = insight.get("confidence", 0)
+            confidence_color = Colors.RED if confidence < 60 else Colors.YELLOW if confidence < 80 else Colors.GREEN
+            print(f"{i+1}. {insight['description']}")
+            print(f"   {Colors.CYAN}Evidence:{Colors.ENDC} {insight['evidence']}")
+            print(f"   {Colors.YELLOW}Importance:{Colors.ENDC} {insight['importance']}")
+            print(f"   {confidence_color}Confidence: {confidence}%{Colors.ENDC}")
+            print(f"   {Colors.GREEN}Suggested Action:{Colors.ENDC} {insight['action']}")
+            print()
+        
+        if len(self.insights) > 10:
+            print(f"\n... and {len(self.insights) - 10} more insights.")
+    
+    def run_session(self):
+        """Enhanced interactive chat session with Document Intelligence features"""
+        try:
+            while True:
+                # Get user input
+                user_input = input(f"\n{Colors.CYAN}👤 You:{Colors.ENDC} ")
+                user_input = user_input.strip()
+                
+                # Check for special commands
+                if not user_input:
+                    continue
+                
+                # Exit commands
+                if user_input.lower() in ['exit', 'quit', 'q']:
+                    self.monitor_running = False  # Stop the monitoring thread
+                    self.save_history()
+                    print(f"{Colors.GREEN}Goodbye! Chat history and facts have been saved.{Colors.ENDC}")
+                    break
+                
+                # Help command
+                elif user_input.lower() == 'help':
+                    self.show_help()
+                    continue
+                
+                # Clear history command
+                elif user_input.lower() == 'clear':
+                    self.history = []
+                    self.conversation_memory.clear()
+                    self.summary_memory.clear()
+                    print(f"{Colors.YELLOW}Chat history cleared.{Colors.ENDC}")
+                    continue
+                
+                # Show facts command
+                elif user_input.lower() == 'facts':
+                    self.show_facts()
+                    continue
+                
+                # Show insights command
+                elif user_input.lower() == 'insights':
+                    self.show_insights()
+                    continue
+                
+                # Toggle insights mode
+                elif user_input.lower() == 'insights on':
+                    self.auto_insights_mode = True
+                    print(f"{Colors.GREEN}Automatic insights enabled.{Colors.ENDC}")
+                    continue
+                elif user_input.lower() == 'insights off':
+                    self.auto_insights_mode = False
+                    print(f"{Colors.YELLOW}Automatic insights disabled.{Colors.ENDC}")
+                    continue
+                
+                # Refresh command
+                elif user_input.lower() == 'refresh':
+                    print(f"{Colors.YELLOW}Manually refreshing document database...{Colors.ENDC}")
+                    self._refresh_documents()
+                    continue
+                
+                # Toggle reasoning mode
+                elif user_input.lower() == 'reasoning on':
+                    self.reasoning_mode = True
+                    print(f"{Colors.GREEN}Reasoning steps display enabled.{Colors.ENDC}")
+                    continue
+                elif user_input.lower() == 'reasoning off':
+                    self.reasoning_mode = False
+                    print(f"{Colors.YELLOW}Reasoning steps display disabled.{Colors.ENDC}")
+                    continue
+                elif user_input.lower() == 'reasoning':
+                    self.reasoning_mode = not self.reasoning_mode
+                    status = "enabled" if self.reasoning_mode else "disabled"
+                    print(f"{Colors.GREEN if self.reasoning_mode else Colors.YELLOW}Reasoning steps display {status}.{Colors.ENDC}")
+                    continue
+                
+                # Process regular queries
+                print(f"\n{Colors.GREEN}🤖 Assistant:{Colors.ENDC} ", end="")
+                result = self.process_query(user_input)
+                self.display_response(result)
+                
+                # Show reasoning if enabled and available
+                if self.reasoning_mode and "reasoning" in result and result["reasoning"]:
+                    print(f"\n{Colors.BLUE}Reasoning Process:{Colors.ENDC}")
+                    reasoning_lines = result["reasoning"].split('\n')
+                    for line in reasoning_lines:
+                        if line.strip().startswith("STEP") or "step" in line.lower()[:10]:
+                            print(f"{Colors.YELLOW}{line}{Colors.ENDC}")
+                        else:
+                            print(f"{Colors.BLUE}{line}{Colors.ENDC}")
+                
+                print(f"\n{Colors.YELLOW}" + "-"*50 + Colors.ENDC)
+                
+        except KeyboardInterrupt:
+            self.monitor_running = False  # Stop the monitoring thread
+            print(f"\n{Colors.YELLOW}Session ended by user.{Colors.ENDC}")
+            self.save_history()
+        except Exception as e:
+            self.monitor_running = False  # Stop the monitoring thread
+            print(f"{Colors.RED}An error occurred: {e}{Colors.ENDC}")
+            logger.exception("Error in chat session")
+            self.save_history()
 
 if __name__ == "__main__":
     # Check for command line arguments
