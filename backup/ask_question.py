@@ -1,30 +1,24 @@
 #!/usr/bin/env python3
 import sys
-from qa_system import chain, logger
+from ai_agent import setup_qa_system, ask_question
 
 def main():
+    # Check if a question was provided as a command-line argument
     if len(sys.argv) < 2:
-        print("Usage: python ask_question.py 'Your question about the documents?'")
-        return
-
-    # Get the question from command-line argument
-    question = " ".join(sys.argv[1:])
-    print("\n" + "-"*50)
-    print(f"Question: {question}")
-    print("-"*50)
+        print("Usage: ./ask_question.py 'Your question here'")
+        sys.exit(1)
     
-    try:
-        # Invoke the QA chain
-        response = chain.invoke({"question": question})
-        
-        # Print the answer
-        print("\nAnswer:")
-        print("-"*50)
-        print(response["answer"])
-        print("-"*50 + "\n")
-    except Exception as e:
-        logger.exception("Error running the chain")
-        print(f"Error: {str(e)}")
+    # Get the question from command-line arguments
+    question = sys.argv[1]
+    
+    # Set up the QA chain
+    qa_chain = setup_qa_system()
+    
+    # Ask the question
+    result = ask_question(qa_chain, question)
+    
+    # Display the result
+    print(f"\nAnswer: {result}")
 
 if __name__ == "__main__":
     main()

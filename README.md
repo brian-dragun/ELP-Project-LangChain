@@ -31,12 +31,7 @@ This project includes a comprehensive simulation of corporate office behaviors a
 
 2. Make sure your documents are placed in the `documents/` folder.
 
-3. Run the document ingestion process:
-   ```bash
-   python ingest_documents.py
-   ```
-
-4. Set up environment variables for API keys and configuration:
+3. Set up environment variables for API keys and configuration:
    - Create a `.env` file in the project root
    - Add your API keys and configuration settings
    - See the `.env.example` file for required variables
@@ -56,27 +51,29 @@ For example:
 ./ask_question.py "What was the average meeting room utilization in NYC?"
 ```
 
-### Using the qa_system.py directly
+Note: The ai_agent will automatically ingest documents when needed.
 
-Edit the question in `qa_system.py` and run:
+### Using the ai_agent.py directly
+
+Edit the question in `ai_agent.py` and run:
 ```bash
-python qa_system.py
+python ai_agent.py
 ```
 
 ### Interactive Chat (v3)
 
 For a more interactive experience, use the v3 interactive chat:
 ```bash
-python interactive_chat_v3.py
+python ai_agent_interactive_chat.py
 ```
 
 ## System Components
 
-- `ingest_documents.py`: Processes documents and creates a vector database
-- `qa_system.py`: Main system that handles retrieval and question answering
+- `ingest_documents.py`: Optional utility to pre-process documents and create a vector database
+- `ai_agent.py`: Main system that handles both document ingestion and question answering
 - `ask_question.py`: Command-line interface for asking questions
 - `config.py`: Configuration management for API keys and settings
-- `interactive_chat_v3.py`: Interactive chat interface for asking questions
+- `ai_agent_interactive_chat.py`: Interactive chat interface for asking questions
 
 ## Simulation Details
 

@@ -18,6 +18,7 @@ matplotlib.use('Agg')  # Use non-interactive backend
 import matplotlib.pyplot as plt
 import plotly.express as px
 import plotly.io as pio
+import chromadb
 from datetime import datetime
 from typing import List, Dict, Any, Optional, ClassVar, Type, Union, Pattern, Tuple
 
@@ -31,13 +32,17 @@ from langchain.memory import ConversationSummaryMemory
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.tools import BaseTool
 from langchain.agents import initialize_agent, AgentType
-from qa_system import llm, logger, prompt
-import chromadb
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.document_loaders import DirectoryLoader, CSVLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+
+# pydantic imports
 from pydantic import Field, field_validator, BaseModel
+
+# Local imports
+from ai_agent import llm, logger, prompt
+
 
 # Define colors for terminal output
 class Colors:

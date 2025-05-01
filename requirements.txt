@@ -16,6 +16,9 @@ pydantic
 requests
 python-dotenv
 
+# Lambda Labs integration
+lambda-client
+
 # Data visualization and analysis (new)
 pandas
 numpy

@@ -1,38 +1,21 @@
-from langchain_community.document_loaders import DirectoryLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_huggingface import HuggingFaceEmbeddings
 import os
-import chromadb
-from langchain_chroma import Chroma
+import sys
 
-# Configure document loading
-# Update this to match your document types - using the appropriate loader
-loader = DirectoryLoader(
-    './documents',  # Path to your documents folder
-    glob="**/*.csv",  # Load specifically CSV files
-)
-documents = loader.load()
-print(f"Loaded {len(documents)} documents")
+# Import the document processing function from elp_ai_agent.py
+from ai_agent import process_documents
 
-# Split documents into chunks
-text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=1000,
-    chunk_overlap=200
-)
-splits = text_splitter.split_documents(documents)
-print(f"Split into {len(splits)} chunks")
+def main():
+    """
+    Run the document ingestion process.
+    """
+    try:
+        print("Starting document ingestion process...")
+        vectordb = process_documents()
+        print(f"Document ingestion complete! Vector database saved to ./chroma_db")
+        print("You can now use elp_ai_agent.py or ask_question.py to query your documents.")
+    except Exception as e:
+        print(f"Error during document ingestion: {e}")
+        sys.exit(1)
 
-# Create embeddings
-embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-
-# Configure and create Chroma client explicitly
-client = chromadb.PersistentClient(path="./chroma_db")
-
-# Create vector store with the explicit client
-vectorstore = Chroma.from_documents(
-    documents=splits,
-    embedding=embeddings,
-    client=client,
-    collection_name="document_collection"
-)
-print(f"Created vector store at ./chroma_db with collection name: document_collection")
+if __name__ == "__main__":
+    main()

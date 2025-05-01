@@ -341,5 +341,201 @@
     "confidence": 1.0,
     "timestamp": "2025-05-01T00:31:20.583793",
     "verified": false
+  },
+  {
+    "fact": "Gamma Plaza in Chicago has an occupancy rate of 85%.**",
+    "source": "Office City VacancyRate OccupancyRate document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:06:41.495427",
+    "verified": false
+  },
+  {
+    "fact": "Alpha Tower in Philadelphia has an occupancy rate of 75%.**",
+    "source": "Office City VacancyRate OccupancyRate document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:06:41.495452",
+    "verified": false
+  },
+  {
+    "fact": "Beta Center in New York has an occupancy rate of 60%.**",
+    "source": "Office City VacancyRate OccupancyRate document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:06:41.495458",
+    "verified": false
+  },
+  {
+    "fact": "Delta Point in Miami has an occupancy rate of 50%.**",
+    "source": "Office City VacancyRate OccupancyRate document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:06:41.495462",
+    "verified": false
+  },
+  {
+    "fact": "Epsilon Hub in Los Angeles has an occupancy rate of 70%.**",
+    "source": "Office City VacancyRate OccupancyRate document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:06:41.495466",
+    "verified": false
+  },
+  {
+    "fact": "The current occupancy rate threshold for requiring a headcount increase is 80%.**",
+    "source": "Task description",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:06:41.495471",
+    "verified": false
+  },
+  {
+    "fact": "The required increase in headcount for offices above 80% occupancy is 10%.**",
+    "source": "Task description",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:06:41.495475",
+    "verified": false
+  },
+  {
+    "fact": "Los Angeles has 75 employees.**",
+    "source": "City metrics document (for Los Angeles)",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:06:41.495479",
+    "verified": false
+  },
+  {
+    "fact": "Philadelphia's average daily energy cost is $333.9.",
+    "source": "Daily energy cost data for Philadelphia from 2025-04-01 to 2025-04-25.",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:07:35.114671",
+    "verified": false
+  },
+  {
+    "fact": "New York City's average daily energy cost is $114.76.",
+    "source": "Daily energy cost data for New York City from 2025-04-01 to 2025-04-17.",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:07:35.114683",
+    "verified": false
+  },
+  {
+    "fact": "Chicago's average daily energy cost is $29.24.",
+    "source": "Daily energy cost data for Chicago from 2025-04-22 to 2025-04-30.",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:07:35.114686",
+    "verified": false
+  },
+  {
+    "fact": "Philadelphia has an energy consumption of 2500 kWh per seat per year.",
+    "source": "City data for Philadelphia including energy consumption.",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:07:35.114688",
+    "verified": false
+  },
+  {
+    "fact": "New York City's energy consumption is not directly provided, but it's a major city and likely has significant energy usage.",
+    "source": "Implication from the data provided for New York City.",
+    "confidence": 0.5,
+    "timestamp": "2025-05-01T14:07:35.114690",
+    "verified": false
+  },
+  {
+    "fact": "Chicago's energy consumption is not directly provided.",
+    "source": "Implication from the data provided for Chicago.",
+    "confidence": 0.5,
+    "timestamp": "2025-05-01T14:07:35.114692",
+    "verified": false
+  },
+  {
+    "fact": "Philadelphia's average daily energy cost is $333.9.",
+    "source": "Daily energy cost data for Philadelphia.",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:07:35.114694",
+    "verified": false
+  },
+  {
+    "fact": "New York City's average daily energy cost is $114.76.",
+    "source": "Daily energy cost data for New York City.",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:07:35.114696",
+    "verified": false
+  },
+  {
+    "fact": "Chicago's average daily energy cost is $29.24.",
+    "source": "Daily energy cost data for Chicago.",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:07:35.114698",
+    "verified": false
+  },
+  {
+    "fact": "Philadelphia's average daily energy cost is $333.9.",
+    "source": "Daily energy cost data for Philadelphia from 2025-04-01 to 2025-04-25.",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:14:54.578689",
+    "verified": false
+  },
+  {
+    "fact": "Chicago's average daily energy cost is $29.24.",
+    "source": "Daily energy cost data for Chicago from 2025-04-22 to 2025-04-30.",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:14:54.578705",
+    "verified": false
+  },
+  {
+    "fact": "New York City's average daily energy cost is $114.76.",
+    "source": "Daily energy cost data for New York City from 2025-04-01 to 2025-04-17.",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:14:54.578709",
+    "verified": false
+  },
+  {
+    "fact": "Philadelphia has an energy consumption of 2500 kWh per seat per year.",
+    "source": "City data for Philadelphia.",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:14:54.578712",
+    "verified": false
+  },
+  {
+    "fact": "New York City is not directly comparable in terms of energy consumption per seat per year from the given data, but its daily energy cost is lower than Philadelphia's.",
+    "source": "Daily energy cost comparison.",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:14:54.578714",
+    "verified": false
+  },
+  {
+    "fact": "Chicago has a lower daily energy cost compared to Philadelphia and New York City.",
+    "source": "Daily energy cost data for Chicago.",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:14:54.578717",
+    "verified": false
+  },
+  {
+    "fact": "Philadelphia's average daily energy cost is $333.9.",
+    "source": "Daily energy cost data for Philadelphia.",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:14:54.578719",
+    "verified": false
+  },
+  {
+    "fact": "New York City's average daily energy cost is $114.76.",
+    "source": "Daily energy cost data for New York City.",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:14:54.578722",
+    "verified": false
+  },
+  {
+    "fact": "Chicago's average daily energy cost is $29.24.",
+    "source": "Daily energy cost data for Chicago.",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:14:54.578724",
+    "verified": false
+  },
+  {
+    "fact": "Philadelphia has the highest average daily energy cost among the cities provided.",
+    "source": "Comparison of daily energy costs across cities.",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:14:54.578727",
+    "verified": false
+  },
+  {
+    "fact": "The daily energy costs for Philadelphia, New York City, and Chicago are consistent over the periods they were measured.",
+    "source": "Daily energy cost data for each city.",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:14:54.578729",
+    "verified": false
   }
 ]
