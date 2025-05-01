@@ -1,182 +1,207 @@
-# Document Q&A System with LangChain, LangGraph and Lambda Labs
+# 🏢📊 Document Q&A System with LangChain, LangGraph & Lambda Labs
 
-This system allows you to ingest documents and ask questions about them using LangChain, LangGraph, and Lambda Labs API.
+This project enables powerful AI-driven Q&A and analytics over enterprise documents using **LangChain**, **LangGraph**, and a **Lambda Labs-hosted LLM**.
 
-## Enterprise Office Utilization and ESG Simulation
+---
 
-This project includes a comprehensive simulation of corporate office behaviors across multiple U.S. cities for an insurance company. The simulation focuses on occupancy trends, energy consumption, ESG performance, and strategic space optimization.
+## 🌐 Enterprise Office Utilization & ESG Simulation
 
-### Cities Included:
-- Philadelphia
-- Los Angeles
-- Miami
-- Chicago
-- New York City
+A realistic simulation of workplace behaviors across major U.S. cities — designed for strategic decision-making, space optimization, and ESG monitoring in an insurance enterprise.
 
-### Data Categories Simulated:
-- Employee Directory
-- Badge Swipe Data
-- Meeting Room Utilization
-- Lease and Market Data
-- Energy Consumption
-- ESG Metrics
+### 🏙️ Cities Simulated:
+- 🏛️ Philadelphia
+- 🌴 Los Angeles
+- 🌞 Miami
+- 🌆 Chicago
+- 🗽 New York City
+
+### 📂 Data Categories Simulated:
+- 👥 Employee Directory
+- 🚪 Badge Swipe Logs
+- 🧠 Meeting Room Utilization
+- 🏢 Lease & Market Data
+- ⚡ Energy Consumption
+- 🌱 ESG Metrics
+
+---
 
 ## 📘 Related Documentation
 
-- [AI Document Intelligence Summary](./ELP_AI_Document_Intelligence_Summary.md) – Overview of how our document-aware AI system works.
+- 📄 [AI Document Intelligence Summary](./ELP_AI_Document_Intelligence_Summary.md) – Full system architecture, prompt design, and capability breakdown.
 
+---
 
-## Setup
-0. Uninstall environment if needed:
-   ```bash
-   rm -rf .venv
-   ```
+## ⚙️ AI Agent Setup
 
-1. Install the required packages:
-   ```bash
-   python3 -m venv .venv && source .venv/bin/activate
-   pip --version
-   python -m pip install --upgrade pip
-   python -m pip install --upgrade pip setuptools
-   pip install -r requirements.txt
-   ```
+### 🧼 Step 0: Clean Environment (if needed)
+```bash
+rm -rf .venv
+```
 
-2. Make sure documents are placed in the `documents/` folder.
+### 📦 Step 1: Install Dependencies
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+python -m pip install --upgrade pip setuptools
+pip install -r requirements.txt
+```
 
-3. Set up environment variables for API keys and configuration:
-   - Create a `.env` file in the project root
-   - Add API keys and configuration settings
-   - See the `.env.example` file for required variables
+### 📁 Step 2: Add Documents
+Place your files in the `documents/` folder.
 
-## Usage
+### 🔐 Step 3: Set Configuration
+Create a `.env` file in the root directory. See `.env.example` for required keys.
 
-### Using the ai_agent.py directly
+---
 
-Edit the question in `ai_agent.py` and run:
+## 🚀 Usage
+
+### 🧠 Run Basic Q&A Agent
 ```bash
 python ai_agent.py
 ```
-Note: The ai_agent will automatically ingest documents when needed.
 
-### Interactive Chat
-
-For a more interactive experience, use the interactive chat:
+### 💬 Launch Interactive Chat
 ```bash
 python ai_agent_interactive_chat.py
 ```
 
-## System Components
+---
 
-- `ingest_documents.py`: Optional utility to pre-process documents and create a vector database
-- `ai_agent.py`: Main system that handles both document ingestion and question answering
-- `ask_question.py`: Command-line interface for asking questions
-- `config.py`: Configuration management for API keys and settings
-- `ai_agent_interactive_chat.py`: Interactive chat interface for asking questions
+## 🧩 System Components
 
-## Simulation Details
+| File                          | Description                                                |
+|-------------------------------|------------------------------------------------------------|
+| `ai_agent.py`                 | Core LangGraph agent for document retrieval + answering    |
+| `ai_agent_interactive_chat.py`| Interactive chat interface with tools + memory             |
+| `ingest_documents.py`         | Utility to pre-process and embed documents (optional)      |
+| `ask_question.py`             | CLI tool to ask a single question                          |
+| `config.py`                   | Stores API keys and configuration                          |
 
-### Key Simulation Assumptions:
-- Badge Utilization Rates: City-specific % of employees badging in daily
-- Door Usage: Main door gets 50% of swipes; other doors distributed randomly
-- Entry vs Exit: 70% Entry; 30% Exit
-- Energy Consumption: Based on energy per seat per year scaled by badge activity
-- Occupancy Thresholds: Over 90% occupancy triggers "Over Threshold" warning
-- Electricity Costs: Average $/kWh set per city
-- Meeting Room Booking: Higher utilization on weekdays
-- Environmental Impact: Calculated from occupancy-driven energy use
-- Employee Turnover: Incorporated into Social ESG metrics
+---
 
-### Simulated Advanced Analysis:
-- Occupancy Threshold Monitoring
-- Daily Energy Cost Estimates
-- Future Occupancy Predictions
-- Hybrid Work Cost Savings Simulation
-- Office Consolidation Risk Identification
-- Strategic Resource Allocation Modeling
+## 🔬 Simulation Logic
 
-### Files Generated:
-- *_employees.csv: Employee directories for each city
-- *_badge_data.csv: Badge swipes with multiple doors
-- *_meeting_room_utilization.csv: Meeting room usage data
-- *_lease_market_data.csv: Lease and vacancy data
-- *_esg_metrics.csv: ESG metrics per city
-- occupancy_energy_analysis_v2.csv: Occupancy % and daily energy costs
+### 🛠️ Assumptions:
+- Badge rates, entry/exit ratios, and door prioritization
+- Energy tied to badge activity per seat
+- Over 90% occupancy triggers alerts
+- City-based cost models and energy prices
+- Realistic meeting room booking and ESG scoring
 
-## AI Agent Capabilities
+### 📈 Analysis Scenarios:
+- Threshold Monitoring & Warnings
+- Daily Energy Forecasts
+- Future Occupancy Modeling
+- Hybrid Work Cost Simulations
+- Space Consolidation Risk Detection
 
-AI Agent can now support:
-- Real-time Reporting
-- Occupancy Forecasting
-- Energy Forecasting
-- Strategic Space Planning
-- ESG Recommendations
+### 🗂️ Output Files:
+- `*_employees.csv`, `*_badge_data.csv`, `*_meeting_room_utilization.csv`
+- `*_lease_market_data.csv`, `*_esg_metrics.csv`
+- `occupancy_energy_analysis_v2.csv`
 
-## Sample Questions
+---
 
-### Occupancy & Space Utilization
-- "Which office had the highest average occupancy in April 2025?"
-- "How many days did Philadelphia exceed safe occupancy thresholds?"
-- "Predict which offices will face over-capacity issues by end of next quarter."
+## 🤖 AI Agent Capabilities
 
-### Energy Cost Analysis
-- "Which city has the highest average daily energy cost?"
-- "How much are we spending annually on energy in the Los Angeles office?"
-- "Predict the total energy cost for the NYC office for the next 6 months."
+- 📊 Real-Time Reporting
+- 🔮 Forecasting Occupancy & Energy
+- 🧩 ESG Strategy Recommendations
+- 🧠 Strategic Planning Assistance
+- 📉 Cost Optimization
 
-### ESG and Environmental Impact
-- "Which office has the most environmentally friendly performance based on energy usage?"
-- "Where could implementing stricter occupancy policies reduce energy costs the most?"
+---
 
-### Strategic Office Planning
-- "Which city would benefit most from downsizing office space based on under-utilization?"
-- "If we relocated 25% of New York staff to Miami, what would be the estimated occupancy impact?"
+## 🧠 Sample Questions
 
-### Badge & Employee Data
-- "How many employees work in the Los Angeles office?"
-- "What is the badge utilization rate in Chicago compared to NYC?"
-- "Which city office has the highest employee count?"
-- "How does employee turnover rate compare between Philadelphia and Miami?"
-- "What is the average workforce diversity percentage across all offices?"
+### 🔎 Occupancy & Planning
+- “Which office had the highest average occupancy in April 2025?”
+- “Predict which offices will exceed capacity thresholds next month.”
 
-### Office Space & Facilities
-- "What is the meeting room utilization rate in Los Angeles on weekdays?"
-- "Which city has the highest meeting room utilization on weekends?"
-- "What is the vacancy rate for the NYC office?"
-- "How does office space cost per square foot in Philadelphia compare to the national average?"
-- "What is the total square footage of our lease in Los Angeles?"
+### ⚡ Energy Cost Analysis
+- “Which city has the highest average energy cost?”
+- “Predict total energy cost in NYC for the next 6 months.”
 
-### ESG & Sustainability Metrics
-- "Which office has the highest energy consumption per seat?"
-- "What is the LEED certification level for the Chicago office?"
-- "How does water usage compare between the Miami and NYC offices?"
-- "What is the waste recycling rate in Philadelphia?"
-- "Which office has the best overall ESG metrics?"
+### 🌿 ESG Metrics
+- “Which office performs best environmentally?”
+- “Where would occupancy policies cut energy usage most?”
 
-### Financial & Lease Data
-- "When does the Los Angeles office lease end?"
-- "What is the build-out cost per square foot in NYC?"
-- "Which city has the highest rent per square foot?"
-- "What is the executive compensation ratio across all offices?"
-- "What is the total occupancy rate across all office locations?"
+### 🗺️ Strategic Decisions
+- “Which city should consolidate based on utilization?”
+- “What is the impact of relocating 25% of NYC staff to Miami?”
 
-## Ready-to-Use Prompts for AI Agent
+### 🛂 Badge & Employee Data
+- “How many employees are assigned to LA?”
+- “Compare badge utilization between Chicago and NYC.”
 
-### Predict Future Headcount Needs
-"Based on the current occupancy rates across all offices, predict which offices will need to grow their headcount in the next 6 months. Assume that offices operating above 80% average occupancy will require a 10% increase in seats to maintain safe thresholds. List the offices and estimated new headcounts."
+### 🏢 Facilities & Leasing
+- “What is the lease cost per square foot in Philadelphia?”
+- “What is our total leased square footage in LA?”
 
-### Recommend Office Consolidation
-"Analyze occupancy data and recommend if any offices should be consolidated due to underutilization. Flag any city where average occupancy is below 50%. Provide a consolidation recommendation and estimated annual savings if offices are closed."
+---
 
-### Predict Occupancy for Next Month
-"Using historical badge swipe and occupancy trends from April 2025, predict the expected average occupancy for each office in May 2025. Highlight any offices expected to exceed 85% average occupancy."
+## ✨ Ready-to-Use AI Prompts
 
-### Recommend Cost Savings Strategies
-"Review occupancy, lease costs, and energy costs for all offices. Recommend at least three cost savings strategies. Prioritize actions like moving underutilized offices to smaller spaces, shifting to hybrid models, or targeting energy efficiency improvements."
+### 📈 Predict Headcount Needs
+> “Based on current occupancy rates... estimate where we need more seats.”
 
-## Complex Multi-factor Questions
+### 🏢 Recommend Office Consolidation
+> “Identify underutilized offices below 50% and suggest closures.”
 
-- "Considering both ESG metrics and office costs, which location offers the best balance of sustainability and financial efficiency?"
-- "Based on badge utilization, meeting room usage, and employee count, which office is most efficiently using its space?"
-- "How does employee satisfaction correlate with office sustainability metrics across our locations?"
-- "Comparing lease terms, occupancy rates and forecasted growth, which office might need renegotiation first?"
-- "Based on all available metrics, which office location should be our model for future expansions?"
+### 🔮 Forecast Occupancy
+> “Predict May 2025 occupancy from April swipe patterns.”
+
+### 💸 Recommend Cost Savings
+> “Suggest 3 strategies based on lease, occupancy, and energy cost data.”
+
+---
+
+## 🧠 Complex Questions You Can Ask
+
+- “Which office best balances sustainability and financials?”
+- “Which space is most efficiently used?”
+- “What is the correlation between employee satisfaction and ESG scores?”
+- “Which lease needs renegotiation first?”
+- “Which office should be the model for future expansions?”
+
+---
+
+## 💡 Tip:
+Use `ai_agent_interactive_chat.py` for the best experience — including:
+- Reasoning steps
+- Confidence scoring
+- Fact checking
+- Insight generation
+- Auto-visualization
+
+---
+
+## 🧠 Prompt Design Philosophy
+
+Prompts are structured instructions to control what the AI does. In our system, they ensure:
+
+- Answers are **grounded in your documents**
+- Facts are **extracted with sources + confidence**
+- Claims are **verified** before being presented
+- Responses show **step-by-step reasoning**
+- AI finds **insights and summaries** automatically
+
+---
+
+## 🎯 Prompt Types
+
+| Prompt Type         | What It Does                                                        | Why It Matters for ELP                                      |
+|---------------------|---------------------------------------------------------------------|--------------------------------------------------------------|
+| Question Answering  | Answers using retrieved docs only                                   | Trustworthy, document-based answers                          |
+| Fact Extraction     | Pulls key facts + sources                                           | Helps teams digest data fast                                 |
+| Fact Verification   | Checks if a claim is true                                           | Prevents misinformation in business decisions                |
+| Self-Questioning    | AI asks itself clarifying questions                                 | Improves precision on vague queries                          |
+| Reasoning Steps     | Explains the steps it took to reach an answer                       | Transparent, auditable logic                                 |
+| Confidence Analysis | Scores each part of the response                                    | Tells us how much to trust the answer                        |
+| Insight Generation  | Surfaces patterns or outliers                                       | Suggests strategic actions                                   |
+| Document Summary    | Generates concise summaries of documents                           | Saves time on long ESG or facility files                     |
+| Cross-Compare       | Finds similarities and differences across documents                 | Enables deeper comparisons between cities/offices            |
+
+---
+
+🔥 Built to help Facilities and Management teams make better decisions — faster, smarter, and with confidence.

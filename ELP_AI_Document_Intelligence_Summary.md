@@ -1,3 +1,6 @@
+🔙 [Back to Project README](./README.md)
+
+
 # 🧠 AI-Powered Document Intelligence System
 
 This system powers an interactive AI assistant that helps workplace teams analyze and understand internal business documents such as office occupancy data, ESG reports, and facility metrics. It combines language model reasoning, document search, and data intelligence into one user-friendly experience.
@@ -80,7 +83,7 @@ AI responses are:
 
 ---
 
-## 🏁 Why This Matters for ELP/WLP
+## 🏁 Why This Matters for ELP
 
 - Enables **data-driven decisions** for office planning and ESG strategy.
 - Reduces manual review by surfacing **key facts and patterns** automatically.
