@@ -1,26 +1,54 @@
-OPENAI_API_KEY: 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
+# Document Q&A System with LangChain, LangGraph and Lambda Labs
 
-https://ai-documentcompare-poc490709415051.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2025-01-01-preview
-10BlITrqL1qtqbvrQqjmhwNyogM22xhLpEu0j4UKTVuADVJR3XmUJQQJ99BCACYeBjFXJ3w3AAAAACOGPMfK
+This system allows you to ingest documents and ask questions about them using LangChain, LangGraph, and Lambda Labs API.
 
+## Setup
 
-AZURE_AI_SERVICES_KEY: 10BlITrqL1qtqbvrQqjmhwNyogM22xhLpEu0j4UKTVuADVJR3XmUJQQJ99BCACYeBjFXJ3w3AAAAACOGPMfK
-AZURE_AI_SERVICES_ENDPOINT: https://ai-documentcompare-poc490709415051.openai.azure.com/
-AZURE_AI_SERVICES_REGION: eastus
+1. Install the required packages:
+   python3 -m venv .venv && source .venv/bin/activate
+   ```
+   pip install -r requirements.txt
+   ```
 
+2. Make sure your documents are placed in the `documents/` folder.
 
-LANGCHAIN API
-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
+3. Run the document ingestion process:
+   ```
+   python ingest_documents.py
+   ```
 
-LambdaLabs API
-secret_langchain-api_f5317003614d4426ad833ba9c3dbcdfe.hamV6E06g98LET6AKa2guKRpQV6TXSbJ
+## Usage
 
- http://localhost:8000/agent/playground
+You can ask questions about your documents in two ways:
 
-deactivate
-rm -rf venv
-python3 -m venv .venv && source .venv/bin/activate
-python3.11 -m venv .venv && source .venv/bin/activate
-python -m pip install --upgrade pip
-pip install -r requirements.txt
-uvicorn AzureOpenAI_Run:app --reload
+### Using the ask_question.py script
+
+```bash
+./ask_question.py "Your question about the documents?"
+```
+
+For example:
+```bash
+./ask_question.py "What was the average meeting room utilization in NYC?"
+```
+
+### Using the qa_system.py directly
+
+Edit the question in `qa_system.py` and run:
+```bash
+python qa_system.py
+```
+
+## System Components
+
+- `ingest_documents.py`: Processes documents and creates a vector database
+- `qa_system.py`: Main system that handles retrieval and question answering
+- `ask_question.py`: Command-line interface for asking questions
+
+## Sample Questions
+
+- "How many employees work in the Philadelphia office?"
+- "What is the lease term for the Los Angeles office?"
+- "What are the ESG metrics for the Miami office?"
+- "Compare meeting room utilization rates across all cities."
+- "Which office has the highest energy consumption?"

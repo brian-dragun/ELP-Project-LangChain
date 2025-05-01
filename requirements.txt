@@ -14,6 +14,7 @@ chromadb
 # Data processing
 pydantic
 requests
+python-dotenv
 
 # Data visualization and analysis (new)
 pandas

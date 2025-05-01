@@ -34,4 +34,5 @@ faiss_index/
 
 # System
 .DS_Store
-Thumbs.db
+Thumbs.db.env
+.env.backup
