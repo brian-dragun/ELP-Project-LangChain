@@ -36,29 +36,14 @@ This project includes a comprehensive simulation of corporate office behaviors a
    pip install -r requirements.txt
    ```
 
-2. Make sure your documents are placed in the `documents/` folder.
+2. Make sure documents are placed in the `documents/` folder.
 
 3. Set up environment variables for API keys and configuration:
    - Create a `.env` file in the project root
-   - Add your API keys and configuration settings
+   - Add API keys and configuration settings
    - See the `.env.example` file for required variables
 
 ## Usage
-
-You can ask questions about your documents in two ways:
-
-### Using the ask_question.py script
-
-```bash
-./ask_question.py "Your question about the documents?"
-```
-
-For example:
-```bash
-./ask_question.py "What was the average meeting room utilization in NYC?"
-```
-
-Note: The ai_agent will automatically ingest documents when needed.
 
 ### Using the ai_agent.py directly
 
@@ -66,8 +51,9 @@ Edit the question in `ai_agent.py` and run:
 ```bash
 python ai_agent.py
 ```
+Note: The ai_agent will automatically ingest documents when needed.
 
-### Interactive Chat (v3)
+### Interactive Chat
 
 For a more interactive experience, use the v3 interactive chat:
 ```bash
@@ -113,7 +99,7 @@ python ai_agent_interactive_chat.py
 
 ## AI Agent Capabilities
 
-Your AI Agent can now support:
+AI Agent can now support:
 - Real-time Reporting
 - Occupancy Forecasting
 - Energy Forecasting
@@ -168,7 +154,7 @@ Your AI Agent can now support:
 - "What is the executive compensation ratio across all offices?"
 - "What is the total occupancy rate across all office locations?"
 
-## Ready-to-Use Prompts for Your AI Agent
+## Ready-to-Use Prompts for AI Agent
 
 ### Predict Future Headcount Needs
 ```

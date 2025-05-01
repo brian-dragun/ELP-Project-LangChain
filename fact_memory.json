@@ -593,5 +593,152 @@
     "confidence": 1.0,
     "timestamp": "2025-05-01T14:43:00.476376",
     "verified": false
+  },
+  {
+    "fact": "The Philadelphia office has 500 employees.",
+    "source": "First document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:03:12.076108",
+    "verified": false
+  },
+  {
+    "fact": "The occupancy rate in the Philadelphia office is consistently 65%.",
+    "source": "Second document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:03:12.076125",
+    "verified": false
+  },
+  {
+    "fact": "The Alpha Tower in Philadelphia has an occupancy rate of 75%.",
+    "source": "Third document (Office City VacancyRate OccupancyRate table)",
+    "confidence": 0.8,
+    "timestamp": "2025-05-01T15:03:12.076129",
+    "verified": false
+  },
+  {
+    "fact": "The number of employees in the Philadelphia office can be directly obtained from the first document.",
+    "source": "First document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:03:12.076132",
+    "verified": false
+  },
+  {
+    "fact": "There is no other data point that directly states the number of employees in the Philly office.",
+    "source": "All documents",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:03:12.076134",
+    "verified": false
+  },
+  {
+    "fact": "The occupancy rate and number of employees are related but distinct metrics.",
+    "source": "All documents",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:03:12.076137",
+    "verified": false
+  },
+  {
+    "fact": "To estimate the number of people present in the Philly office, we can use the occupancy rate (65%) and the total number of employees (500).",
+    "source": "First and second documents",
+    "confidence": 0.9,
+    "timestamp": "2025-05-01T15:03:12.076140",
+    "verified": false
+  },
+  {
+    "fact": "Chicago has a higher MeetingRoomUtilizationWeekdays% (68%) compared to New York City (65%).**",
+    "source": "Comparative analysis of Chicago and New York City data",
+    "confidence": 0.95,
+    "timestamp": "2025-05-01T15:06:04.810898",
+    "verified": false
+  },
+  {
+    "fact": "New York City has a significantly higher EnergyConsumptionkWhPerSeatPerYear (2800) compared to Chicago (2300).**",
+    "source": "Comparative analysis of Chicago and New York City data",
+    "confidence": 0.95,
+    "timestamp": "2025-05-01T15:06:04.810913",
+    "verified": false
+  },
+  {
+    "fact": "Both cities have a WhistleblowerProgram in place.**",
+    "source": "Chicago and New York City data",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:06:04.810917",
+    "verified": false
+  },
+  {
+    "fact": "Chicago has a higher BadgeUtilizationRate% (62%) compared to New York City (56%).**",
+    "source": "Comparative analysis of Chicago and New York City data",
+    "confidence": 0.95,
+    "timestamp": "2025-05-01T15:06:04.810919",
+    "verified": false
+  },
+  {
+    "fact": "New York City has a higher WaterUsageGallonsPerSeatPerYear (2500) compared to Chicago (1250).**",
+    "source": "Comparative analysis of Chicago and New York City data",
+    "confidence": 0.95,
+    "timestamp": "2025-05-01T15:06:04.810922",
+    "verified": false
+  },
+  {
+    "fact": "Chicago and New York City have the same ExecutiveCompensationRatio (20:1).**",
+    "source": "Comparative analysis of Chicago and New York City data",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:06:04.810925",
+    "verified": false
+  },
+  {
+    "fact": "New York City has a higher OfficeSpaceCostPerSF (75) compared to Chicago (38.69).**",
+    "source": "Comparative analysis of Chicago and New York City data",
+    "confidence": 0.95,
+    "timestamp": "2025-05-01T15:06:04.810927",
+    "verified": false
+  },
+  {
+    "fact": "The Philadelphia office has 500 employees.**",
+    "source": "Philadelphia table, \"NumberOfEmployees\" column",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:09:38.496972",
+    "verified": false
+  },
+  {
+    "fact": "The Miami office has the highest BadgeUtilizationRate% among the offices with a relatively low number of employees (22).**",
+    "source": "Miami table, \"BadgeUtilizationRate%\" column",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:09:38.496986",
+    "verified": false
+  },
+  {
+    "fact": "Los Angeles has the highest WasteRecyclingRate% of 76.4%.**",
+    "source": "Los Angeles table, \"WasteRecyclingRate%\" column",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:09:38.496989",
+    "verified": false
+  },
+  {
+    "fact": "Philadelphia has a Gold LEEDCertification and relatively high EnergyConsumptionkWhPerSeatPerYear.**",
+    "source": "Philadelphia table, \"LEEDCertification\" and \"EnergyConsumptionkWhPerSeatPerYear\" columns",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:09:38.496991",
+    "verified": false
+  },
+  {
+    "fact": "All offices have a high EthicsTrainingCompletionRate% of 95% or more (for some cities, it's exactly 95%).**",
+    "source": "Various tables, \"EthicsTrainingCompletionRate%\" column",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:09:38.496994",
+    "verified": false
+  },
+  {
+    "fact": "The Los Angeles and Chicago offices have a relatively lower EnergyConsumptionkWhPerSeatPerYear compared to other cities like Philadelphia and New York City.**",
+    "source": "Various tables, \"EnergyConsumptionkWhPerSeatPerYear\" column",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:09:38.496996",
+    "verified": false
+  },
+  {
+    "fact": "New York City has the highest EnergyConsumptionkWhPerSeatPerYear and WaterUsageGallonsPerSeatPerYear, but it also has a significant number of employees (123).**",
+    "source": "New York City table, \"EnergyConsumptionkWhPerSeatPerYear\" and \"WaterUsageGallonsPerSeatPerYear\" columns",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T15:09:38.496999",
+    "verified": false
   }
 ]
