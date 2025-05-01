@@ -33,7 +33,7 @@ A realistic simulation of workplace behaviors across major U.S. cities — desig
 
 ## ⚙️ AI Agent Setup
 
-### 🧼 Step 0: Clean Environment (if needed)
+### 🧼 Clean Environment (if needed)
 ```bash
 rm -rf .venv
 ```
