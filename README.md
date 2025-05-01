@@ -46,7 +46,7 @@ pip install -r requirements.txt
 ```
 
 ### 📁 Step 2: Add Documents
-Place your files in the `documents/` folder.
+Place files in the `documents/` folder.
 
 ### 🔐 Step 3: Set Configuration
 Create a `.env` file in the root directory. See `.env.example` for required keys.
@@ -180,7 +180,7 @@ Use `ai_agent_interactive_chat.py` for the best experience — including:
 
 Prompts are structured instructions to control what the AI does. In our system, they ensure:
 
-- Answers are **grounded in your documents**
+- Answers are **grounded in ingested documents**
 - Facts are **extracted with sources + confidence**
 - Claims are **verified** before being presented
 - Responses show **step-by-step reasoning**
