@@ -21,6 +21,11 @@ This project includes a comprehensive simulation of corporate office behaviors a
 - Energy Consumption
 - ESG Metrics
 
+## 📘 Related Documentation
+
+- [AI Document Intelligence Summary](./ELP_AI_Document_Intelligence_Summary.md) – Overview of how our document-aware AI system works.
+
+
 ## Setup
 0. Uninstall environment if needed:
    ```bash
