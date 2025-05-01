@@ -55,7 +55,7 @@ Note: The ai_agent will automatically ingest documents when needed.
 
 ### Interactive Chat
 
-For a more interactive experience, use the v3 interactive chat:
+For a more interactive experience, use the interactive chat:
 ```bash
 python ai_agent_interactive_chat.py
 ```
@@ -157,24 +157,16 @@ AI Agent can now support:
 ## Ready-to-Use Prompts for AI Agent
 
 ### Predict Future Headcount Needs
-```
 "Based on the current occupancy rates across all offices, predict which offices will need to grow their headcount in the next 6 months. Assume that offices operating above 80% average occupancy will require a 10% increase in seats to maintain safe thresholds. List the offices and estimated new headcounts."
-```
 
 ### Recommend Office Consolidation
-```
 "Analyze occupancy data and recommend if any offices should be consolidated due to underutilization. Flag any city where average occupancy is below 50%. Provide a consolidation recommendation and estimated annual savings if offices are closed."
-```
 
 ### Predict Occupancy for Next Month
-```
 "Using historical badge swipe and occupancy trends from April 2025, predict the expected average occupancy for each office in May 2025. Highlight any offices expected to exceed 85% average occupancy."
-```
 
 ### Recommend Cost Savings Strategies
-```
 "Review occupancy, lease costs, and energy costs for all offices. Recommend at least three cost savings strategies. Prioritize actions like moving underutilized offices to smaller spaces, shifting to hybrid models, or targeting energy efficiency improvements."
-```
 
 ## Complex Multi-factor Questions
 
