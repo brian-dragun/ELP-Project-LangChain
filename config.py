@@ -22,6 +22,8 @@ class Config:
     
     # Lambda Labs settings
     LAMBDA_API_KEY = os.getenv("LAMBDA_API_KEY")
+    LAMBDA_API_BASE = os.getenv("LAMBDA_API_BASE")
+    LAMBDA_MODEL = os.getenv("LAMBDA_MODEL")
     
     @classmethod
     def get_all_configs(cls) -> Dict[str, Any]:

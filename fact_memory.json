@@ -537,5 +537,61 @@
     "confidence": 1.0,
     "timestamp": "2025-05-01T14:14:54.578729",
     "verified": false
+  },
+  {
+    "fact": "There are 5 offices listed in the first document.**",
+    "source": "Office City VacancyRate OccupancyRate document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:43:00.476342",
+    "verified": false
+  },
+  {
+    "fact": "The cities mentioned in the detailed documents are Los Angeles, New York City, Miami, and Chicago.**",
+    "source": "City-specific documents",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:43:00.476358",
+    "verified": false
+  },
+  {
+    "fact": "The number of employees varies across the cities mentioned in the detailed documents.**",
+    "source": "City-specific documents",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:43:00.476362",
+    "verified": false
+  },
+  {
+    "fact": "The presence of detailed documents for 4 cities implies there are at least 4 offices or locations being analyzed in depth.**",
+    "source": "City-specific documents",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:43:00.476365",
+    "verified": false
+  },
+  {
+    "fact": "Not all cities mentioned in the detailed documents are listed in the first document.**",
+    "source": "Comparison between the first document and City-specific documents",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:43:00.476368",
+    "verified": false
+  },
+  {
+    "fact": "The total number of offices can be inferred to be at least 5 based on the first document.**",
+    "source": "Office City VacancyRate OccupancyRate document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:43:00.476371",
+    "verified": false
+  },
+  {
+    "fact": "There's no direct indication that the 4 cities in the detailed documents are the only offices.**",
+    "source": "City-specific documents and Office City VacancyRate OccupancyRate document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:43:00.476373",
+    "verified": false
+  },
+  {
+    "fact": "There are 5 offices listed.**",
+    "source": "Office City VacancyRate OccupancyRate document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T14:43:00.476376",
+    "verified": false
   }
 ]

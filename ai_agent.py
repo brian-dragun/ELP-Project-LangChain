@@ -13,6 +13,7 @@ import sys
 from typing import Any, Dict, List, Mapping, Optional, TypedDict
 from langchain.callbacks.manager import CallbackManagerForLLMRun
 from langchain_core.language_models.llms import LLM
+from config import Config
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -77,9 +78,14 @@ class LambdaLabsLLM(LLM):
             raise e
 
 # Set Lambda Labs settings
-LAMBDA_API_KEY = "secret_langchain-api_f5317003614d4426ad833ba9c3dbcdfe.hamV6E06g98LET6AKa2guKRpQV6TXSbJ"
-LAMBDA_API_BASE = "https://api.lambda.ai/v1"
-LAMBDA_MODEL = "llama-4-maverick-17b-128e-instruct-fp8"
+LAMBDA_API_KEY = Config.LAMBDA_API_KEY
+LAMBDA_API_BASE = Config.LAMBDA_API_BASE
+LAMBDA_MODEL = Config.LAMBDA_MODEL
+
+# Validate config
+if not LAMBDA_API_KEY:
+    logger.error("Lambda API key is missing from configuration")
+    raise ValueError("Lambda API key is required")
 
 logger.info(f"Initializing Lambda Labs LLM with model: {LAMBDA_MODEL}")
 
