@@ -6,6 +6,7 @@ langgraph
 langchain-chroma
 langchain-huggingface
 langchain-openai
+langsmith
 
 # Vector storage and embeddings
 sentence-transformers
@@ -15,9 +16,6 @@ chromadb
 pydantic
 requests
 python-dotenv
-
-# Lambda Labs integration
-lambda-client
 
 # Data visualization and analysis (new)
 pandas

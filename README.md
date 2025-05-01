@@ -22,10 +22,17 @@ This project includes a comprehensive simulation of corporate office behaviors a
 - ESG Metrics
 
 ## Setup
+0. Uninstall environment if needed:
+   ```bash
+   rm -rf .venv
+   ```
 
 1. Install the required packages:
    ```bash
    python3 -m venv .venv && source .venv/bin/activate
+   pip --version
+   python -m pip install --upgrade pip
+   python -m pip install --upgrade pip setuptools
    pip install -r requirements.txt
    ```
 
