@@ -4,11 +4,6 @@
 
 ELP Document Intelligence is an advanced RAG (Retrieval Augmented Generation) system built with LangChain that enables intelligent analysis of corporate real estate documents. The system provides powerful document processing capabilities with a conversational interface, making it easy to extract insights from complex datasets across multiple office locations.
 
-## 📘 Related Documentation
-
-- 📄 [AI Document Intelligence Summary](./ELP_AI_Document_Intelligence_Summary.md) – Full system architecture, prompt design, and capability breakdown.
-
-
 ## 🌐 Enterprise Office Utilization & ESG Simulation
 
 A realistic simulation of workplace behaviors across major U.S. cities — designed for strategic decision-making, space optimization, and ESG monitoring in an insurance enterprise.
@@ -27,6 +22,10 @@ A realistic simulation of workplace behaviors across major U.S. cities — desig
 - 🏢 Lease & Market Data
 - ⚡ Energy Consumption
 - 🌱 ESG Metrics
+
+## 📘 Related Documentation
+
+- 📄 [AI Document Intelligence Summary](./ELP_AI_Document_Intelligence_Summary.md) – Full system architecture, prompt design, and capability breakdown.
 
 ## Key Features
 
