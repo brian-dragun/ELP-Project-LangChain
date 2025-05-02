@@ -22,6 +22,25 @@ The ELP Document Intelligence System is built on a flexible, modular architectur
 └──────────────────┘                             └──────────────────┘
 ```
 
+### LLM Models Used
+
+The system leverages Lambda Labs' API to access powerful language models:
+
+**Primary Model:**
+- The primary model is specified via the `LAMBDA_MODEL` environment variable
+- Default model: `llama-4-maverick-17b-128e-instruct-fp8`
+
+**Fallback Chain:**
+If the primary model becomes unavailable, the system automatically falls back to these models in order:
+1. `llama-4-maverick-17b-128e-instruct-fp8` - High-performance Llama 4 model optimized for general tasks
+2. `llama-4-geopolitics-17b-128e-instruct-fp8` - Specialized Llama 4 variant with geopolitical knowledge
+3. `mistral-large-2402-2024-04-02` - Mistral's large model with strong reasoning capabilities
+4. `claude-3-opus-20240229` - Anthropic's Claude 3 Opus model
+5. `gpt-4-turbo` - OpenAI's advanced GPT-4 model
+6. `gpt-3.5-turbo` - OpenAI's more cost-efficient model (last resort)
+
+This resilient model architecture ensures the system remains operational even during API outages or rate limiting events.
+
 ### Core Components
 
 1. **Document Processing Pipeline**
