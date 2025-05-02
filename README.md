@@ -1,8 +1,8 @@
-# 🏢📊 Document Q&A System with LangChain, LangGraph & Lambda Labs
+# ELP Document Intelligence System
 
-This project enables powerful AI-driven Q&A and analytics over enterprise documents using **LangChain**, **LangGraph**, and a **Lambda Labs-hosted LLM**.
+## Overview
 
----
+ELP Document Intelligence is an advanced RAG (Retrieval Augmented Generation) system built with LangChain that enables intelligent analysis of corporate real estate documents. The system provides powerful document processing capabilities with a conversational interface, making it easy to extract insights from complex datasets across multiple office locations.
 
 ## 🌐 Enterprise Office Utilization & ESG Simulation
 
@@ -23,200 +23,111 @@ A realistic simulation of workplace behaviors across major U.S. cities — desig
 - ⚡ Energy Consumption
 - 🌱 ESG Metrics
 
----
+## Key Features
 
-## 📘 Related Documentation
+- **Document-Aware Chat System**: Natural language interface to query documents across multiple office locations
+- **Advanced Reasoning**: Step-by-step reasoning with confidence scoring
+- **Self-Questioning**: AI-generated clarifying questions to improve answer accuracy
+- **Fact Extraction & Verification**: Automatically extracts and verifies key facts from documents
+- **Pattern Detection**: Extract structured data like dates, currencies, and percentages
+- **Data Visualization**: Generate charts and graphs from document data
+- **Cross-Document Analysis**: Compare information across multiple documents
+- **Auto-Summarization**: Generate concise summaries of documents
+- **Incremental Document Processing**: Efficiently update the vector database when documents change
+- **LangSmith Integration**: Request tracking and feedback for continuous improvement
 
-- 📄 [AI Document Intelligence Summary](./ELP_AI_Document_Intelligence_Summary.md) – Full system architecture, prompt design, and capability breakdown.
+## Architecture
 
----
+The system is built with a modular architecture:
 
-## ⚙️ AI Agent Setup
+1. **Document Ingestion**: Process documents into a vector database (ChromaDB)
+2. **AI Agent**: Core LLM with reasoning capabilities
+3. **Reasoning Service**: Handle complex multi-step reasoning processes
+4. **Interactive Chat**: User-friendly interface with chat history
+5. **Document Intelligence**: Data extraction, visualization, and insight generation
+6. **Fact Memory**: Store and retrieve extracted facts
 
-### 🧼 Clean Environment (if needed)
+## Installation
+
+### Prerequisites
+
+- Python 3.9+ 
+- Pipenv or Virtualenv (recommended)
+- API key for an LLM provider like Lambda Labs
+
+### Setup
+
+1. Clone the repository
 ```bash
-rm -rf .venv
+git clone https://github.com/yourusername/ELP-Project-LangChain.git
+cd ELP-Project-LangChain
 ```
 
-### 📦 Step 1: Install Dependencies
+2. Create a virtual environment and install dependencies
 ```bash
-python3 -m venv .venv && source .venv/bin/activate
-python -m pip install --upgrade pip setuptools
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 📁 Step 2: Add Documents
-Place files in the `documents/` folder.
-
-### 🔐 Step 3: Set Configuration
-Create a `.env` file in the root directory. See `.env.example` for required keys.
-
----
-
-## 🚀 Usage
-
-### 🧠 Run Basic Q&A Agent
-```bash
-python ai_agent.py
+3. Create a `.env` file with your API keys:
+```
+LAMBDA_API_KEY=your_lambda_api_key_here
+LANGCHAIN_API_KEY=your_langchain_api_key_here
 ```
 
-### 💬 Launch Interactive Chat
+4. Ingest documents into the vector database:
+```bash
+python ingest_documents.py
+```
+
+## Usage
+
+### Starting the Chat Interface
+
 ```bash
 python ai_agent_interactive_chat.py
 ```
 
----
-
-## 🧩 System Components
-
-| File                          | Description                                                |
-|-------------------------------|------------------------------------------------------------|
-| `ai_agent.py`                 | Core LangGraph agent for document retrieval + answering    |
-| `ai_agent_interactive_chat.py`| Interactive chat interface with tools + memory             |
-| `ingest_documents.py`         | Utility to pre-process and embed documents (optional)      |
-| `ask_question.py`             | CLI tool to ask a single question                          |
-| `config.py`                   | Stores API keys and configuration                          |
-
----
-
-## 🔬 Simulation Logic
-
-### 🛠️ Assumptions:
-- Badge rates, entry/exit ratios, and door prioritization
-- Energy tied to badge activity per seat
-- Over 90% occupancy triggers alerts
-- City-based cost models and energy prices
-- Realistic meeting room booking and ESG scoring
-
-### 📈 Analysis Scenarios:
-- Threshold Monitoring & Warnings
-- Daily Energy Forecasts
-- Future Occupancy Modeling
-- Hybrid Work Cost Simulations
-- Space Consolidation Risk Detection
-
-### 🗂️ Output Files:
-- `*_employees.csv`, `*_badge_data.csv`, `*_meeting_room_utilization.csv`
-- `*_lease_market_data.csv`, `*_esg_metrics.csv`
-- `occupancy_energy_analysis_v2.csv`
-
----
-
-## 🤖 AI Agent Capabilities
-
-- 📊 Real-Time Reporting
-- 🔮 Forecasting Occupancy & Energy
-- 🧩 ESG Strategy Recommendations
-- 🧠 Strategic Planning Assistance
-- 📉 Cost Optimization
-
----
-
 ## 🧠 Sample Questions
 
 ### 🔎 Occupancy & Planning
-- “Which office had the highest average occupancy in April 2025?”
-- “Predict which offices will exceed capacity thresholds next month.”
+- "Which office had the highest average occupancy in April 2025?"
+- "Predict which offices will exceed capacity thresholds next month."
 
 ### ⚡ Energy Cost Analysis
-- “Which city has the highest average energy cost?”
-- “Predict total energy cost in NYC for the next 6 months.”
+- "Which city has the highest average energy cost?"
+- "Predict total energy cost in NYC for the next 6 months."
 
 ### 🌿 ESG Metrics
-- “Which office performs best environmentally?”
-- “Where would occupancy policies cut energy usage most?”
+- "Which office performs best environmentally?"
+- "Where would occupancy policies cut energy usage most?"
 
 ### 🗺️ Strategic Decisions
-- “Which city should consolidate based on utilization?”
-- “What is the impact of relocating 25% of NYC staff to Miami?”
+- "Which city should consolidate based on utilization?"
+- "What is the impact of relocating 25% of NYC staff to Miami?"
 
 ### 🛂 Badge & Employee Data
-- “How many employees are assigned to LA?”
-- “Compare badge utilization between Chicago and NYC.”
+- "How many employees are assigned to LA?"
+- "Compare badge utilization between Chicago and NYC."
 
 ### 🏢 Facilities & Leasing
-- “What is the lease cost per square foot in Philadelphia?”
-- “What is our total leased square footage in LA?”
-
----
+- "What is the lease cost per square foot in Philadelphia?"
+- "What is our total leased square footage in LA?"
 
 ## ✨ Ready-to-Use AI Prompts
 
 ### 📈 Predict Headcount Needs
-> “Based on current occupancy rates... estimate where we need more seats.”
+> "Based on current occupancy rates... estimate where we need more seats."
 
 ### 🏢 Recommend Office Consolidation
-> “Identify underutilized offices below 50% and suggest closures.”
+> "Identify underutilized offices below 50% and suggest closures."
 
 ### 🔮 Forecast Occupancy
-> “Predict May 2025 occupancy from April swipe patterns.”
+> "Predict May 2025 occupancy from April swipe patterns."
 
 ### 💸 Recommend Cost Savings
-> “Suggest 3 strategies based on lease, occupancy, and energy cost data.”
-
----
-
-## 🧠 Complex Questions You Can Ask
-
-- “Which office best balances sustainability and financials?”
-- “Which space is most efficiently used?”
-- “What is the correlation between employee satisfaction and ESG scores?”
-- “Which lease needs renegotiation first?”
-- “Which office should be the model for future expansions?”
-
----
-
-## 💡 Tip:
-Use `ai_agent_interactive_chat.py` for the best experience — including:
-- Reasoning steps
-- Confidence scoring
-- Fact checking
-- Insight generation
-- Auto-visualization
-
----
-
-## 🧠 Prompt Design Philosophy
-
-Prompts are structured instructions to control what the AI does. In our system, they ensure:
-
-- Answers are **grounded in ingested documents**
-- Facts are **extracted with sources + confidence**
-- Claims are **verified** before being presented
-- Responses show **step-by-step reasoning**
-- AI finds **insights and summaries** automatically
-
----
-
-## 🎯 Prompt Types
-
-| Prompt Type         | What It Does                                                        | Why It Matters for ELP                                      |
-|---------------------|---------------------------------------------------------------------|--------------------------------------------------------------|
-| Question Answering  | Answers using retrieved docs only                                   | Trustworthy, document-based answers                          |
-| Fact Extraction     | Pulls key facts + sources                                           | Helps teams digest data fast                                 |
-| Fact Verification   | Checks if a claim is true                                           | Prevents misinformation in business decisions                |
-| Self-Questioning    | AI asks itself clarifying questions                                 | Improves precision on vague queries                          |
-| Reasoning Steps     | Explains the steps it took to reach an answer                       | Transparent, auditable logic                                 |
-| Confidence Analysis | Scores each part of the response                                    | Tells us how much to trust the answer                        |
-| Insight Generation  | Surfaces patterns or outliers                                       | Suggests strategic actions                                   |
-| Document Summary    | Generates concise summaries of documents                           | Saves time on long ESG or facility files                     |
-| Cross-Compare       | Finds similarities and differences across documents                 | Enables deeper comparisons between cities/offices            |
-
----
-
-# Document Intelligence System
-
-An AI-powered system for analyzing documents and answering questions about office data across multiple locations.
-
-## Features
-
-- **Document Analysis**: Extract insights, patterns, and data from various document formats
-- **Natural Language Interface**: Ask questions in plain language about your documents
-- **Interactive Chat**: Have continuous conversations with context and memory
-- **Data Visualization**: Auto-generate charts and graphs from your data
-- **Fact Tracking**: Automatically extract and remember facts from documents
-- **Cross-Document Intelligence**: Compare and analyze data across multiple sources
-- **LangSmith Integration**: Performance tracking and evaluation
+> "Suggest 3 strategies based on lease, occupancy, and energy cost data."
 
 ## Available Commands
 
@@ -275,15 +186,57 @@ When using the `extract` command, the following pattern types are available:
 - `time`: Find time values
 - `numeric`: Find any numeric values
 
-## Sample Questions
+## Advanced Features
 
-1. "How many employees work in the Los Angeles office?"
-2. "What is the badge utilization rate in Chicago compared to NYC?"
-3. "Which city has the highest meeting room utilization on weekends?"
-4. "What's the trend in energy usage across all offices over time?"
-5. "Compare the sustainability metrics of Chicago and Miami offices"
-6. "Extract all dates from the NYC lease document"
-7. "Summarize the ESG metrics across all locations"
+### Document Processing
+
+The system handles various document types including:
+- CSV files
+- PDFs
+- Text files
+- HTML documents
+- Markdown files
+- Excel spreadsheets
+- Word documents
+
+### Incremental Updates
+
+The system uses a hash-based approach to detect document changes and update the vector database incrementally, avoiding full reprocesses when only some files have changed.
+
+### Cross-Document Analysis
+
+Special processing is applied to documents like employee data to create cross-document insights that make it easy to compare data across offices.
+
+## 🧠 Prompt Design Philosophy
+
+Prompts are structured instructions that control what the AI does. In our system, they ensure:
+
+- Answers are **grounded in ingested documents**
+- Facts are **extracted with sources + confidence**
+- Claims are **verified** before being presented
+- Responses show **step-by-step reasoning**
+- AI finds **insights and summaries** automatically
+
+## Customization
+
+The system can be customized by modifying:
+
+- `config.py` - System configuration options
+- `ai_agent.py` - Core LLM integration 
+- `reasoning.py` - Reasoning service
+- Document loaders in `ingest_documents.py` for new document types
+
+## Future Improvements
+
+See `z_improvements.md` for a list of planned enhancements.
+
+## License
+
+This project is proprietary and confidential.
+
+## Contact
+
+For questions or support, please contact [your.email@example.com](mailto:your.email@example.com).
 
 ---
 
