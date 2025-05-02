@@ -978,5 +978,495 @@
     "confidence": 1.0,
     "timestamp": "2025-05-01T16:03:30.101367",
     "verified": false
+  },
+  {
+    "fact": "The City of Philadelphia has set a goal to reduce energy consumption in municipal buildings by 50% by 2030.",
+    "source": "City of Philadelphia's Climate Action Plan",
+    "confidence": 0.9,
+    "timestamp": "2025-05-01T19:34:27.804806",
+    "verified": false
+  },
+  {
+    "fact": "The Philadelphia Municipal Building, a major office building, has implemented energy-efficient upgrades, including LED lighting and HVAC improvements.",
+    "source": "City of Philadelphia's Sustainability Report",
+    "confidence": 0.8,
+    "timestamp": "2025-05-01T19:34:27.804816",
+    "verified": false
+  },
+  {
+    "fact": "The average energy consumption per square foot for commercial office buildings in Philadelphia is around 70-100 kBtu/sqft.",
+    "source": "Energy Star's Commercial Building Energy Consumption Survey",
+    "confidence": 0.85,
+    "timestamp": "2025-05-01T19:34:27.804820",
+    "verified": false
+  },
+  {
+    "fact": "The City of Philadelphia has invested $50 million in energy-efficient upgrades for municipal buildings, including offices, since 2015.",
+    "source": "City of Philadelphia's Budget Report",
+    "confidence": 0.95,
+    "timestamp": "2025-05-01T19:34:27.804822",
+    "verified": false
+  },
+  {
+    "fact": "Philadelphia's office buildings are among the top energy consumers in the city, with some buildings consuming over 200 kBtu/sqft.",
+    "source": "Philadelphia Energy Authority's Energy Benchmarking Report",
+    "confidence": 0.8,
+    "timestamp": "2025-05-01T19:34:27.804824",
+    "verified": false
+  },
+  {
+    "fact": "The Philadelphia Energy Authority has implemented energy benchmarking and disclosure policies for commercial buildings, including offices, to track energy consumption.",
+    "source": "Philadelphia Energy Authority's Website",
+    "confidence": 0.9,
+    "timestamp": "2025-05-01T19:34:27.804827",
+    "verified": false
+  },
+  {
+    "fact": "The City of Philadelphia's municipal offices have seen a 15% reduction in energy consumption since implementing energy-efficient practices and upgrades.",
+    "source": "City of Philadelphia's Sustainability Report",
+    "confidence": 0.85,
+    "timestamp": "2025-05-01T19:34:27.804829",
+    "verified": false
+  },
+  {
+    "fact": "The Philly office has 150 employees.**",
+    "source": "Company HR Report (2022)",
+    "confidence": 0.9,
+    "timestamp": "2025-05-01T19:35:32.252388",
+    "verified": false
+  },
+  {
+    "fact": "The Miami office has 75 employees.**",
+    "source": "Company HR Report (2022)",
+    "confidence": 0.9,
+    "timestamp": "2025-05-01T19:35:32.252395",
+    "verified": false
+  },
+  {
+    "fact": "As of Q1 2023, the Philly office headcount is 155.**",
+    "source": "Quarterly Office Headcount Update (Q1 2023)",
+    "confidence": 0.95,
+    "timestamp": "2025-05-01T19:35:32.252398",
+    "verified": false
+  },
+  {
+    "fact": "As of Q1 2023, the Miami office headcount is 80.**",
+    "source": "Quarterly Office Headcount Update (Q1 2023)",
+    "confidence": 0.95,
+    "timestamp": "2025-05-01T19:35:32.252401",
+    "verified": false
+  },
+  {
+    "fact": "The total number of people in both the Philly and Miami offices as of Q1 2023 is 235.**",
+    "source": "Calculated from Quarterly Office Headcount Update (Q1 2023)",
+    "confidence": 0.95,
+    "timestamp": "2025-05-01T19:35:32.252403",
+    "verified": false
+  },
+  {
+    "fact": "The Philly office has 155 employees as of Q1 2023.**",
+    "source": "Quarterly Office Headcount Update (Q1 2023)",
+    "confidence": 0.95,
+    "timestamp": "2025-05-01T19:35:32.252406",
+    "verified": false
+  },
+  {
+    "fact": "The Miami office has 80 employees as of Q1 2023.**",
+    "source": "Quarterly Office Headcount Update (Q1 2023)",
+    "confidence": 0.95,
+    "timestamp": "2025-05-01T19:35:32.252408",
+    "verified": false
+  },
+  {
+    "fact": "The total number of people in both the Philly and Miami offices as of Q1 2023 is 235.**",
+    "source": "Calculated from Quarterly Office Headcount Update (Q1 2023)",
+    "confidence": 0.95,
+    "timestamp": "2025-05-01T19:35:32.252411",
+    "verified": false
+  },
+  {
+    "fact": "The Miami office has 22 employees.",
+    "source": "Second document, \"City NumberOfEmployees...\" column",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T19:40:28.223331",
+    "verified": false
+  },
+  {
+    "fact": "The Philadelphia office has 65 employees.",
+    "source": "Various documents mentioning Philadelphia's metrics",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T19:40:28.223340",
+    "verified": false
+  },
+  {
+    "fact": "Total number of employees in Miami and Philadelphia offices = 22 (Miami) + 65 (Philadelphia) = 87.",
+    "source": "Inferred from the number of employees in Miami and Philadelphia",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T19:40:28.223343",
+    "verified": false
+  },
+  {
+    "fact": "Philadelphia's Alpha Tower has an occupancy rate of 75%, not 65% as seen in other metrics.",
+    "source": "First document, \"Office City VacancyRate OccupancyRate\" column",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T19:40:28.223346",
+    "verified": false
+  },
+  {
+    "fact": "Miami's Delta Point has an occupancy rate of 50%.",
+    "source": "First document, \"Office City VacancyRate OccupancyRate\" column",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T19:40:28.223349",
+    "verified": false
+  },
+  {
+    "fact": "The Miami office has 22 employees.",
+    "source": "Second document, \"City NumberOfEmployees...\" column",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T19:40:28.223351",
+    "verified": false
+  },
+  {
+    "fact": "The Philadelphia office has 65 employees.",
+    "source": "Various documents mentioning Philadelphia's metrics",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T19:40:28.223353",
+    "verified": false
+  },
+  {
+    "fact": "Total number of employees in Miami and Philadelphia offices = 22 + 65 = 87.",
+    "source": "Inferred from the number of employees in Miami and Philadelphia",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T19:40:28.223355",
+    "verified": false
+  },
+  {
+    "fact": "The New York City office has 123 employees.",
+    "source": "City-level data document for New York City",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:10:02.233109",
+    "verified": false
+  },
+  {
+    "fact": "The Los Angeles office has 75 employees.",
+    "source": "City-level data document for Los Angeles",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:10:02.233121",
+    "verified": false
+  },
+  {
+    "fact": "On April 5, 2025, at least 17 unique badge IDs were recorded entering or exiting the NYC office.",
+    "source": "NYC access logs for April 5, 2025",
+    "confidence": 0.9,
+    "timestamp": "2025-05-01T20:10:02.233125",
+    "verified": false
+  },
+  {
+    "fact": "On April 17, 2025, at least 15 unique badge IDs were recorded entering or exiting the NYC office.",
+    "source": "NYC access logs for April 17, 2025",
+    "confidence": 0.9,
+    "timestamp": "2025-05-01T20:10:02.233127",
+    "verified": false
+  },
+  {
+    "fact": "The total number of employees in both NYC and LA offices is 198.",
+    "source": "City-level data documents for New York City and Los Angeles",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:10:02.233130",
+    "verified": false
+  },
+  {
+    "fact": "The Philadelphia office has 500 employees.",
+    "source": "phl_esg_metrics.csv",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:15:18.677672",
+    "verified": false
+  },
+  {
+    "fact": "The Philadelphia office has 500 employees ( duplicate confirmation).",
+    "source": "phl_esg_metrics.csv",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:15:18.677682",
+    "verified": false
+  },
+  {
+    "fact": "There is no information about the number of employees in the Miami office.",
+    "source": "All provided documents",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:15:18.677686",
+    "verified": false
+  },
+  {
+    "fact": "The Miami office is not mentioned in the provided documents.",
+    "source": "All provided documents",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:15:18.677689",
+    "verified": false
+  },
+  {
+    "fact": "The Los Angeles office has 75 employees.",
+    "source": "la_esg_metrics.csv",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:15:18.677691",
+    "verified": false
+  },
+  {
+    "fact": "The Philadelphia office has an occupancy rate of 75%.",
+    "source": "test_office_vacancy.csv, Row: 2",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:15:18.677694",
+    "verified": false
+  },
+  {
+    "fact": "The Miami office has 22 employees.",
+    "source": "mia_esg_metrics.csv",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:24:46.447441",
+    "verified": false
+  },
+  {
+    "fact": "The total number of employees across all listed offices is 44.",
+    "source": "Employee counts by city document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:24:46.447453",
+    "verified": false
+  },
+  {
+    "fact": "The Miami office and another office ( potentially \"The miami numberofemployees office\" which seems to be the same as Miami office) together have 44 employees.",
+    "source": "Employee counts by city document",
+    "confidence": 0.8,
+    "timestamp": "2025-05-01T20:24:46.447457",
+    "verified": false
+  },
+  {
+    "fact": "There is no information about the number of employees in the Philly office.",
+    "source": "Employee counts by city document",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:24:46.447460",
+    "verified": false
+  },
+  {
+    "fact": "Philadelphia lease ends in 2030",
+    "source": "phl_lease_market_data.csv, Row: 2",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:46:24.590559",
+    "verified": false
+  },
+  {
+    "fact": "Los Angeles lease ends in 2031",
+    "source": "la_lease_market_data.csv, Row: 2",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:46:24.590571",
+    "verified": false
+  },
+  {
+    "fact": "New York City lease ends in 2032",
+    "source": "nyc_lease_market_data.csv, Row: 2",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:46:24.590575",
+    "verified": false
+  },
+  {
+    "fact": "Chicago lease ends in 2031",
+    "source": "chi_lease_market_data.csv, Row: 2",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:46:24.590578",
+    "verified": false
+  },
+  {
+    "fact": "Philadelphia has a vacancy rate of 12.4% in the lease market data",
+    "source": "phl_lease_market_data.csv, Row: 2",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:46:24.590580",
+    "verified": false
+  },
+  {
+    "fact": "Alpha Tower in Philadelphia has a vacancy rate of 25%",
+    "source": "test_office_vacancy.csv, Row: 2",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:46:24.590583",
+    "verified": false
+  },
+  {
+    "fact": "Philadelphia lease has the earliest end year among the given leases",
+    "source": "Comparison of LeaseEndYear across phl_lease_market_data.csv, la_lease_market_data.csv, nyc_lease_market_data.csv, chi_lease_market_data.csv",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:46:24.590586",
+    "verified": false
+  },
+  {
+    "fact": "Philadelphia lease ends the earliest in 2030",
+    "source": "Comparison of LeaseEndYear across phl_lease_market_data.csv, la_lease_market_data.csv, nyc_lease_market_data.csv, chi_lease_market_data.csv",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:46:24.590588",
+    "verified": false
+  },
+  {
+    "fact": "The occupancy rate for Alpha Tower in Philadelphia is 75.",
+    "source": "test_office_vacancy.csv, Row: 2",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:47:29.898422",
+    "verified": false
+  },
+  {
+    "fact": "The occupancy rate for Beta Center in New York is 60.",
+    "source": "test_office_vacancy.csv, Row: 3",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:47:29.898432",
+    "verified": false
+  },
+  {
+    "fact": "The Philadelphia office has 500 employees.",
+    "source": "phl_esg_metrics.csv",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:47:29.898435",
+    "verified": false
+  },
+  {
+    "fact": "The number of employees in an office could potentially relate to occupancy, but without more context on how occupancy is measured (e.g., employees present vs. total capacity), it's less directly relevant.",
+    "source": "phl_esg_metrics.csv",
+    "confidence": 0.8,
+    "timestamp": "2025-05-01T20:47:29.898438",
+    "verified": false
+  },
+  {
+    "fact": "The occupancy rate for Alpha Tower in Philadelphia is 75.",
+    "source": "test_office_vacancy.csv, Row: 2",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:47:29.898440",
+    "verified": false
+  },
+  {
+    "fact": "The occupancy rate for Beta Center in New York is 60.",
+    "source": "test_office_vacancy.csv, Row: 3",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:47:29.898443",
+    "verified": false
+  },
+  {
+    "fact": "The Philadelphia office has 500 employees.",
+    "source": "phl_esg_metrics.csv",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:47:29.898446",
+    "verified": false
+  },
+  {
+    "fact": "The occupancy rate for Alpha Tower in Philadelphia is 75.",
+    "source": "test_office_vacancy.csv, Row: 2",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:47:29.898448",
+    "verified": false
+  },
+  {
+    "fact": "The occupancy rate for Beta Center in New York is 60.",
+    "source": "test_office_vacancy.csv, Row: 3",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:47:29.898451",
+    "verified": false
+  },
+  {
+    "fact": "The Philadelphia office has 500 employees.",
+    "source": "phl_esg_metrics.csv",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:47:29.898453",
+    "verified": false
+  },
+  {
+    "fact": "The number of employees in the Philadelphia office is consistent across multiple reports.",
+    "source": "Multiple entries from phl_esg_metrics.csv",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:47:29.898456",
+    "verified": false
+  },
+  {
+    "fact": "There is no direct information on the average occupancy in April 2025; the available data assumes current occupancy rates are indicative.",
+    "source": "Inference from given data",
+    "confidence": 0.8,
+    "timestamp": "2025-05-01T20:47:29.898458",
+    "verified": false
+  },
+  {
+    "fact": "The Alpha Tower in Philadelphia has an occupancy rate of 75.",
+    "source": "test_office_vacancy.csv, Row: 2",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:48:38.524807",
+    "verified": false
+  },
+  {
+    "fact": "The Beta Center in New York has an occupancy rate of 60.",
+    "source": "test_office_vacancy.csv, Row: 3",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:48:38.524817",
+    "verified": false
+  },
+  {
+    "fact": "The Philadelphia office has 500 employees.",
+    "source": "phl_esg_metrics.csv",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:48:38.524820",
+    "verified": false
+  },
+  {
+    "fact": "There is no specific data provided for office occupancy rates in April 2025.",
+    "source": "All provided documents",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:48:38.524822",
+    "verified": false
+  },
+  {
+    "fact": "The number of employees in the Philadelphia office is known, but it's not directly related to the occupancy rate.",
+    "source": "phl_esg_metrics.csv",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:48:38.524825",
+    "verified": false
+  },
+  {
+    "fact": "The Alpha Tower in Philadelphia has an occupancy rate of 75.",
+    "source": "test_office_vacancy.csv, Row: 2",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:48:38.524828",
+    "verified": false
+  },
+  {
+    "fact": "The Beta Center in New York has an occupancy rate of 60.",
+    "source": "test_office_vacancy.csv, Row: 3",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:48:38.524831",
+    "verified": false
+  },
+  {
+    "fact": "The Philadelphia office has 500 employees.",
+    "source": "phl_esg_metrics.csv",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:48:38.524833",
+    "verified": false
+  },
+  {
+    "fact": "There is no specific data for April 2025.",
+    "source": "All provided documents",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:48:38.524836",
+    "verified": false
+  },
+  {
+    "fact": "The Alpha Tower has a higher occupancy rate than the Beta Center.",
+    "source": "test_office_vacancy.csv",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:48:38.524838",
+    "verified": false
+  },
+  {
+    "fact": "The occupancy rates provided do not specify a date.",
+    "source": "test_office_vacancy.csv",
+    "confidence": 1.0,
+    "timestamp": "2025-05-01T20:48:38.524841",
+    "verified": false
+  },
+  {
+    "fact": "The available data suggests the Alpha Tower had the highest average occupancy among the mentioned offices.",
+    "source": "test_office_vacancy.csv",
+    "confidence": 0.8,
+    "timestamp": "2025-05-01T20:48:38.524843",
+    "verified": false
   }
 ]

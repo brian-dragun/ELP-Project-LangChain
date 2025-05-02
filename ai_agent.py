@@ -102,77 +102,71 @@ llm = LambdaLabsLLM(
     api_base=LAMBDA_API_BASE
 )
 
-# Configure and create Chroma client explicitly
-logger.info("Setting up ChromaDB client")
-client = chromadb.PersistentClient(path="./chroma_db")
+def setup_retrieval_chain(query):
+    """Set up a retrieval chain for the given query."""
+    # Load the vector store
+    embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+    
+    # Check if ChromaDB exists, if not create a warning
+    if not os.path.exists("./chroma_db"):
+        logger.warning("ChromaDB not found. Please run ingest_documents.py first.")
+        return None, None
+    
+    client = chromadb.PersistentClient(path="./chroma_db")
+    vectorstore = Chroma(
+        client=client, 
+        collection_name="document_collection",
+        embedding_function=embeddings
+    )
+    
+    # Use Maximum Marginal Relevance for better diverse results
+    # This helps get both general and specific documents about the same topic
+    retriever = vectorstore.as_retriever(
+        search_type="mmr",  # Maximum Marginal Relevance
+        search_kwargs={
+            "k": 8,         # Retrieve more documents
+            "fetch_k": 20,  # Consider more candidates
+            "lambda_mult": 0.7  # Balance between relevance and diversity
+        }
+    )
+    
+    # Create a filter for employee count queries to prioritize those documents
+    if any(term in query.lower() for term in 
+           ["employee", "employees", "people", "staff", "headcount"]):
+        logger.info("Employee-related query detected, applying metadata filter")
+        retriever = vectorstore.as_retriever(
+            search_type="mmr",
+            search_kwargs={
+                "k": 5,
+                "filter": {"content_type": "employee_count"}  # First try with specific docs
+            }
+        )
+    
+    # Set up the prompt
+    system_prompt = """You are an AI assistant that helps analyze documents about office data.
+Answer questions based ONLY on the provided context. 
+Be precise, detailed and show your step-by-step reasoning.
+If the answer cannot be determined from the context, say so clearly.
+If you find conflicting information, explain the discrepancy.
 
-# Load the existing vector store
-logger.info("Loading vector store")
-embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-vectorstore = Chroma(
-    client=client,
-    collection_name="document_collection",
-    embedding_function=embeddings
-)
-
-# Create retriever from vectorstore
-retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
-
-# Create prompt template for question answering
-template = """Answer the following question based on the provided context:
-
-Context:
-{context}
-
-Question: {question}
-
-Provide a detailed answer using only the information from the context. If the answer cannot be determined from the context, say "I don't have enough information to answer this question."
-
-Important: Do not use LaTeX formatting like \boxed{} in your answer. For highlighting important information, use emoji, asterisks, or brackets instead.
-
-Answer:"""
-
-prompt = ChatPromptTemplate.from_template(template)
-
-# Define the graph nodes
-def retrieve(state: GraphState) -> GraphState:
-    logger.info(f"Retrieving context for question: {state['question']}")
-    question = state["question"]
-    docs = retriever.invoke(question)
-    logger.info(f"Retrieved {len(docs)} documents")
-    return {"context": docs, "question": question}
-
-def generate_answer(state: GraphState) -> GraphState:
-    logger.info("Generating answer")
-    try:
-        context_str = "\n\n".join([doc.page_content for doc in state["context"]])
-        formatted_prompt = prompt.format(context=context_str, question=state["question"])
-        logger.info(f"Formatted prompt with context of length: {len(context_str)}")
-        
-        response = llm.invoke(formatted_prompt)
-        logger.info(f"Generated response: {response}")
-        
-        return {"answer": response}
-    except Exception as e:
-        logger.exception("Error generating answer")
-        return {"answer": f"Error generating answer: {str(e)}"}
-
-# Create the graph with the state schema
-logger.info("Creating StateGraph")
-graph = StateGraph(state_schema=GraphState)
-
-# Add nodes
-graph.add_node("retrieve", retrieve)
-graph.add_node("generate_answer", generate_answer)
-
-# Add edges
-graph.add_edge("retrieve", "generate_answer")
-graph.set_entry_point("retrieve")
-graph.set_finish_point("generate_answer")
-
-# Compile the graph
-logger.info("Compiling the graph")
-chain = graph.compile()
+For questions about employee counts, check all relevant sources and specify which office/city you're referring to.
+"""
+    
+    # Create the prompt template
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", system_prompt),
+        ("human", "Context:\n\n{context}\n\nQuestion: {question}")
+    ])
+    
+    # Create the chain
+    chain = (
+        {"context": retriever, "question": RunnablePassthrough()}
+        | prompt
+        | llm
+        | StrOutputParser()
+    )
+    
+    return chain, retriever
 
 # Example usage
 if __name__ == "__main__":
@@ -180,6 +174,11 @@ if __name__ == "__main__":
         # Test the system with a sample question
         question = "What information can you provide about the documents?"
         logger.info(f"Starting with question: {question}")
+        
+        chain, retriever = setup_retrieval_chain(question)
+        if chain is None:
+            logger.error("Failed to set up retrieval chain")
+            sys.exit(1)
         
         response = chain.invoke({"question": question})
         

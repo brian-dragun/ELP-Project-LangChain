@@ -36,3 +36,10 @@ faiss_index/
 .DS_Store
 Thumbs.db.env
 .env.backup
+
+
+# ChromaDB files
+chroma_db/
+*.parquet
+*.bin
+*.sqlite3

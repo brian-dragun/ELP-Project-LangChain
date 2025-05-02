@@ -204,4 +204,87 @@ Prompts are structured instructions to control what the AI does. In our system, 
 
 ---
 
+# Document Intelligence System
+
+An AI-powered system for analyzing documents and answering questions about office data across multiple locations.
+
+## Features
+
+- **Document Analysis**: Extract insights, patterns, and data from various document formats
+- **Natural Language Interface**: Ask questions in plain language about your documents
+- **Interactive Chat**: Have continuous conversations with context and memory
+- **Data Visualization**: Auto-generate charts and graphs from your data
+- **Fact Tracking**: Automatically extract and remember facts from documents
+- **Cross-Document Intelligence**: Compare and analyze data across multiple sources
+- **LangSmith Integration**: Performance tracking and evaluation
+
+## Available Commands
+
+When using the interactive chat mode, the following commands are available:
+
+### Basic Commands
+
+| Command | Description |
+|---------|-------------|
+| `help` | Show all available commands and sample questions |
+| `exit` or `quit` | End the session and save history |
+| `clear` | Clear conversation history |
+
+### Document Management
+
+| Command | Description |
+|---------|-------------|
+| `refresh` | Manually refresh the document database |
+| `delete chroma` | Delete the ChromaDB vector database |
+| `rebuild database` | Delete and completely rebuild the database |
+
+### Information Display
+
+| Command | Description |
+|---------|-------------|
+| `facts` | Show facts the system has learned |
+| `runs` | View links to recent LangSmith runs |
+| `insights` | Show generated insights |
+
+### Feature Toggles
+
+| Command | Description |
+|---------|-------------|
+| `reasoning on` | Enable display of reasoning steps |
+| `reasoning off` | Disable display of reasoning steps |
+| `insights on` | Enable automatic insight generation |
+| `insights off` | Disable automatic insight generation |
+
+### Document Intelligence
+
+| Command | Description |
+|---------|-------------|
+| `visualize [data]` | Create visualization from data |
+| `summarize [document]` | Generate summary of document |
+| `extract [pattern] from [text]` | Extract patterns (dates, numbers, etc.) |
+| `compare [docs]` | Compare multiple documents |
+
+### Pattern Types 
+
+When using the `extract` command, the following pattern types are available:
+- `currency`: Find monetary values (e.g., $100, 50 dollars)
+- `percentage`: Find percentage values (e.g., 50%)
+- `date`: Find dates in various formats
+- `email`: Find email addresses
+- `phone`: Find phone numbers
+- `time`: Find time values
+- `numeric`: Find any numeric values
+
+## Sample Questions
+
+1. "How many employees work in the Los Angeles office?"
+2. "What is the badge utilization rate in Chicago compared to NYC?"
+3. "Which city has the highest meeting room utilization on weekends?"
+4. "What's the trend in energy usage across all offices over time?"
+5. "Compare the sustainability metrics of Chicago and Miami offices"
+6. "Extract all dates from the NYC lease document"
+7. "Summarize the ESG metrics across all locations"
+
+---
+
 🔥 Built to help Facilities and Management teams make better decisions — faster, smarter, and with confidence.
