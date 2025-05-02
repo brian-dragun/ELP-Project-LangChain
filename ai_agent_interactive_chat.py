@@ -47,7 +47,7 @@ from langchain.smith import RunEvalConfig, run_on_dataset
 from pydantic import Field, field_validator, BaseModel
 
 # Local imports
-from ai_agent import llm, logger, prompt
+from ai_agent import llm, logger
 from config import Config
 
 # Initialize LangSmith client
@@ -766,54 +766,161 @@ class DocumentChatV2:
             f.write(current_hash)
 
     def _refresh_documents(self):
-        """Re-ingest all documents in the documents folder"""
-        print("Refreshing document database...")
+        """Re-ingest documents only if needed"""
+        print("Checking document database...")
         
         try:
-            # Configure document loading
-            loader = DirectoryLoader(
-                self.documents_path,
-                glob="**/*.csv"
-            )
-            documents = loader.load()
-            print(f"Loaded {len(documents)} documents")
+            # First, check if the vector store already exists and contains documents
+            if os.path.exists(self.chroma_path) and os.path.isdir(self.chroma_path):
+                try:
+                    # Check if we have a valid collection with documents
+                    collection = self.client.get_collection("document_collection")
+                    count = collection.count()
+                    
+                    # If we have a good number of documents and the hash hasn't changed
+                    if count > 0 and not self._documents_changed():
+                        print(f"{Colors.GREEN}Document database is up to date with {count} documents.{Colors.ENDC}")
+                        
+                        # Update class variables without reloading
+                        self.vectorstore = Chroma(
+                            client=self.client,
+                            collection_name="document_collection",
+                            embedding_function=self.embeddings
+                        )
+                        self.retriever = self.vectorstore.as_retriever(search_kwargs={"k": 5})
+                        
+                        # Make sure the document hash is saved
+                        self._save_documents_hash()
+                        
+                        # Update tools with existing retriever
+                        for tool in self.tools:
+                            if hasattr(tool, 'retriever'):
+                                tool.retriever = self.retriever
+                        
+                        return True
+                except Exception as e:
+                    # If there's an issue checking the collection, we'll recreate it
+                    print(f"{Colors.YELLOW}Could not verify existing database: {e}{Colors.ENDC}")
             
-            # Split documents into chunks
-            text_splitter = RecursiveCharacterTextSplitter(
-                chunk_size=1000,
-                chunk_overlap=200
-            )
-            splits = text_splitter.split_documents(documents)
-            print(f"Split into {len(splits)} chunks")
+            # If we get here, we need to refresh the database
+            print(f"{Colors.YELLOW}Refreshing document database...{Colors.ENDC}")
             
-            # Remove existing collection if it exists
+            # Use our improved ingest_documents function from the module
             try:
-                self.client.delete_collection(name="document_collection")
-            except:
-                pass
-            
-            # Create vector store with new documents
-            vectorstore = Chroma.from_documents(
-                documents=splits,
-                embedding=self.embeddings,
-                client=self.client,
-                collection_name="document_collection"
-            )
-            
-            # Update vector store and retriever references
-            self.vectorstore = vectorstore
-            self.retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
-            
-            # Update tools with new retriever
-            for tool in self.tools:
-                if hasattr(tool, 'retriever'):
-                    tool.retriever = self.retriever
-            
-            # Save the new document hash
-            self._save_documents_hash()
-            
-            print(f"{Colors.GREEN}Document refresh complete!{Colors.ENDC}")
-            return True
+                # Import the ingest function dynamically
+                sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+                from ingest_documents import ingest_documents
+                
+                # Call the ingest function with our documents path
+                num_docs = ingest_documents(self.documents_path)
+                print(f"Loaded {num_docs} documents")
+                
+                # Update vector store and retriever references
+                self.vectorstore = Chroma(
+                    client=self.client,
+                    collection_name="document_collection",
+                    embedding_function=self.embeddings
+                )
+                self.retriever = self.vectorstore.as_retriever(search_kwargs={"k": 5})
+                
+                # Update tools with new retriever
+                for tool in self.tools:
+                    if hasattr(tool, 'retriever'):
+                        tool.retriever = self.retriever
+                
+                # Save the new document hash
+                self._save_documents_hash()
+                
+                print(f"{Colors.GREEN}Document refresh complete!{Colors.ENDC}")
+                return True
+                
+            except ImportError:
+                print(f"{Colors.YELLOW}Could not import ingest_documents module, falling back to built-in ingestion{Colors.ENDC}")
+                # Fall back to original document loading if import fails
+                
+                # Configure document loading (with more file types)
+                loader = DirectoryLoader(
+                    self.documents_path,
+                    glob="**/*.*",  # Load all file types
+                    silent_errors=True
+                )
+                
+                try:
+                    documents = loader.load()
+                    print(f"Loaded {len(documents)} documents")
+                    
+                    # Split documents into chunks
+                    text_splitter = RecursiveCharacterTextSplitter(
+                        chunk_size=1000,
+                        chunk_overlap=200
+                    )
+                    splits = text_splitter.split_documents(documents)
+                    print(f"Split into {len(splits)} chunks")
+                    
+                    # Special processing for employee data in CSV files
+                    enhanced_splits = []
+                    for doc in splits:
+                        enhanced_splits.append(doc)
+                        
+                        # Check if the document contains employee count data
+                        content = doc.page_content.lower()
+                        if ("numberofemployees" in content or "employee_count" in content or 
+                            "employees" in content or "headcount" in content):
+                            
+                            # Try to extract the city and employee count
+                            city_match = re.search(r'city:?\s*([a-zA-Z\s]+)', content, re.IGNORECASE)
+                            employee_match = re.search(r'(?:numberofemployees|employee_count|employees|headcount):?\s*(\d+)', content, re.IGNORECASE)
+                            
+                            if city_match and employee_match:
+                                city = city_match.group(1).strip()
+                                employee_count = employee_match.group(1).strip()
+                                
+                                # Create a specialized document for this employee count
+                                emp_content = f"The {city} office has {employee_count} employees."
+                                emp_doc = Document(
+                                    page_content=emp_content,
+                                    metadata={
+                                        "source": doc.metadata.get("source", "unknown"),
+                                        "file_type": "csv",
+                                        "content_type": "employee_count",
+                                        "city": city,
+                                        "employee_count": employee_count
+                                    }
+                                )
+                                enhanced_splits.append(emp_doc)
+                                print(f"Created specific employee count document for {city}: {employee_count} employees")
+                    
+                    # Remove existing collection if it exists
+                    try:
+                        self.client.delete_collection(name="document_collection")
+                    except:
+                        pass
+                    
+                    # Create vector store with new documents
+                    vectorstore = Chroma.from_documents(
+                        documents=enhanced_splits,
+                        embedding=self.embeddings,
+                        client=self.client,
+                        collection_name="document_collection"
+                    )
+                    
+                    # Update vector store and retriever references
+                    self.vectorstore = vectorstore
+                    self.retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
+                    
+                    # Update tools with new retriever
+                    for tool in self.tools:
+                        if hasattr(tool, 'retriever'):
+                            tool.retriever = self.retriever
+                    
+                    # Save the new document hash
+                    self._save_documents_hash()
+                    
+                    print(f"{Colors.GREEN}Document refresh complete!{Colors.ENDC}")
+                    return True
+                except Exception as e:
+                    print(f"{Colors.RED}Error loading documents: {e}{Colors.ENDC}")
+                    raise
             
         except Exception as e:
             print(f"{Colors.RED}Error refreshing documents: {str(e)}{Colors.ENDC}")
@@ -1062,6 +1169,8 @@ Format your response with clear STEP 1, STEP 2, etc. headings."""
 - "reasoning on/off": Toggle display of reasoning steps
 - "facts": Show facts the system has learned
 - "refresh": Manually refresh document database
+- "delete chroma": Delete the ChromaDB database
+- "rebuild database": Delete and rebuild the entire database
 - "clear": Clear conversation history
 - "help": Show this help message
 - "exit" or "quit": End the session
@@ -1139,34 +1248,99 @@ For more sample questions, check SAMPLE_QUESTIONS.md
                 elif user_input.lower() == 'clear':
                     self.history = []
                     self.conversation_memory.clear()
-                    self.summary_memory.clear()
-                    print(f"{Colors.YELLOW}Chat history cleared.{Colors.ENDC}")
+                    print(f"{Colors.GREEN}Chat history cleared.{Colors.ENDC}")
                     continue
                 
-                # Show facts command
+                # Facts command
                 elif user_input.lower() == 'facts':
                     self.show_facts()
                     continue
-                
-                # Refresh command
+                    
+                # Refresh documents command
                 elif user_input.lower() == 'refresh':
-                    print(f"{Colors.YELLOW}Manually refreshing document database...{Colors.ENDC}")
-                    self._refresh_documents()
+                    print(f"{Colors.YELLOW}Refreshing document database...{Colors.ENDC}")
+                    success = self._refresh_documents()
+                    if success:
+                        print(f"{Colors.GREEN}Document database refreshed successfully!{Colors.ENDC}")
+                    else:
+                        print(f"{Colors.RED}Failed to refresh document database.{Colors.ENDC}")
+                    continue
+                
+                # Delete Chroma database command
+                elif user_input.lower() == 'delete chroma':
+                    print(f"{Colors.RED}WARNING: This will delete the entire ChromaDB database. Are you sure? (y/n){Colors.ENDC}")
+                    confirm = input().strip().lower()
+                    if confirm == 'y' or confirm == 'yes':
+                        print(f"{Colors.YELLOW}Deleting ChromaDB database...{Colors.ENDC}")
+                        import shutil
+                        try:
+                            # Close any open connections
+                            self.client = None
+                            self.vectorstore = None
+                            self.retriever = None
+                            
+                            # Delete the directory
+                            if os.path.exists(self.chroma_path) and os.path.isdir(self.chroma_path):
+                                shutil.rmtree(self.chroma_path)
+                                print(f"{Colors.GREEN}ChromaDB database deleted successfully!{Colors.ENDC}")
+                            else:
+                                print(f"{Colors.YELLOW}ChromaDB directory not found.{Colors.ENDC}")
+                        except Exception as e:
+                            print(f"{Colors.RED}Error deleting ChromaDB: {e}{Colors.ENDC}")
+                    else:
+                        print(f"{Colors.GREEN}Database deletion cancelled.{Colors.ENDC}")
+                    continue
+                
+                # Rebuild database command
+                elif user_input.lower() == 'rebuild database':
+                    print(f"{Colors.YELLOW}This will delete and rebuild the entire database. Continue? (y/n){Colors.ENDC}")
+                    confirm = input().strip().lower()
+                    if confirm == 'y' or confirm == 'yes':
+                        print(f"{Colors.YELLOW}Rebuilding database from scratch...{Colors.ENDC}")
+                        
+                        # Delete ChromaDB
+                        import shutil
+                        try:
+                            # Close any open connections
+                            self.client = None
+                            self.vectorstore = None
+                            self.retriever = None
+                            
+                            # Delete the directory if it exists
+                            if os.path.exists(self.chroma_path) and os.path.isdir(self.chroma_path):
+                                shutil.rmtree(self.chroma_path)
+                                print(f"{Colors.GREEN}Old database deleted.{Colors.ENDC}")
+                        except Exception as e:
+                            print(f"{Colors.RED}Error deleting database: {e}{Colors.ENDC}")
+                            continue
+                        
+                        # Reinitialize client
+                        self.client = chromadb.PersistentClient(path=self.chroma_path)
+                        
+                        # Rebuild database
+                        success = self._refresh_documents()
+                        if success:
+                            print(f"{Colors.GREEN}Database rebuilt successfully!{Colors.ENDC}")
+                        else:
+                            print(f"{Colors.RED}Failed to rebuild database.{Colors.ENDC}")
+                    else:
+                        print(f"{Colors.GREEN}Database rebuild cancelled.{Colors.ENDC}")
                     continue
                 
                 # Toggle reasoning mode
                 elif user_input.lower() == 'reasoning on':
                     self.reasoning_mode = True
-                    print(f"{Colors.GREEN}Reasoning steps display enabled.{Colors.ENDC}")
+                    print(f"{Colors.GREEN}Reasoning steps enabled.{Colors.ENDC}")
                     continue
+                    
                 elif user_input.lower() == 'reasoning off':
                     self.reasoning_mode = False
-                    print(f"{Colors.YELLOW}Reasoning steps display disabled.{Colors.ENDC}")
+                    print(f"{Colors.GREEN}Reasoning steps disabled.{Colors.ENDC}")
                     continue
+                    
                 elif user_input.lower() == 'reasoning':
-                    self.reasoning_mode = not self.reasoning_mode
                     status = "enabled" if self.reasoning_mode else "disabled"
-                    print(f"{Colors.GREEN if self.reasoning_mode else Colors.YELLOW}Reasoning steps display {status}.{Colors.ENDC}")
+                    print(f"{Colors.GREEN}Reasoning steps are currently {status}.{Colors.ENDC}")
                     continue
                 
                 # Process regular queries
@@ -1176,24 +1350,21 @@ For more sample questions, check SAMPLE_QUESTIONS.md
                 
                 # Add feedback collection feature
                 if self.langsmith_enabled:
-                    try:
-                        feedback_input = input(f"\n{Colors.CYAN}Rate this response (1-5, or skip):{Colors.ENDC} ")
-                        if feedback_input.strip() and feedback_input.strip() in "12345":
-                            rating = int(feedback_input.strip())
-                            self.get_feedback(user_input, result["answer"], rating)
-                            print(f"{Colors.GREEN}Thank you for your feedback!{Colors.ENDC}")
-                    except Exception as e:
-                        logger.exception(f"Error collecting feedback: {str(e)}")
+                    if "answer" in result and not "error" in result:
+                        try:
+                            rating = input(f"\n{Colors.CYAN}Rate this response (1-5, or skip): {Colors.ENDC}")
+                            if rating.isdigit() and 1 <= int(rating) <= 5:
+                                self.get_feedback(user_input, result["answer"], int(rating))
+                                print(f"{Colors.GREEN}Thank you for your feedback!{Colors.ENDC}")
+                        except:
+                            pass
                 
                 # Show reasoning if enabled and available
                 if self.reasoning_mode and "reasoning" in result and result["reasoning"]:
-                    print(f"\n{Colors.BLUE}Reasoning Process:{Colors.ENDC}")
-                    reasoning_lines = result["reasoning"].split('\n')
-                    for line in reasoning_lines:
-                        if line.strip().startswith("STEP") or "step" in line.lower()[:10]:
-                            print(f"{Colors.YELLOW}{line}{Colors.ENDC}")
-                        else:
-                            print(f"{Colors.BLUE}{line}{Colors.ENDC}")
+                    should_show = input(f"\n{Colors.CYAN}Show reasoning steps? (y/n): {Colors.ENDC}")
+                    if should_show.lower() == "y":
+                        print(f"\n{Colors.YELLOW}Reasoning Process:{Colors.ENDC}")
+                        print(result["reasoning"])
                 
                 print(f"\n{Colors.YELLOW}" + "-"*50 + Colors.ENDC)
                 
