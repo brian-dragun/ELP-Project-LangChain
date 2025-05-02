@@ -62,6 +62,36 @@ The ELP Document Intelligence System is built on a flexible, modular architectur
    - **FactExtractionTool**: Extracts key facts from documents
    - **FactVerificationTool**: Verifies statements against sources
 
+## 🧠 What Are Prompts?
+
+Prompts are the structured instructions we give to the AI model to guide its response — like giving a detailed question or a script to follow. They define how the AI understands the user's request, what information it uses, and how it presents the output.
+
+## 🎯 Purpose of the Prompts in Our System
+
+In our document-aware AI agent, we use custom prompts to ensure the AI:
+
+- Answers questions based only on the retrieved documents — not general internet knowledge.
+- Extracts facts in a structured format, with confidence scores and sources.
+- Verifies statements against the documents for accuracy.
+- Thinks step by step before responding.
+- Generates helpful insights and summaries from multiple documents.
+
+These prompt templates allow us to enforce consistency, avoid hallucination, and align responses with real business data.
+
+## 🧩 Types of Prompts We Use
+
+| Prompt Type            | What It Does                                                               | Why It Matters for ELP                                           |
+|------------------------|----------------------------------------------------------------------------|------------------------------------------------------------------|
+| Question Answering     | Tells the AI to answer based on a specific context of documents.           | Ensures leasing or ESG decisions are made using real data only. |
+| Fact Extraction        | Instructs the AI to find 5–7 key facts from documents, with sources.       | Helps quickly summarize critical details (e.g. headcount, cost).|
+| Fact Verification      | Asks the AI to confirm if a statement is supported by the documents.       | Prevents false assumptions in reporting or recommendations.     |
+| Self-Questioning       | Forces the AI to ask clarifying questions to better understand the user.   | Improves accuracy when user inputs are vague or incomplete.     |
+| Reasoning Steps        | Prompts the AI to walk through its thought process step by step.           | Makes the AI's decision-making transparent and auditable.       |
+| Confidence Analysis    | Gets the AI to assign scores to each statement based on how well-supported.| Helps us trust or challenge AI-generated insights.              |
+| Insight Generation     | Guides the AI to find actionable insights from office data.                | Automatically surfaces opportunities for optimization or savings.|
+| Document Summary       | Prompts the AI to summarize a document concisely.                          | Speeds up review of long ESG or leasing docs.                   |
+| Cross-Document Compare | Instructs the AI to find similarities, differences, and contradictions.    | Enables informed comparisons across office locations.           |
+
 ## Data Flow
 
 1. **Document Ingestion Flow**
@@ -196,6 +226,13 @@ The system uses a custom LambdaLabsLLM implementation with:
    - Performance monitoring
    - Error analysis
 
+## 🏁 Why This Matters for ELP
+
+- Enables **data-driven decisions** for office planning and ESG strategy.
+- Reduces manual review by surfacing **key facts and patterns** automatically.
+- Adds explainability through **reasoning and verification**.
+- Functions as a **virtual analyst** for internal workplace intelligence.
+
 ## Future Development Areas
 
 1. **Advanced Reasoning**
@@ -217,3 +254,7 @@ The system uses a custom LambdaLabsLLM implementation with:
 5. **Extended Intelligence**
    - Time-series analysis for trend detection
    - Predictive analytics for future forecasting
+
+---
+
+🔙 [Back to Project README](./README.md)
