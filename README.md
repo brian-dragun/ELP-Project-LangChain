@@ -469,14 +469,6 @@ The system can be customized by modifying:
 
 See `z_improvements.md` for a list of planned enhancements.
 
-## License
-
-This project is proprietary and confidential.
-
-## Contact
-
-For questions or support, please contact [your.email@example.com](mailto:your.email@example.com).
-
 ---
 
 🔥 Built to help Facilities and Management teams make better decisions — faster, smarter, and with confidence.

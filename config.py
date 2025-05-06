@@ -100,6 +100,14 @@ class Config:
     AZURE_AI_SERVICES_REGION = os.getenv("AZURE_AI_SERVICES_REGION")
     AZURE_OPENAI_DEPLOYMENT = os.getenv("AZURE_OPENAI_DEPLOYMENT")
     
+    # Azure AI Foundry settings
+    AZURE_FOUNDRY_API_KEY = os.getenv("AZURE_FOUNDRY_API_KEY")
+    AZURE_FOUNDRY_ENDPOINT = os.getenv("AZURE_FOUNDRY_ENDPOINT")
+    AZURE_FOUNDRY_PROJECT_NAME = os.getenv("AZURE_FOUNDRY_PROJECT_NAME")
+    AZURE_FOUNDRY_MODEL_ID = os.getenv("AZURE_FOUNDRY_MODEL_ID")
+    AZURE_FOUNDRY_DEPLOYMENT_NAME = os.getenv("AZURE_FOUNDRY_DEPLOYMENT_NAME")
+    AZURE_FOUNDRY_API_VERSION = os.getenv("AZURE_FOUNDRY_API_VERSION", "2023-10-01-preview")
+    
     # LangChain settings
     LANGCHAIN_API_KEY = os.getenv("LANGCHAIN_API_KEY")
     
@@ -129,7 +137,10 @@ class Config:
         required_vars = [
             "OPENAI_API_KEY", 
             "AZURE_AI_SERVICES_KEY",
-            "AZURE_AI_SERVICES_ENDPOINT"
+            "AZURE_AI_SERVICES_ENDPOINT",
+            "AZURE_FOUNDRY_API_KEY",
+            "AZURE_FOUNDRY_ENDPOINT",
+            "AZURE_FOUNDRY_PROJECT_NAME"
         ]
         
         missing = [var for var in required_vars if getattr(cls, var) is None]
