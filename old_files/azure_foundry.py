@@ -122,6 +122,106 @@ class AzureFoundryClient:
             status_code = e.response.status_code if hasattr(e, 'response') and e.response else None
             msg = f"Error searching documents in Azure AI Foundry: {str(e)}"
             raise APIError(msg, status_code=status_code, service="AzureFoundry")
+    
+    @retry_with_exponential_backoff
+    def generate_suggested_questions(self, num_questions: int = 5) -> List[str]:
+        """
+        Generate suggested questions based on the document content in the project.
+        
+        Args:
+            num_questions: Number of questions to generate
+            
+        Returns:
+            List of suggested questions
+        """
+        # First retrieve a sample of documents to understand content
+        url = f"{self.endpoint}/projects/{self.project_name}/documents?api-version={self.api_version}&top=10"
+        
+        try:
+            # Get a sample of documents
+            response = requests.get(url, headers=self.get_auth_headers())
+            response.raise_for_status()
+            documents = response.json().get("value", [])
+            
+            if not documents:
+                logger.warning("No documents found to generate questions from")
+                return [
+                    "What features does this system provide?",
+                    "How can I search for specific information?",
+                    "What types of documents can be processed?"
+                ]
+            
+            # Extract topics and content samples from documents
+            document_snippets = []
+            for doc in documents[:5]:  # Use up to 5 documents for context
+                doc_id = doc.get("id")
+                doc_url = f"{self.endpoint}/projects/{self.project_name}/documents/{doc_id}?api-version={self.api_version}"
+                doc_response = requests.get(doc_url, headers=self.get_auth_headers())
+                if doc_response.status_code == 200:
+                    content = doc_response.json().get("content", "")
+                    # Take a snippet to understand document content
+                    document_snippets.append(content[:500])
+            
+            # If we couldn't get content, return default questions
+            if not document_snippets:
+                logger.warning("Could not retrieve document content")
+                return [
+                    "What information is available in the system?",
+                    "Can you summarize the key topics in the documents?",
+                    "What are the main themes covered in the content?"
+                ]
+            
+            # Now use the deployment to generate questions based on content
+            prompt = f"""Based on the following document snippets, generate {num_questions} specific, engaging questions 
+            that a user might want to ask about this content. The questions should be diverse and cover different 
+            aspects of the information available.
+            
+            Document snippets:
+            {document_snippets}
+            
+            Generate {num_questions} questions that would be interesting and relevant to users wanting to learn about this content.
+            Format your response as a JSON array of strings, with each string being a question.
+            """
+            
+            response_data = self.query_deployment(prompt, temperature=0.7)
+            response_text = response_data.get('choices', [{}])[0].get('message', {}).get('content', '')
+            
+            # Try to parse questions from JSON format
+            try:
+                # Find JSON array in response
+                if '[' in response_text and ']' in response_text:
+                    json_str = response_text[response_text.find('['):response_text.rfind(']')+1]
+                    questions = json.loads(json_str)
+                    return questions[:num_questions]
+                else:
+                    # Fallback: extract questions line by line
+                    questions = [line.strip().strip('"-').strip() 
+                                for line in response_text.split('\n') 
+                                if line.strip() and '?' in line]
+                    return questions[:num_questions]
+            except json.JSONDecodeError:
+                # Fallback parsing if JSON fails
+                questions = []
+                for line in response_text.split('\n'):
+                    line = line.strip()
+                    if line and '?' in line:
+                        # Clean up the line to extract just the question
+                        question = line.replace('"', '').replace('- ', '').strip()
+                        if question not in questions:
+                            questions.append(question)
+                
+                return questions[:num_questions] if questions else [
+                    "What are the main topics covered in these documents?",
+                    "Can you summarize the key findings from the documents?",
+                    "What specific information can I learn from these documents?"
+                ]
+        except Exception as e:
+            logger.error(f"Error generating suggested questions: {str(e)}")
+            return [
+                "What information is available in the system?",
+                "What types of documents have been uploaded?",
+                "How can this system help me find specific information?"
+            ]
 
 class AzureFoundryReasoning:
     """

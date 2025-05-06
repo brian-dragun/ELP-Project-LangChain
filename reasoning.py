@@ -6,12 +6,14 @@ This version relies more on the AI's inherent capabilities with less template sc
 
 import logging
 import re
+import traceback
 from typing import List, Dict, Any, Optional
 from langchain_core.documents import Document
 from langchain_huggingface import HuggingFaceEmbeddings
 import chromadb
 from langchain_chroma import Chroma
 from datetime import datetime
+from config import Config
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -87,84 +89,198 @@ class ReasoningService:
             logger.error(f"Error retrieving documents: {e}")
             return []
     
-    def process_query(self, query: str, detail_level: str = 'standard') -> Dict[str, Any]:
+    def process_query(self, query, detail_level="standard"):
+        """Process a user query with detailed reasoning steps."""
+        try:
+            context = self.retrieve_context(query)
+            prompt = self.build_prompt(query, context, detail_level)
+            
+            # Use the temperature from Config for the API call
+            # This allows for more consistent results across different queries
+            llm_response_text = self.llm.invoke(
+                prompt, 
+                temperature=Config.LLM_TEMPERATURE  # Use centralized temperature setting
+            )
+            
+            parsed = self.parse_response(llm_response_text)
+            
+            answer = parsed.get("answer", "")
+            reasoning = parsed.get("reasoning", "")
+
+            cleaned_answer = self._clean_answer(answer)
+
+            # If the cleaned answer is still very short or empty, and reasoning is present,
+            # Try to extract a better answer from reasoning
+            if reasoning and (not cleaned_answer or len(cleaned_answer.strip()) < 20):
+                conclusion_markers = ["Conclusion:", "In conclusion:", "Therefore,", "Thus,", "To conclude:", "To summarize:", "Form a clear conclusion:"]
+                conclusion_found_in_reasoning = False
+                for marker in conclusion_markers:
+                    if marker.lower() in reasoning.lower():
+                        # Split by marker (case-insensitive) and take the part after it
+                        parts = re.split(marker, reasoning, maxsplit=1, flags=re.IGNORECASE)
+                        if len(parts) > 1:
+                            conclusion_part = parts[1].split("\n")[0].strip() # Take first line after marker
+                            if len(conclusion_part) > 10:
+                                cleaned_answer = self._clean_answer(conclusion_part)
+                                conclusion_found_in_reasoning = True
+                                break
+                
+                # If no explicit conclusion marker found, but answer is still too short,
+                # try taking the last meaningful sentence of the reasoning.
+                if not conclusion_found_in_reasoning and (not cleaned_answer or len(cleaned_answer.strip()) < 20):
+                    sentences = re.split(r'(?<=[.!?])\s+', reasoning.strip())
+                    if sentences:
+                        for sent in reversed(sentences):
+                            sent = sent.strip()
+                            if sent and len(sent) > 15 and sent.endswith(('.', '!', '?')):
+                                cleaned_answer = self._clean_answer(sent)
+                                break
+            
+            if not cleaned_answer and not reasoning: # If both are empty after all processing
+                cleaned_answer = "I couldn't find an answer to your question or generate a reasoning process."
+            elif not cleaned_answer and reasoning: # If no answer but reasoning exists
+                cleaned_answer = "Please see the reasoning process for details."
+
+            return {
+                "answer": cleaned_answer,
+                "reasoning": reasoning,
+                "confidence": "high" if context else "low",
+                "context_sources": list(set([c.metadata.get("source", "Unknown") for c in context if hasattr(c, "metadata")]))
+            }
+        
+        except Exception as e:
+            logger.error(f"Error processing query: {str(e)}\n{traceback.format_exc()}")
+            return {
+                "answer": f"Sorry, I encountered an error while processing your query: {str(e)}",
+                "reasoning": f"Error occurred: {traceback.format_exc()}",
+                "confidence": "error",
+                "context_sources": []
+            }
+    
+    def build_prompt(self, query: str, context: List[Dict], detail_level="standard"):
         """
-        Process a user query with minimal scaffolding, relying more on the AI's capabilities.
+        Build a prompt for the LLM with context and query.
         
         Args:
             query: The user query
-            detail_level: Level of detail for reasoning ('basic', 'standard', or 'detailed')
+            context: The retrieved context documents
+            detail_level: Level of detail for the reasoning ("standard" or "detailed")
             
         Returns:
-            Dictionary with response and metadata
+            Structured prompt for the LLM
         """
-        try:
-            # Step 1: Retrieve relevant documents with wider search
-            context_docs = self.retrieve_context(query)
-            
-            if not context_docs:
-                return {
-                    "answer": "I couldn't find any relevant information to answer your question.",
-                    "context_sources": []
-                }
-            
-            # Extract document sources for tracking
-            context_sources = [
-                doc.metadata.get('source', 'unknown') 
-                if hasattr(doc, 'metadata') else 'unknown' 
-                for doc in context_docs
-            ]
-            
-            # Format the context
-            context_text = "\n\n".join([doc.page_content for doc in context_docs])
-            
-            # Step 2: Use a single unified prompt that relies on the AI's reasoning capabilities
-            reasoning_level = {
-                'basic': "Provide a brief, direct answer with minimal explanation.",
-                'standard': "Include step-by-step reasoning and explain your thought process.",
-                'detailed': "Provide detailed reasoning with multiple steps, addressing potential assumptions and limitations."
-            }.get(detail_level, "Include step-by-step reasoning and explain your thought process.")
-            
-            # Unified prompt that handles both answer generation and reasoning
-            unified_prompt = f"""Answer the following question based on the provided context.
+        current_date = datetime.now().strftime("%Y-%m-%d")
+        formatted_context = ""
+        if context:
+            for i, doc_obj in enumerate(context, 1):
+                # Ensure doc_obj is treated as a Document object if it has metadata
+                source = doc_obj.metadata.get("source", "Unknown source") if hasattr(doc_obj, 'metadata') else "Unknown source"
+                content = doc_obj.page_content if hasattr(doc_obj, 'page_content') else str(doc_obj)
+                formatted_context += f"Document {i} [Source: {source}]:\n{content}\n\n"
+        
+        if detail_level == "detailed":
+            system_prompt = f"""You are an AI assistant focused on real estate analysis. Today is {current_date}.
+You MUST structure your response in two distinct parts, using the exact headings specified below:
+
+### Final Answer ###
+(Provide a concise, direct answer to the user's question here. This should be the final conclusion, not the reasoning steps.)
+
+### Reasoning Process ###
+(Provide a comprehensive, step-by-step reasoning process that shows how you arrived at the final answer. Follow these analytical steps:
+1. Identify relevant information from the provided documents.
+2. Extract key metrics and data points.
+3. Perform any necessary comparisons or calculations.
+4. Interpret the results in context.
+5. Form a clear conclusion (this conclusion will be summarized in the 'Final Answer' section above).
+Be explicit about your thought process and reference specific documents if applicable.)
+
+Context documents:
+{formatted_context}
 
 Question: {query}
-
-Context:
-{context_text}
-
-{reasoning_level}
-
-If you can't find a direct answer in the context, use your reasoning to provide the best possible answer based on what's available.
-If there's truly not enough information to answer, say so clearly.
-
-Begin by thinking through the problem step by step, then provide your final answer.
 """
-            
-            # Generate response
-            response = self.llm.invoke(unified_prompt)
-            
-            # Extract the final answer and reasoning
-            # Modern LLMs will typically structure their response with reasoning followed by answer
-            reasoning, answer = self._extract_reasoning_and_answer(response)
-            
-            # Perform confidence analysis
-            confidence = self._analyze_confidence(response, context_docs)
-            
-            result = {
-                "answer": answer,
-                "reasoning": reasoning,
-                "confidence": confidence,
-                "context_sources": context_sources
+        else:
+            system_prompt = f"""You are an AI assistant focused on real estate analysis. Today is {current_date}.
+Please answer the user's question based on the provided documents.
+
+Context documents:
+{formatted_context}
+
+Question: {query}
+"""
+        return system_prompt
+    
+    def parse_response(self, response: str) -> Dict[str, Any]:
+        """
+        Parse the LLM response to extract reasoning and answer components
+        using specific headings.
+        """
+        answer_marker = "### Final Answer ###"
+        reasoning_marker = "### Reasoning Process ###"
+        
+        answer = ""
+        reasoning = ""
+
+        try:
+            answer_start_index = response.find(answer_marker)
+            reasoning_start_index = response.find(reasoning_marker)
+
+            if answer_start_index != -1 and reasoning_start_index != -1:
+                if answer_start_index < reasoning_start_index:
+                    answer_content_start = answer_start_index + len(answer_marker)
+                    answer = response[answer_content_start:reasoning_start_index].strip()
+                    reasoning_content_start = reasoning_start_index + len(reasoning_marker)
+                    reasoning = response[reasoning_content_start:].strip()
+                else: # Reasoning marker appears before answer marker
+                    reasoning_content_start = reasoning_start_index + len(reasoning_marker)
+                    reasoning = response[reasoning_content_start:answer_start_index].strip()
+                    answer_content_start = answer_start_index + len(answer_marker)
+                    answer = response[answer_content_start:].strip()
+            elif answer_start_index != -1: # Only answer marker found
+                answer_content_start = answer_start_index + len(answer_marker)
+                answer = response[answer_content_start:].strip()
+                # Attempt to find reasoning in the part before the answer marker if it looks like reasoning
+                potential_reasoning = response[:answer_start_index].strip()
+                if len(potential_reasoning) > len(answer) * 2 or "step" in potential_reasoning.lower(): # Heuristic
+                    reasoning = potential_reasoning
+            elif reasoning_start_index != -1: # Only reasoning marker found
+                reasoning_content_start = reasoning_start_index + len(reasoning_marker)
+                reasoning = response[reasoning_content_start:].strip()
+                # Attempt to find answer in the part before the reasoning marker
+                potential_answer = response[:reasoning_start_index].strip()
+                if potential_answer and (len(potential_answer) < len(reasoning) or not "step" in potential_answer.lower()):
+                     answer = potential_answer
+
+            if not answer and not reasoning: # Neither marker found, use fallback
+                logger.warning("Specific markers not found in LLM response. Using fallback parsing.")
+                reasoning, answer = self._extract_reasoning_and_answer(response)
+            elif not answer and reasoning: # Reasoning found, but no clear answer
+                 # Try to extract a conclusion from the end of reasoning as the answer
+                conclusion_match = re.search(r"(?:Conclusion:|Form a clear conclusion:)\s*(.*)", reasoning, re.IGNORECASE | re.DOTALL)
+                if conclusion_match and conclusion_match.group(1).strip():
+                    answer = conclusion_match.group(1).strip().split('\n')[0] # Take first line of conclusion
+                elif len(reasoning.split('.')) > 2: # take last sentence of reasoning if no explicit conclusion
+                    answer = reasoning.split('.')[-2].strip() + "."
+
+            if not reasoning and answer and len(answer) > 300: # Answer found, but no clear reasoning, and answer is very long
+                # Assume the long answer might contain reasoning, try to split it
+                temp_reasoning, temp_answer = self._extract_reasoning_and_answer(answer)
+                if temp_reasoning: # If fallback found reasoning within the long answer
+                    reasoning = temp_reasoning
+                    answer = temp_answer
+
+            return {
+                "reasoning": reasoning.strip(),
+                "answer": answer.strip()
             }
             
-            return result
-            
         except Exception as e:
-            logger.exception("Error processing query")
+            logger.error(f"Error parsing response with specific markers: {str(e)}. Falling back.")
+            # Fall back to the original extraction method if specific marker parsing fails
+            reasoning, answer = self._extract_reasoning_and_answer(response)
             return {
-                "answer": f"Error processing your question: {str(e)}",
-                "error": str(e)
+                "reasoning": reasoning,
+                "answer": answer
             }
     
     def _extract_reasoning_and_answer(self, response: str) -> tuple:
@@ -250,3 +366,19 @@ Begin by thinking through the problem step by step, then provide your final answ
             "overall": confidence,
             "has_uncertainty": uncertainty_count > 0
         }
+    
+    def _clean_answer(self, answer: str) -> str:
+        """Cleans the answer by removing common LaTeX artifacts."""
+        if not answer:
+            return ""
+        # Remove $\boxed{...}$
+        answer = re.sub(r"\\boxed{([^}]*)}", r"\1", answer)
+        # Remove $...$ if it's just wrapping a number or simple text
+        answer = re.sub(r"\$([^$]*)\$", r"\1", answer)
+        # Remove \(...\) and \[...\]
+        answer = re.sub(r"\\\((.*?)\\\)", r"\1", answer)
+        answer = re.sub(r"\\\[(.*?)\\\]", r"\1", answer)
+        # Remove any remaining isolated $
+        answer = answer.replace("$", "")
+        # Trim whitespace
+        return answer.strip()

@@ -114,12 +114,16 @@ class Config:
     # LangSmith settings
     LANGSMITH_PROJECT = os.getenv("LANGCHAIN_PROJECT")
     LANGSMITH_ENDPOINT = os.getenv("LANGSMITH_ENDPOINT")
-    LANGSMITH_TRACING_ENABLED = os.getenv("LANGSMITH_TRACING_ENABLED", "true").lower() == "true"
+    LANGSMITH_TRACING_ENABLED = os.getenv("LANGCHAIN_TRACING", "true").lower() == "true"
     
     # Lambda Labs settings
     LAMBDA_API_KEY = os.getenv("LAMBDA_API_KEY")
     LAMBDA_API_BASE = os.getenv("LAMBDA_API_BASE")
     LAMBDA_MODEL = os.getenv("LAMBDA_MODEL")
+    
+    # LLM Settings
+    LLM_TEMPERATURE = float(os.getenv("LLM_TEMPERATURE", "0.1"))
+    LLM_MAX_TOKENS = int(os.getenv("LLM_MAX_TOKENS", "2048"))
     
     # API request settings
     API_MAX_RETRIES = int(os.getenv("API_MAX_RETRIES", "3"))
