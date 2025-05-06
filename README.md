@@ -2,7 +2,7 @@
 
 ## Overview
 
-ELP Document Intelligence is an advanced RAG (Retrieval Augmented Generation) system built with LangChain that enables intelligent analysis of corporate real estate documents. The system provides powerful document processing capabilities with a conversational interface, making it easy to extract insights from complex datasets across multiple office locations.
+ELP Document Intelligence is an advanced RAG (Retrieval Augmented Generation) system built with LangChain that enables intelligent analysis of corporate real estate and lease documents as well as security badging data. The system provides powerful document processing capabilities with a conversational interface, making it easy to extract insights from complex datasets across multiple office locations.
 
 ## 🌐 Enterprise Office Utilization & ESG Simulation
 
