@@ -237,45 +237,116 @@ The current API implementation is intended for internal use. For production depl
 - Access control based on roles
 - Request logging and monitoring
 
-## 🧠 Sample Questions
+## 🧠 Sample Questions & System Capabilities
+
+Each question below is designed to test specific capabilities of the Document Intelligence System based on the available data.
 
 ### 🔎 Occupancy & Planning
-- "Which office had the highest average occupancy in April 2025?"
+- "Which office had the highest average occupancy in April 2025?" 
+  *(Tests temporal data analysis across badge_data.csv files)*
 - "Predict which offices will exceed capacity thresholds next month."
+  *(Tests predictive modeling using historical badge data trends)*
+- "What was the week-over-week change in occupancy across all offices for the past month?"
+  *(Tests time-series analysis and cross-document aggregation)*
+- "Which meeting rooms in Chicago have less than 50% utilization?"
+  *(Tests granular data filtering in chi_meeting_room_utilization.csv)*
+- "What's the correlation between office occupancy and day of the week across our locations?"
+  *(Tests pattern recognition and multi-variable correlation analysis)*
 
 ### ⚡ Energy Cost Analysis
 - "Which city has the highest average energy cost?"
+  *(Tests basic aggregation across esg_metrics.csv files)*
 - "Predict total energy cost in NYC for the next 6 months."
+  *(Tests forecasting using time-series energy consumption data)*
+- "How does energy usage per employee compare across all offices?"
+  *(Tests cross-document normalization between employees.csv and esg_metrics.csv)*
+- "What's the correlation between occupancy rates and energy consumption in Miami?"
+  *(Tests multi-document correlation between badge_data.csv and esg_metrics.csv)*
+- "Which office has shown the most improvement in energy efficiency over the last quarter?"
+  *(Tests trend analysis and percentage change calculations)*
 
 ### 🌿 ESG Metrics
 - "Which office performs best environmentally?"
+  *(Tests multi-variable ranking across all esg_metrics.csv files)*
 - "Where would occupancy policies cut energy usage most?"
+  *(Tests hypothetical scenario modeling with badge data and energy patterns)*
+- "Calculate the carbon footprint per employee across all offices."
+  *(Tests data normalization between employees.csv and esg_metrics.csv files)*
+- "How do our ESG metrics compare to industry benchmarks?"
+  *(Tests external context integration with internal metrics)*
+- "What would be the environmental impact of implementing a 4-day work week in our LA office?"
+  *(Tests complex scenario modeling using badge, employee, and energy data)*
 
 ### 🗺️ Strategic Decisions
 - "Which city should consolidate based on utilization?"
+  *(Tests decision optimization based on multiple datasets)*
 - "What is the impact of relocating 25% of NYC staff to Miami?"
+  *(Tests scenario modeling across multiple offices and datasets)*
+- "If we need to reduce total leased space by 15%, which offices should be prioritized and why?"
+  *(Tests multi-criteria decision analysis using lease_market_data.csv and badge_data.csv)*
+- "Based on current trends, where should we invest in expanding office space next year?"
+  *(Tests trend extrapolation and predictive analysis across all locations)*
+- "What would be the financial impact of converting 30% of NYC office space to hot-desking?"
+  *(Tests financial modeling and workspace optimization analysis)*
 
 ### 🛂 Badge & Employee Data
 - "How many employees are assigned to LA?"
+  *(Tests basic count aggregation in la_employees.csv)*
 - "Compare badge utilization between Chicago and NYC."
+  *(Tests cross-document comparison between badge_data.csv files)*
+- "Which departments have the highest and lowest office attendance rates?"
+  *(Tests joined analysis between employees.csv and badge_data.csv files)*
+- "Is there a correlation between seniority level and office attendance frequency?"
+  *(Tests attribute correlation across employee directories and badge logs)*
+- "What percentage of employees use the office less than once per week?"
+  *(Tests frequency analysis and percentage calculations across datasets)*
 
 ### 🏢 Facilities & Leasing
 - "What is the lease cost per square foot in Philadelphia?"
+  *(Tests specific data extraction from phl_lease_market_data.csv)*
 - "What is our total leased square footage in LA?"
+  *(Tests summation calculation from la_lease_market_data.csv)*
+- "Which office has the best and worst cost-per-employee ratio?"
+  *(Tests derived metric calculation across lease data and employee headcounts)*
+- "How do our lease costs compare to current market rates in each city?"
+  *(Tests comparative analysis between internal and market data points)*
+- "When are our lease renewal dates and what are the projected market rates at those times?"
+  *(Tests date extraction and future projection from lease_market_data.csv files)*
+
+### 📊 Data Visualization Requests
+- "Create a chart showing occupancy rates by day of week for all offices."
+  *(Tests data visualization capabilities and temporal pattern recognition)*
+- "Visualize the correlation between meeting room bookings and total office attendance."
+  *(Tests multi-document visualization between badge_data.csv and meeting_room_utilization.csv)*
+- "Generate a heat map of energy usage by hour of day for each location."
+  *(Tests complex visualization of time-series energy consumption data)*
+- "Show me a comparison chart of space utilization vs. lease cost across offices."
+  *(Tests multi-variable comparative visualization across document types)*
+- "Create a dashboard visualization of key ESG metrics by location."
+  *(Tests multi-document dashboard visualization capabilities)*
 
 ## ✨ Ready-to-Use AI Prompts
 
 ### 📈 Predict Headcount Needs
-> "Based on current occupancy rates... estimate where we need more seats."
+> "Based on current occupancy rates and growth projections, estimate where we need more seats in Q3 2025."
 
 ### 🏢 Recommend Office Consolidation
-> "Identify underutilized offices below 50% and suggest closures."
+> "Identify underutilized offices below 50% capacity and suggest a phased consolidation plan with projected savings."
 
 ### 🔮 Forecast Occupancy
-> "Predict May 2025 occupancy from April swipe patterns."
+> "Predict May 2025 occupancy from April swipe patterns considering seasonal trends and upcoming holidays."
 
 ### 💸 Recommend Cost Savings
-> "Suggest 3 strategies based on lease, occupancy, and energy cost data."
+> "Suggest 3 data-driven strategies based on lease terms, occupancy patterns, and energy consumption to reduce our real estate costs by 20% while maintaining employee satisfaction."
+
+### 🌱 ESG Improvement Plan
+> "Analyze our current ESG metrics and recommend 5 actionable initiatives to improve our environmental performance while optimizing space utilization."
+
+### 📋 Executive Summary Creation
+> "Create an executive summary of our real estate portfolio performance with key metrics, trends, and recommendations for the board meeting."
+
+### 🔍 Anomaly Detection
+> "Identify any unusual patterns or anomalies in our office utilization data across all locations and suggest possible explanations."
 
 ## Available Commands
 
