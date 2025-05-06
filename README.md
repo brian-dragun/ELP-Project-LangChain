@@ -237,6 +237,127 @@ The current API implementation is intended for internal use. For production depl
 - Access control based on roles
 - Request logging and monitoring
 
+## Web Interface
+
+The Document Intelligence System includes a web-based interface for easier team collaboration and testing. This temporary solution provides access to all system capabilities through an intuitive browser interface until migration to Azure AI Foundry.
+
+### Starting the Web Interface
+
+```bash
+# Install required dependencies
+pip install streamlit pandas matplotlib seaborn
+
+# Start the web interface
+streamlit run web_interface.py
+```
+
+By default, the interface runs on port 8080 and can be accessed at:
+- http://localhost:8080 (on the local machine)
+- http://[server-ip-address]:8080 (from other machines on the network)
+
+### Navigation Options
+
+The web interface includes several navigation sections, each providing access to different system capabilities:
+
+#### 1. Chat Interface
+
+The main interactive component that allows users to query the document intelligence system through a chat-like interface.
+
+**Features:**
+- Natural language queries about your documents
+- Chat history preservation during your session
+- Toggle for displaying detailed reasoning steps
+- Source attribution for answers
+
+**Example Interactions:**
+- "Which office had the highest average occupancy in April 2025?"
+- "Compare energy usage between NYC and Chicago offices"
+- "What are the key ESG metrics across all locations?"
+
+**Expected Output:**
+- Direct answers to your queries
+- Optional reasoning steps showing how the system arrived at the answer
+- Document sources used to generate the response
+
+#### 2. Document Management
+
+Administrative interface for managing the document database and vector store.
+
+**Features:**
+- Document database statistics and visualization 
+- Options to refresh or rebuild the document database
+- Visual breakdown of document types in the system
+
+**Expected Output:**
+- Document count and type distribution charts
+- Success/failure messages for database operations
+- Estimated processing time for operations
+
+#### 3. Facts & Insights
+
+Display and management of extracted facts and generated insights from your documents.
+
+**Features:**
+- Table view of all facts extracted from documents
+- Confidence scores for each extracted fact
+- Source attribution for facts
+- Manual fact extraction option
+
+**Expected Output:**
+- Structured table of facts with metadata
+- Success messages when extracting new facts
+- Filterable/sortable fact database
+
+#### 4. System Status
+
+System health monitoring and configuration information.
+
+**Features:**
+- System configuration overview
+- Memory usage statistics
+- API usage tracking
+- Health checks for system components
+
+**Expected Output:**
+- Vector database size metrics
+- System health indicators (success/failure)
+- Model information and configuration details
+- API usage statistics
+
+### Web Interface Access Control
+
+The web interface is designed for internal team use and does not implement authentication by default. When deploying in a shared environment, consider:
+
+1. Limiting access through network controls
+2. Using a reverse proxy with authentication
+3. Implementing a VPN requirement for access
+
+### Customizing the Web Interface
+
+The web interface can be customized by modifying the `web_interface.py` file. Common customizations include:
+
+```python
+# Change page title and icon
+st.set_page_config(
+    page_title="Custom Title", 
+    page_icon="🔍",
+    layout="wide"
+)
+
+# Add custom CSS
+st.markdown("""
+<style>
+    .main {
+        background-color: #f5f5f5;
+    }
+    .stButton>button {
+        background-color: #4CAF50;
+        color: white;
+    }
+</style>
+""", unsafe_allow_html=True)
+```
+
 ## 🧠 Sample Questions & System Capabilities
 
 Each question below is designed to test specific capabilities of the Document Intelligence System based on the available data.

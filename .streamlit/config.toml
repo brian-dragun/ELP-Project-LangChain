@@ -1,0 +1,6 @@
+[server]
+port = 8080
+fileWatcherType = "none"
+
+# Correct format for maxMessageSize (MB)
+maxMessageSize = 200
