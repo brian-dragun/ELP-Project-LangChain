@@ -1,42 +1,6 @@
 [
   [
-    "Which space is most efficiently used?",
-    "$\\boxed{Philadelphia}$"
-  ],
-  [
-    "Which space is most efficiently used?",
-    "The best answer is Philadelphia."
-  ],
-  [
-    "Which space is most efficiently used?",
-    "$\\boxed{Philadelphia}$"
-  ],
-  [
-    "$\\boxed{Philadelphia}$",
-    "$\\boxed{Philadelphia}$"
-  ],
-  [
-    "Overall Confidence: 77%",
-    "**Final Answer**: There's not enough information to directly answer what \"Overall Confidence: 77%\" refers to. However, if we were to consider a scenario where this confidence level relates to predicting or analyzing one of the provided metrics (like meeting room utilization), we could potentially use the data to support such an analysis. For instance, the average meeting room utilization rate in Philadelphia is around 55% (based on `phl_meeting_room_utilization.csv` summary), and if a predictive model had a confidence level of 77% in its predictions, this could imply a certain level of reliability in forecasting future utilization rates. Without a specific question, the most accurate response is that there's insufficient information to provide a definitive answer."
-  ],
-  [
-    "Sources: /home/bdragun/ELP-Project-LangChain/./documents/chi_meeting_room_utilization.csv, /home/bdragun/ELP-Project-LangChain/./documents/mia_meeting_room_utilization.csv, /home/bdragun/ELP-Project-LangChain/./documents/phl_esg_metrics.csv, /home/bdragun/ELP-Project-LangChain/./documents/occupancy_energy_analysis_v2.csv, /home/bdragun/ELP-Project-LangChain/./documents/chi_esg_metrics.csv, /home/bdragun/ELP-Project-LangChain/./documents/nyc_esg_metrics.csv, /home/bdragun/ELP-Project-LangChain/./documents/la_meeting_room_utilization.csv, /home/bdragun/ELP-Project-LangChain/./documents/phl_meeting_room_utilization.csv, /home/bdragun/ELP-Project-LangChain/./documents/test_office_vacancy.csv, /home/bdragun/ELP-Project-LangChain/./documents/nyc_meeting_room_utilization.csvPredict May 2025 occupancy from April swipe patterns.",
-    "This prediction assumes that the factors influencing occupancy remain constant and that April's data is representative of the upcoming month. However, it's essential to note that this is a basic assumption and real-world factors could influence actual occupancy rates."
-  ],
-  [
-    "What is the lease cost per square foot in Philadelphia?",
-    "$\\boxed{38"
-  ],
-  [
-    "What is our total leased square footage in LA?",
-    "our total leased square footage in LA is **13125 square feet**"
-  ],
-  [
-    "Which city should consolidate based on utilization?",
-    "**Final Answer**: New York City."
-  ],
-  [
-    "Which city should consolidate based on utilization?",
-    "$\\boxed{Los Angeles}$"
+    "How many people in the Philly office?",
+    "$\\boxed{525}$"
   ]
 ]

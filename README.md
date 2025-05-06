@@ -69,8 +69,7 @@ cd ELP-Project-LangChain
 
 2. Create a virtual environment and install dependencies
 ```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+python -m venv .venv && source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
@@ -92,6 +91,151 @@ python ingest_documents.py
 ```bash
 python ai_agent_interactive_chat.py
 ```
+
+### Using the API
+
+The Document Intelligence System now provides a REST API built with FastAPI, allowing programmatic access to all system capabilities.
+
+#### Starting the API Server
+
+```bash
+python api.py
+```
+
+This will start a FastAPI server on `http://localhost:8000` by default.
+
+#### API Documentation
+
+Interactive API documentation is automatically generated and available at:
+- Swagger UI: `http://localhost:8000/docs`
+- ReDoc: `http://localhost:8000/redoc`
+
+#### Available Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/query` | POST | Process document queries with optional reasoning |
+| `/documents/refresh` | POST | Refresh the document database (incremental or full rebuild) |
+| `/documents/status` | GET | Get document database stats and status |
+| `/facts` | GET | Retrieve all extracted facts |
+| `/facts` | POST | Add a new fact to the fact memory |
+| `/extract-patterns` | POST | Extract patterns like dates, emails, etc. from text |
+| `/summarize` | POST | Generate a summary of a document |
+| `/visualize` | POST | Create data visualizations |
+| `/compare-documents` | POST | Compare multiple documents |
+| `/insights` | POST | Generate insights from documents |
+| `/health` | GET | Check API health status |
+
+#### Example API Usage
+
+**Querying Documents**
+
+```bash
+curl -X POST "http://localhost:8000/query" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "Which office had the highest occupancy in April?",
+    "reasoning_mode": true,
+    "detail_level": "detailed"
+  }'
+```
+
+**Refreshing the Document Database**
+
+```bash
+curl -X POST "http://localhost:8000/documents/refresh" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "documents_path": "./documents",
+    "full_rebuild": false
+  }'
+```
+
+**Extracting Patterns from Text**
+
+```bash
+curl -X POST "http://localhost:8000/extract-patterns" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "Meeting scheduled for January 15, 2025 at 3:30 PM. Contact sales@example.com for details.",
+    "pattern_type": "date"
+  }'
+```
+
+**Generating Data Visualizations**
+
+```bash
+curl -X POST "http://localhost:8000/visualize" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "data": "City,Occupancy\nNYC,78%\nLA,65%\nChicago,71%\nMiami,82%\nPhiladelphia,68%",
+    "chart_type": "bar",
+    "title": "Office Occupancy by City"
+  }'
+```
+
+#### API Request/Response Types
+
+**Query Request**
+```json
+{
+  "query": "Which office had the highest average occupancy?",
+  "reasoning_mode": true,
+  "detail_level": "standard"
+}
+```
+
+**Document Refresh Request**
+```json
+{
+  "documents_path": "./documents",
+  "full_rebuild": false
+}
+```
+
+**Pattern Extraction Request**
+```json
+{
+  "text": "Contract expires on 12/31/2025. Budget: $1,500,000.",
+  "pattern_type": "currency"
+}
+```
+
+**Visualization Request**
+```json
+{
+  "data": "Month,Energy,Cost\nJan,1200,3600\nFeb,1100,3300\nMar,1300,3900",
+  "chart_type": "line",
+  "title": "Energy Consumption Trend"
+}
+```
+
+**Document Comparison Request**
+```json
+{
+  "documents": ["la_employees.csv", "nyc_employees.csv"],
+  "aspects": ["headcount", "departments", "roles"]
+}
+```
+
+#### Integration with Other Systems
+
+The API can be integrated with:
+
+- **BI Dashboards**: Connect Tableau, Power BI or similar tools to the API
+- **Custom Applications**: Build web or mobile apps that leverage document intelligence
+- **Automation Tools**: Include in workflows with tools like Zapier or n8n
+- **Scheduled Jobs**: Set up cron jobs to refresh data and generate reports
+
+#### API Security Considerations
+
+The current API implementation is intended for internal use. For production deployment, consider implementing:
+
+- API key authentication
+- HTTPS encryption
+- Rate limiting
+- Access control based on roles
+- Request logging and monitoring
 
 ## 🧠 Sample Questions
 
@@ -139,56 +283,76 @@ When using the interactive chat mode, the following commands are available:
 
 ### Basic Commands
 
-| Command | Description |
-|---------|-------------|
-| `help` | Show all available commands and sample questions |
-| `exit` or `quit` | End the session and save history |
-| `clear` | Clear conversation history |
+| Command | Description | Usage and Expectations |
+|---------|-------------|------------------------|
+| `help` | Show all available commands and sample questions | **Usage**: Type `help` at any time<br>**Expects**: Displays a comprehensive list of all available commands and sample queries you can ask the system |
+| `exit` or `quit` | End the session and save history | **Usage**: Type `exit` or `quit` when finished<br>**Expects**: Conversation history will be saved to `chat_history.json` and the program will terminate |
+| `clear` | Clear conversation history | **Usage**: Type `clear` to start fresh<br>**Expects**: Removes all previous conversation turns while maintaining learned facts |
 
 ### Document Management
 
-| Command | Description |
-|---------|-------------|
-| `refresh` | Manually refresh the document database |
-| `delete chroma` | Delete the ChromaDB vector database |
-| `rebuild database` | Delete and completely rebuild the database |
+| Command | Description | Usage and Expectations |
+|---------|-------------|------------------------|
+| `refresh` | Manually refresh the document database | **Usage**: Type `refresh` after adding or modifying documents<br>**Expects**: System will incrementally update the vector database with any document changes (takes 1-2 minutes depending on changes) |
+| `delete chroma` | Delete the ChromaDB vector database | **Usage**: Type `delete chroma` when you want to reset the database<br>**Expects**: Removes the entire database folder; requires a `rebuild database` afterward |
+| `rebuild database` | Delete and completely rebuild the database | **Usage**: Type `rebuild database` for a fresh start<br>**Expects**: Full reprocessing of all documents (takes 3-5 minutes depending on document count) |
 
 ### Information Display
 
-| Command | Description |
-|---------|-------------|
-| `facts` | Show facts the system has learned |
-| `runs` | View links to recent LangSmith runs |
-| `insights` | Show generated insights |
+| Command | Description | Usage and Expectations |
+|---------|-------------|------------------------|
+| `facts` | Show facts the system has learned | **Usage**: Type `facts` to see extracted knowledge<br>**Expects**: Displays a table of all facts the system has extracted, along with their sources and confidence levels |
+| `runs` | View links to recent LangSmith runs | **Usage**: Type `runs` to see debugging information<br>**Expects**: Shows URLs to recent LangSmith trace visualizations (requires LANGCHAIN_API_KEY) |
+| `insights` | Show generated insights | **Usage**: Type `insights` to see automated analysis<br>**Expects**: Displays a list of insights the system has automatically generated from your documents |
 
 ### Feature Toggles
 
-| Command | Description |
-|---------|-------------|
-| `reasoning on` | Enable display of reasoning steps |
-| `reasoning off` | Disable display of reasoning steps |
-| `insights on` | Enable automatic insight generation |
-| `insights off` | Disable automatic insight generation |
+| Command | Description | Usage and Expectations |
+|---------|-------------|------------------------|
+| `reasoning on` | Enable display of reasoning steps | **Usage**: Type `reasoning on` for transparent thinking<br>**Expects**: Future responses will include detailed step-by-step reasoning, including confidence scores and verification steps |
+| `reasoning off` | Disable display of reasoning steps | **Usage**: Type `reasoning off` for concise answers<br>**Expects**: Future responses will show only the final answer without detailed reasoning |
+| `insights on` | Enable automatic insight generation | **Usage**: Type `insights on` for proactive analysis<br>**Expects**: System will automatically generate insights when answering relevant queries |
+| `insights off` | Disable automatic insight generation | **Usage**: Type `insights off` for faster responses<br>**Expects**: System will not automatically generate insights, potentially increasing response speed |
 
 ### Document Intelligence
 
-| Command | Description |
-|---------|-------------|
-| `visualize [data]` | Create visualization from data |
-| `summarize [document]` | Generate summary of document |
-| `extract [pattern] from [text]` | Extract patterns (dates, numbers, etc.) |
-| `compare [docs]` | Compare multiple documents |
+| Command | Description | Usage and Expectations |
+|---------|-------------|------------------------|
+| `visualize [data]` | Create visualization from data | **Usage**: Type `visualize` followed by CSV data or a reference to data (e.g., `visualize occupancy rates by city`)<br>**Expects**: Generates and displays a chart based on the provided data; saves the image to the `visualizations` folder |
+| `summarize [document]` | Generate summary of document | **Usage**: Type `summarize` followed by document name (e.g., `summarize nyc_lease_market_data.csv`)<br>**Expects**: Produces a concise summary highlighting key points from the document |
+| `extract [pattern] from [text]` | Extract patterns (dates, numbers, etc.) | **Usage**: Type `extract` followed by pattern type and text (e.g., `extract dates from The meeting is on May 15, 2025`)<br>**Expects**: Returns all instances of the specified pattern found in the text |
+| `compare [docs]` | Compare multiple documents | **Usage**: Type `compare` followed by document names (e.g., `compare nyc_employees.csv la_employees.csv`)<br>**Expects**: Produces a comparison analysis highlighting similarities and differences between the documents |
 
-### Pattern Types 
+### Advanced Usage Examples
 
-When using the `extract` command, the following pattern types are available:
-- `currency`: Find monetary values (e.g., $100, 50 dollars)
-- `percentage`: Find percentage values (e.g., 50%)
-- `date`: Find dates in various formats
-- `email`: Find email addresses
-- `phone`: Find phone numbers
-- `time`: Find time values
-- `numeric`: Find any numeric values
+**Visualizing Data**
+```
+> visualize City,Occupancy,Energy Usage (kWh)
+> NYC,78%,45000
+> LA,65%,38000
+> Chicago,71%,42000
+> Miami,82%,51000
+> Philadelphia,68%,36000
+```
+*Expects*: Creates and displays a bar chart showing occupancy and energy usage by city
+
+**Extracting Multiple Pattern Types**
+```
+> extract currency from The budget for Q2 is $350,000 with an additional €25,000 for contingency
+```
+*Expects*: Returns ["$350,000", "€25,000"]
+
+**Comparing Documents with Focus Areas**
+```
+> compare nyc_employees.csv la_employees.csv with focus on department distribution and salary ranges
+```
+*Expects*: Produces an analysis comparing the department distribution and salary ranges between NYC and LA offices
+
+**Creating Insights with Specific Parameters**
+```
+> insights on employee headcount and space utilization across all offices
+```
+*Expects*: Generates and displays insights specifically about headcount and utilization patterns
 
 ## Advanced Features
 
