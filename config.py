@@ -121,6 +121,19 @@ class Config:
     LAMBDA_API_BASE = os.getenv("LAMBDA_API_BASE")
     LAMBDA_MODEL = os.getenv("LAMBDA_MODEL")
     
+    # LLM settings
+    LLM_TEMPERATURE = float(os.getenv("LLM_TEMPERATURE", "0.4"))
+    LLM_MAX_TOKENS = int(os.getenv("LLM_MAX_TOKENS", "2048"))
+    
+    # Retrieval settings
+    RETRIEVAL_DEFAULT_K = int(os.getenv("RETRIEVAL_DEFAULT_K", "15"))
+    RETRIEVAL_FACTUAL_K = int(os.getenv("RETRIEVAL_FACTUAL_K", "5"))
+    RETRIEVAL_COMPARATIVE_K = int(os.getenv("RETRIEVAL_COMPARATIVE_K", "8"))
+    RETRIEVAL_COMPARATIVE_FETCH_K = int(os.getenv("RETRIEVAL_COMPARATIVE_FETCH_K", "20"))
+    RETRIEVAL_ANALYTICAL_K = int(os.getenv("RETRIEVAL_ANALYTICAL_K", "12"))
+    RETRIEVAL_USE_MMR = os.getenv("RETRIEVAL_USE_MMR", "true").lower() == "true"
+    RETRIEVAL_MMR_DIVERSITY = float(os.getenv("RETRIEVAL_MMR_DIVERSITY", "0.3"))
+    
     # API request settings
     API_MAX_RETRIES = int(os.getenv("API_MAX_RETRIES", "3"))
     API_REQUEST_TIMEOUT = int(os.getenv("API_REQUEST_TIMEOUT", "30"))

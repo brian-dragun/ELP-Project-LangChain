@@ -12,6 +12,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 import chromadb
 from langchain_chroma import Chroma
 from datetime import datetime
+from config import Config
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -43,8 +44,20 @@ class ReasoningService:
                 collection_name="document_collection",
                 embedding_function=self.embeddings
             )
-            # Use a higher k value to ensure we retrieve enough context
-            self.retriever = self.vectorstore.as_retriever(search_kwargs={"k": 15})
+            
+            # Use retrieval settings from Config
+            search_kwargs = {
+                "k": Config.RETRIEVAL_DEFAULT_K
+            }
+            
+            # Add MMR settings if enabled
+            if Config.RETRIEVAL_USE_MMR:
+                search_kwargs["search_type"] = "mmr"
+                search_kwargs["fetch_k"] = search_kwargs["k"] * 2  # Fetch more docs for MMR
+                search_kwargs["lambda_mult"] = 1 - Config.RETRIEVAL_MMR_DIVERSITY  # Convert diversity to lambda
+            
+            self.retriever = self.vectorstore.as_retriever(search_kwargs=search_kwargs)
+            logger.info(f"Initialized retriever with search_kwargs: {search_kwargs}")
         except Exception as e:
             logger.warning(f"Could not initialize ChromaDB: {e}")
             self.client = None
@@ -54,6 +67,7 @@ class ReasoningService:
     def retrieve_context(self, query: str) -> List[Document]:
         """
         Retrieve relevant documents for a query with adaptive search.
+        Uses different retrieval strategies based on query type.
         
         Args:
             query: The user query
@@ -66,16 +80,53 @@ class ReasoningService:
             return []
         
         try:
-            # First try to get specific matches with the exact query
-            docs = self.retriever.invoke(query)
+            # Determine the query type to adjust retrieval parameters
+            query_type = self._classify_query_type(query)
+            logger.info(f"Query classified as {query_type}: {query}")
             
-            # If query contains "all offices" but we didn't find the all-offices document,
-            # try a more explicit query to find it
+            # Configure retrieval settings based on query type
+            search_kwargs = {}
+            
+            # Set k value based on query type
+            if query_type == "factual":
+                search_kwargs["k"] = Config.RETRIEVAL_FACTUAL_K
+            elif query_type == "comparative":
+                search_kwargs["k"] = Config.RETRIEVAL_COMPARATIVE_K
+                # For comparative, we might want to fetch more but filter for diversity
+                if Config.RETRIEVAL_USE_MMR:
+                    search_kwargs["search_type"] = "mmr"
+                    search_kwargs["fetch_k"] = Config.RETRIEVAL_COMPARATIVE_FETCH_K
+                    search_kwargs["lambda_mult"] = 1 - Config.RETRIEVAL_MMR_DIVERSITY
+            elif query_type == "analytical":
+                search_kwargs["k"] = Config.RETRIEVAL_ANALYTICAL_K
+                # For analytical, always use MMR with higher diversity
+                if Config.RETRIEVAL_USE_MMR:
+                    search_kwargs["search_type"] = "mmr"
+                    search_kwargs["fetch_k"] = Config.RETRIEVAL_ANALYTICAL_K * 2
+                    # Use slightly higher diversity for analytical queries
+                    search_kwargs["lambda_mult"] = 1 - (Config.RETRIEVAL_MMR_DIVERSITY * 1.2)
+            else:
+                # Default case
+                search_kwargs["k"] = Config.RETRIEVAL_DEFAULT_K
+                if Config.RETRIEVAL_USE_MMR:
+                    search_kwargs["search_type"] = "mmr"
+                    search_kwargs["fetch_k"] = Config.RETRIEVAL_DEFAULT_K * 2
+                    search_kwargs["lambda_mult"] = 1 - Config.RETRIEVAL_MMR_DIVERSITY
+            
+            # Create a temporary retriever with these settings
+            temp_retriever = self.vectorstore.as_retriever(search_kwargs=search_kwargs)
+            logger.info(f"Using retrieval settings for {query_type} query: {search_kwargs}")
+            
+            # Get documents with configured retriever
+            docs = temp_retriever.invoke(query)
+            
+            # Special case handling for queries about all offices
             if "all office" in query.lower() or "all location" in query.lower():
                 if not any("all_employee_counts" in doc.metadata.get("content_type", "") 
                           for doc in docs if hasattr(doc, "metadata")):
-                    # Try a more explicit query to find the all-offices document
-                    all_offices_docs = self.retriever.invoke("total employee count across all listed offices")
+                    # Use default settings for this supplementary query
+                    default_retriever = self.vectorstore.as_retriever(search_kwargs={"k": Config.RETRIEVAL_DEFAULT_K})
+                    all_offices_docs = default_retriever.invoke("total employee count across all listed offices")
                     # Add these documents to the results if they're not already included
                     doc_ids = set(id(doc) for doc in docs)
                     for doc in all_offices_docs:
@@ -86,6 +137,51 @@ class ReasoningService:
         except Exception as e:
             logger.error(f"Error retrieving documents: {e}")
             return []
+    
+    def _classify_query_type(self, query: str) -> str:
+        """
+        Classify the query type to determine appropriate retrieval settings.
+        
+        Args:
+            query: The user query
+            
+        Returns:
+            Query type: "factual", "comparative", "analytical", or "default"
+        """
+        query_lower = query.lower()
+        
+        # Factual queries ask for specific facts or data
+        factual_indicators = [
+            "how many", "what is the", "where is", "when was", "who is",
+            "list the", "tell me the", "find the", "show me", "give me the",
+            "what are the", "is there a", "does the", "do the"
+        ]
+        
+        # Comparative queries ask to compare or contrast
+        comparative_indicators = [
+            "compare", "versus", "vs", "difference between", "similarities between",
+            "how does", "which one", "better than", "worse than", "higher than", "lower than",
+            "more than", "less than", "stronger", "weaker", "taller", "shorter"
+        ]
+        
+        # Analytical queries ask for reasoning, analysis, or multi-step thinking
+        analytical_indicators = [
+            "analyze", "evaluate", "explain why", "reason for", "implications of",
+            "impact of", "effect of", "cause of", "relationship between",
+            "how might", "what would happen if", "why does", "what can be inferred",
+            "what conclusions", "recommend", "suggest", "how should", "optimize",
+            "strategy for", "plan for"
+        ]
+        
+        # Check for indicators in the query
+        if any(indicator in query_lower for indicator in analytical_indicators):
+            return "analytical"
+        elif any(indicator in query_lower for indicator in comparative_indicators):
+            return "comparative"
+        elif any(indicator in query_lower for indicator in factual_indicators):
+            return "factual"
+        else:
+            return "default"
     
     def process_query(self, query: str, detail_level: str = 'standard') -> Dict[str, Any]:
         """

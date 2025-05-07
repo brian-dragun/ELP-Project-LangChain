@@ -68,8 +68,8 @@ class LambdaLabsLLM(LLM):
         data = {
             "model": model,
             "messages": [{"role": "user", "content": prompt}],
-            "temperature": kwargs.get("temperature", 0.7),
-            "max_tokens": kwargs.get("max_tokens", 1024)
+            "temperature": kwargs.get("temperature", Config.LLM_TEMPERATURE),
+            "max_tokens": kwargs.get("max_tokens", Config.LLM_MAX_TOKENS)
         }
         
         if stop is not None:
