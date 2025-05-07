@@ -1,6 +1,22 @@
 [
   [
-    "Create an executive summary of our real estate portfolio performance with key metrics, trends, and recommendations for the board meeting",
-    "## Executive Summary\nOur real estate portfolio exhibits diverse performance across different cities"
+    "How many people in the miami office?",
+    "the number of people in the Miami office is 22."
+  ],
+  [
+    "Based on current occupancy rates and growth projections, estimate where we need more seats in Q3 2025",
+    "To determine where more seats are needed in Q3 2025, we need to analyze the current occupancy rates and growth projections for various cities. Based on the available data, Los Angeles, New York City, and Miami are the cities with relevant occupancy information. The analysis indicates that New York City will likely require more seats due to its higher occupancy rate and meeting room utilization compared to Los Angeles and Miami."
+  ],
+  [
+    "Analyze our current ESG metrics and recommend 5 actionable initiatives to improve our environmental performance while optimizing space utilization",
+    "To improve environmental performance while optimizing space utilization, we recommend the following 5 actionable initiatives:\n1. Implement energy-efficient lighting and HVAC systems in all offices.\n2. Enhance meeting room utilization through flexible scheduling and shared spaces.\n3. Increase waste recycling rates across all locations.\n4. Optimize badge utilization and adjust office space accordingly.\n5. Conduct regular energy audits to identify areas for improvement."
+  ],
+  [
+    "\"Create an executive summary of our real estate portfolio performance with key metrics, trends, and recommendations for the board meeting.",
+    "Our real estate portfolio across Philadelphia, Miami, New York City, Chicago, and Los Angeles exhibits diverse performance metrics. Key highlights include varying office space costs, energy consumption, and lease market conditions. Recommendations focus on optimizing space utilization and cost management."
+  ],
+  [
+    "Identify any unusual patterns or anomalies in our office utilization data across all locations and suggest possible explanations.",
+    "Unusual patterns and anomalies in office utilization data include low meeting room utilization on weekends, significant variations in energy consumption per seat across locations, and discrepancies in badge utilization rates. Possible explanations include different work cultures, varying office sizes, and inconsistent data reporting."
   ]
 ]

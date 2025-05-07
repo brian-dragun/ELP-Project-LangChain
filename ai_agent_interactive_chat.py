@@ -1147,19 +1147,23 @@ class DocumentChatV3(DocumentChatV2):
         answer_text = result['answer']
         final_answer = None
         
-        # Check for final answer pattern and extract it
-        final_answer_match = re.search(
-            r'(\*\*Final Answer\*\*:|\*\*Final Answer:\*\*|Final Answer:)(.*?)(\.|$)',
-            answer_text,
-            re.IGNORECASE | re.DOTALL
-        )
+        # Check for final answer patterns with different formats
+        final_answer_patterns = [
+            r'### Final Answer ###\s*(.*?)(?=###|\Z)',
+            r'\*\*Final Answer\*\*:?\s*(.*?)(?=\n\n|\Z)',
+            r'Final Answer:?\s*(.*?)(?=\n\n|\Z)'
+        ]
         
-        if final_answer_match:
-            final_answer = final_answer_match.group(0)
-            # Remove the final answer from the original text
-            answer_text = answer_text.replace(final_answer, "").strip()
+        for pattern in final_answer_patterns:
+            match = re.search(pattern, answer_text, re.DOTALL | re.IGNORECASE)
+            if match:
+                final_answer = match.group(1).strip()
+                # Remove the final answer from the original text if it's the structured format
+                if '### Final Answer ###' in answer_text:
+                    answer_text = re.sub(r'### Final Answer ###.*?(?=###|\Z)', '', answer_text, flags=re.DOTALL).strip()
+                break
         
-        # Apply green color to boxed answers in the remaining answer text
+        # Apply green color to boxed answers in the answer text
         if "$\\boxed{" in answer_text:
             # Find all boxed answers and color them green
             answer_text = re.sub(
@@ -1168,8 +1172,11 @@ class DocumentChatV3(DocumentChatV2):
                 answer_text
             )
         
-        # Display the main answer without the final answer part
-        print(f"{answer_text}")
+        # Display the main answer without the final answer part if we found a final answer in structured format
+        if final_answer and '### Final Answer ###' in result['answer']:
+            print(answer_text)
+        else:
+            print(answer_text)
         
         # Show verification if available
         if "verification" in result and result["verification"]:
@@ -1229,257 +1236,257 @@ class DocumentChatV3(DocumentChatV2):
         
         # Display the final answer at the bottom in green if it was found
         if final_answer:
-            print(f"\n{Colors.GREEN}{final_answer}{Colors.ENDC}")
-
-    def show_help(self):
-        """Enhanced help display with Document Intelligence capabilities"""
-        help_text = f"""
-{Colors.GREEN}Sample questions you can ask:{Colors.ENDC}
-{Colors.YELLOW}-----------------------------{Colors.ENDC}
-1. "How many employees work in the Los Angeles office?"
-2. "What is the badge utilization rate in Chicago compared to NYC?"
-3. "Which city has the highest meeting room utilization on weekends?"
-4. "What's the trend in energy usage across all offices over time?"
-5. "Create a visualization of meeting room utilization by city"
-6. "Compare the sustainability metrics of Chicago and Miami offices"
-7. "Extract all dates from the NYC lease document"
-8. "Summarize the ESG metrics across all locations"
-
-{Colors.CYAN}Advanced Commands:{Colors.ENDC}
-- "visualize [data]": Create visualization from data
-- "summarize [document]": Generate summary of document
-- "extract [pattern] from [text]": Extract patterns (dates, numbers, etc.)
-- "compare [docs]": Compare multiple documents
-- "insights": Show generated insights
-- "insights on/off": Toggle automatic insights
-- "reasoning on/off": Toggle display of reasoning steps
-- "facts": Show facts the system has learned
-- "refresh": Manually refresh document database
-- "delete chroma": Delete the ChromaDB database
-- "rebuild database": Delete and rebuild the entire database
-- "clear": Clear conversation history
-- "help": Show this help message
-- "exit" or "quit": End the session
-
-{Colors.CYAN}LangSmith Commands:{Colors.ENDC}
-- "runs": View links to recent LangSmith runs
-- You can rate responses 1-5 when prompted for feedback
-
-{Colors.YELLOW}Pattern Types:{Colors.ENDC} currency, percentage, date, email, phone, time, numeric
-
-For more sample questions, check SAMPLE_QUESTIONS.md
-"""
-        print(help_text)
-
-    def show_facts(self):
-        """Show facts that have been learned"""
-        all_facts = self.fact_memory.facts + self.fact_memory.session_facts
-        if not all_facts:
-            print(f"{Colors.YELLOW}No facts have been learned yet.{Colors.ENDC}")
-            return
-
-        print(f"\n{Colors.GREEN}Learned Facts:{Colors.ENDC}")
-        print(f"{Colors.YELLOW}-------------{Colors.ENDC}")
-
-        # Limit to 20 facts for readability
-        for i, fact in enumerate(all_facts[:20]):
-            confidence = fact.get("confidence", 0) * 100
-            confidence_color = Colors.RED if confidence < 60 else Colors.YELLOW if confidence < 80 else Colors.GREEN
-            print(f"{i+1}. {fact['fact']}")
-            print(f"   {Colors.CYAN}Source:{Colors.ENDC} {fact['source']}")
-            print(
-                f"   {confidence_color}Confidence: {confidence:.0f}%{Colors.ENDC}")
-
-        if len(all_facts) > 20:
-            print(f"\n... and {len(all_facts) - 20} more facts.")
-
-    def save_history(self):
-        """Save chat history and facts to files"""
-        # Save chat history
-        history_file = "chat_history.json"
-        try:
-            with open(history_file, 'w') as f:
-                json.dump(self.history, f, indent=2)
-            print(f"Chat history saved to {history_file}")
-        except Exception as e:
-            print(f"Error saving chat history: {e}")
-
-        # Save facts
-        self.fact_memory.save_facts()
-        print(f"Facts saved to {self.fact_memory.memory_file}")
+            # Create a visually striking box for the final answer
+            width = min(len(final_answer) + 4, 100)  # Set max width to 100 chars
+            print(f"\n{Colors.BOLD}{Colors.GREEN}┌{'─' * width}┐{Colors.ENDC}")
+            print(f"{Colors.BOLD}{Colors.GREEN}│ FINAL ANSWER: {' ' * (width - 15)}│{Colors.ENDC}")
+            
+            # Split long answers into multiple lines for the box
+            words = final_answer.split()
+            lines = []
+            current_line = ""
+            
+            for word in words:
+                if len(current_line) + len(word) + 1 <= width - 4:  # -4 for "│ " and " │"
+                    current_line += (" " + word if current_line else word)
+                else:
+                    lines.append(current_line)
+                    current_line = word
+            
+            if current_line:
+                lines.append(current_line)
+            
+            # Print each line of the final answer in the box
+            for line in lines:
+                padding = width - len(line) - 4
+                print(f"{Colors.BOLD}{Colors.GREEN}│ {line}{' ' * padding} │{Colors.ENDC}")
+            
+            print(f"{Colors.BOLD}{Colors.GREEN}└{'─' * width}┘{Colors.ENDC}")
+        elif not final_answer and answer_text.strip():
+            # If no explicit final answer was found but there is an answer,
+            # add a simple separator to make the whole answer stand out
+            print(f"\n{Colors.GREEN}{'=' * 60}{Colors.ENDC}")
 
     def run_session(self):
-        """Run an interactive chat session with advanced features"""
-        try:
-            while True:
+        """Run an interactive chat session with the user"""
+        print("Type 'exit' or 'quit' to end the session.")
+        
+        while True:
+            try:
                 # Get user input
-                user_input = input(f"\n{Colors.CYAN}👤 You:{Colors.ENDC} ")
-                user_input = user_input.strip()
-
+                user_input = input("\n👤 You: ")
+                
                 # Check for special commands
-                if not user_input:
-                    continue
-
-                # Exit commands
-                if user_input.lower() in ['exit', 'quit', 'q']:
-                    self.monitor_running = False  # Stop the monitoring thread
-                    self.save_history()
-                    print(
-                        f"{Colors.GREEN}Goodbye! Chat history and facts have been saved.{Colors.ENDC}")
+                if user_input.lower() in ["exit", "quit"]:
+                    # Save facts before exiting
+                    self.fact_memory.save_facts()
+                    print(f"{Colors.GREEN}Session ended. Goodbye!{Colors.ENDC}")
                     break
-
-                # Help command
-                elif user_input.lower() == 'help':
-                    self.show_help()
+                
+                elif user_input.lower() == "help":
+                    print(f"\n{Colors.YELLOW}Sample questions:{Colors.ENDC}")
+                    print("- Which office has the most employees?")
+                    print("- What is the average energy consumption per office?")
+                    print("- Compare the badge utilization rates between Chicago and NYC.")
+                    print("- What was the meeting room utilization rate in Miami last month?")
+                    print("- Which office has the highest ESG rating?")
+                    print("- What are the current lease costs in Philadelphia?")
+                    print("- Generate a visualization of employee counts by office.")
                     continue
-
-                # Clear history command
-                elif user_input.lower() == 'clear':
+                
+                elif user_input.lower() == "clear":
                     self.history = []
                     self.conversation_memory.clear()
+                    self.summary_memory.clear()
                     print(f"{Colors.GREEN}Chat history cleared.{Colors.ENDC}")
                     continue
-
-                # Facts command
-                elif user_input.lower() == 'facts':
-                    self.show_facts()
+                
+                elif user_input.lower() == "refresh":
+                    print(f"{Colors.YELLOW}Refreshing document database...{Colors.ENDC}")
+                    self._refresh_documents()
                     continue
-
-                # Refresh documents command
-                elif user_input.lower() == 'refresh':
-                    print(
-                        f"{Colors.YELLOW}Refreshing document database...{Colors.ENDC}")
-                    success = self._refresh_documents()
-                    if success:
-                        print(
-                            f"{Colors.GREEN}Document database refreshed successfully!{Colors.ENDC}")
+                
+                elif user_input.lower() == "facts":
+                    print(f"\n{Colors.YELLOW}Learned Facts:{Colors.ENDC}")
+                    all_facts = self.fact_memory.facts + self.fact_memory.session_facts
+                    if not all_facts:
+                        print("No facts have been learned yet.")
                     else:
-                        print(
-                            f"{Colors.RED}Failed to refresh document database.{Colors.ENDC}")
+                        for i, fact in enumerate(all_facts, 1):
+                            confidence = fact.get("confidence", 0)
+                            if isinstance(confidence, str):
+                                try:
+                                    confidence = float(confidence.rstrip('%')) / 100
+                                except:
+                                    confidence = 0
+                            confidence_str = f"{confidence*100:.0f}%" if isinstance(confidence, float) else str(confidence)
+                            print(f"{i}. {fact['fact']} (Source: {fact['source']}, Confidence: {confidence_str})")
                     continue
-
-                # Delete Chroma database command
-                elif user_input.lower() == 'delete chroma':
-                    print(
-                        f"{Colors.RED}WARNING: This will delete the entire ChromaDB database. Are you sure? (y/n){Colors.ENDC}")
-                    confirm = input().strip().lower()
-                    if confirm == 'y' or confirm == 'yes':
-                        print(
-                            f"{Colors.YELLOW}Deleting ChromaDB database...{Colors.ENDC}")
-                        import shutil
-                        try:
-                            # Close any open connections
-                            self.client = None
-                            self.vectorstore = None
-                            self.retriever = None
-
-                            # Delete the directory
-                            if os.path.exists(self.chroma_path) and os.path.isdir(self.chroma_path):
-                                shutil.rmtree(self.chroma_path)
-                                print(
-                                    f"{Colors.GREEN}ChromaDB database deleted successfully!{Colors.ENDC}")
-                            else:
-                                print(
-                                    f"{Colors.YELLOW}ChromaDB directory not found.{Colors.ENDC}")
-                        except Exception as e:
-                            print(
-                                f"{Colors.RED}Error deleting ChromaDB: {e}{Colors.ENDC}")
+                
+                elif user_input.lower() == "runs" and self.langsmith_enabled:
+                    print(f"\n{Colors.YELLOW}LangSmith Run Links:{Colors.ENDC}")
+                    if not self.run_ids:
+                        print("No tracked runs available.")
                     else:
-                        print(
-                            f"{Colors.GREEN}Database deletion cancelled.{Colors.ENDC}")
+                        for i, run_id in enumerate(self.run_ids[-5:], 1):  # Show last 5 runs
+                            print(f"{i}. https://smith.langchain.com/runs/{run_id}")
                     continue
-
-                # Rebuild database command
-                elif user_input.lower() == 'rebuild database':
-                    print(
-                        f"{Colors.YELLOW}This will delete and rebuild the entire database. Continue? (y/n){Colors.ENDC}")
-                    confirm = input().strip().lower()
-                    if confirm == 'y' or confirm == 'yes':
-                        print(
-                            f"{Colors.YELLOW}Rebuilding database from scratch...{Colors.ENDC}")
-
-                        # Delete ChromaDB
-                        import shutil
-                        try:
-                            # Close any open connections
-                            self.client = None
-                            self.vectorstore = None
-                            self.retriever = None
-
-                            # Delete the directory if it exists
-                            if os.path.exists(self.chroma_path) and os.path.isdir(self.chroma_path):
-                                shutil.rmtree(self.chroma_path)
-                                print(
-                                    f"{Colors.GREEN}Old database deleted.{Colors.ENDC}")
-                        except Exception as e:
-                            print(
-                                f"{Colors.RED}Error deleting database: {e}{Colors.ENDC}")
-                            continue
-
-                        # Reinitialize client
-                        self.client = chromadb.PersistentClient(
-                            path=self.chroma_path)
-
-                        # Rebuild database
-                        success = self._refresh_documents()
-                        if success:
-                            print(
-                                f"{Colors.GREEN}Database rebuilt successfully!{Colors.ENDC}")
-                        else:
-                            print(
-                                f"{Colors.RED}Failed to rebuild database.{Colors.ENDC}")
+                
+                elif user_input.lower() == "insights":
+                    print(f"\n{Colors.YELLOW}Generated Insights:{Colors.ENDC}")
+                    if not self.insights:
+                        print("No insights have been generated yet.")
                     else:
-                        print(
-                            f"{Colors.GREEN}Database rebuild cancelled.{Colors.ENDC}")
+                        for i, insight in enumerate(self.insights, 1):
+                            confidence = insight.get("confidence", 0)
+                            print(f"{i}. {insight['description']} (Confidence: {confidence}%)")
+                            print(f"   Importance: {insight.get('importance', 'Unknown')}")
                     continue
-
-                # Toggle reasoning mode
-                elif user_input.lower() == 'reasoning on':
-                    self.reasoning_mode = True
-                    print(f"{Colors.GREEN}Reasoning steps enabled.{Colors.ENDC}")
+                
+                elif user_input.lower() in ["insights on", "insights off"]:
+                    self.auto_insights_mode = (user_input.lower() == "insights on")
+                    state = "enabled" if self.auto_insights_mode else "disabled"
+                    print(f"{Colors.GREEN}Automatic insights {state}.{Colors.ENDC}")
                     continue
-
-                elif user_input.lower() == 'reasoning off':
-                    self.reasoning_mode = False
-                    print(f"{Colors.GREEN}Reasoning steps disabled.{Colors.ENDC}")
+                
+                elif user_input.lower() in ["reasoning on", "reasoning off"]:
+                    self.reasoning_mode = (user_input.lower() == "reasoning on")
+                    state = "visible" if self.reasoning_mode else "hidden"
+                    print(f"{Colors.GREEN}Reasoning steps will be {state}.{Colors.ENDC}")
                     continue
-
-                elif user_input.lower() == 'reasoning':
-                    status = "enabled" if self.reasoning_mode else "disabled"
-                    print(
-                        f"{Colors.GREEN}Reasoning steps are currently {status}.{Colors.ENDC}")
+                
+                elif user_input.lower().startswith("visualize "):
+                    data_text = user_input[10:].strip()
+                    if not data_text:
+                        print(f"{Colors.RED}Please provide data to visualize.{Colors.ENDC}")
+                        continue
+                    
+                    print(f"{Colors.YELLOW}Generating visualization...{Colors.ENDC}")
+                    base64_img, viz_path = self.data_visualizer.generate_visualization(data_text)
+                    
+                    if base64_img:
+                        print(f"{Colors.GREEN}Visualization created and saved to {viz_path}{Colors.ENDC}")
+                        self.charts_generated.append(viz_path)
+                    else:
+                        print(f"{Colors.RED}Could not generate visualization: {viz_path}{Colors.ENDC}")
                     continue
-
-                # Process regular queries
-                print(f"\n{Colors.GREEN}🤖 Assistant:{Colors.ENDC} ", end="")
-                result = self.process_query(user_input)
-                self.display_response(result)
-
-                # Silent LangSmith feedback tracking (no user prompts)
-                if self.langsmith_enabled and "answer" in result and not "error" in result:
-                    # Track the interaction in LangSmith without asking for user feedback
+                
+                elif user_input.lower().startswith("summarize "):
+                    doc_name = user_input[10:].strip()
+                    if not doc_name:
+                        print(f"{Colors.RED}Please provide a document name to summarize.{Colors.ENDC}")
+                        continue
+                    
+                    # Find matching documents
+                    matching_files = []
+                    for file in os.listdir(self.documents_path):
+                        if doc_name.lower() in file.lower():
+                            matching_files.append(os.path.join(self.documents_path, file))
+                    
+                    if not matching_files:
+                        print(f"{Colors.RED}No documents found matching '{doc_name}'.{Colors.ENDC}")
+                        continue
+                    
+                    # Use the first matching file
+                    file_path = matching_files[0]
+                    print(f"{Colors.YELLOW}Summarizing {os.path.basename(file_path)}...{Colors.ENDC}")
+                    
                     try:
-                        self.track_run(user_input, result)
-                    except:
-                        pass
-
-                print(f"\n{Colors.YELLOW}" + "-"*50 + Colors.ENDC)
-
-        except KeyboardInterrupt:
-            self.monitor_running = False  # Stop the monitoring thread
-            print(f"\n{Colors.YELLOW}Session ended by user.{Colors.ENDC}")
-            self.save_history()
-        except Exception as e:
-            self.monitor_running = False  # Stop the monitoring thread
-            print(f"{Colors.RED}An error occurred: {e}{Colors.ENDC}")
-            logger.exception("Error in chat session")
-            self.save_history()
-
-    # Track a run in LangSmith
-    def track_run(self, query, result):
-        """Track a query and response in LangSmith"""
-        if not self.langsmith_enabled or not self.langsmith_client:
-            return None
+                        with open(file_path, 'r') as f:
+                            doc_content = f.read()
+                        
+                        summary = self.document_summarizer.summarize_document(doc_content)
+                        print(f"\n{Colors.CYAN}Summary:{Colors.ENDC}")
+                        print(summary)
+                    except Exception as e:
+                        print(f"{Colors.RED}Error summarizing document: {str(e)}{Colors.ENDC}")
+                    
+                    continue
+                
+                elif user_input.lower().startswith("extract "):
+                    pattern_text = user_input[8:].strip()
+                    if not pattern_text:
+                        print(f"{Colors.RED}Please provide a pattern type to extract.{Colors.ENDC}")
+                        continue
+                    
+                    # Get the context from recently retrieved documents
+                    context_docs = self.get_relevant_context("recent documents")
+                    context_text = "\n\n".join([doc.page_content for doc in context_docs])
+                    
+                    print(f"{Colors.YELLOW}Extracting {pattern_text} patterns...{Colors.ENDC}")
+                    
+                    # Check if it's a named pattern or custom regex
+                    if pattern_text in self.pattern_extractor.patterns:
+                        patterns = self.pattern_extractor.extract_pattern(context_text, pattern_text)
+                    else:
+                        patterns = self.pattern_extractor.extract_custom_pattern(context_text, pattern_text)
+                    
+                    if patterns:
+                        print(f"\n{Colors.CYAN}Found {len(patterns)} matches:{Colors.ENDC}")
+                        for i, match in enumerate(patterns[:20], 1):  # Limit to 20 results
+                            print(f"{i}. {match}")
+                        if len(patterns) > 20:
+                            print(f"...and {len(patterns) - 20} more")
+                    else:
+                        print(f"{Colors.YELLOW}No patterns found.{Colors.ENDC}")
+                    
+                    continue
+                
+                elif user_input.lower().startswith("compare "):
+                    # Format should be: compare doc1,doc2,doc3
+                    doc_list = user_input[8:].strip()
+                    if not doc_list:
+                        print(f"{Colors.RED}Please provide document names to compare.{Colors.ENDC}")
+                        continue
+                    
+                    doc_names = [name.strip() for name in doc_list.split(',')]
+                    if len(doc_names) < 2:
+                        print(f"{Colors.RED}Please provide at least 2 documents to compare.{Colors.ENDC}")
+                        continue
+                    
+                    # Find matching documents for each name
+                    docs_to_compare = []
+                    for name in doc_names:
+                        matching_docs = self.get_relevant_context(name)
+                        if matching_docs:
+                            docs_to_compare.append(matching_docs[0])  # Use the most relevant doc
+                    
+                    if len(docs_to_compare) < 2:
+                        print(f"{Colors.RED}Could not find enough matching documents.{Colors.ENDC}")
+                        continue
+                    
+                    print(f"{Colors.YELLOW}Comparing {len(docs_to_compare)} documents...{Colors.ENDC}")
+                    result = self.cross_doc_analyzer.compare_documents(docs_to_compare)
+                    
+                    print(f"\n{Colors.CYAN}Document Comparison:{Colors.ENDC}")
+                    print(result["comparison"])
+                    
+                    continue
+                
+                # Process regular user query
+                print(f"{Colors.YELLOW}Processing your question...{Colors.ENDC}")
+                result = self.process_query(user_input)
+                
+                # Display the result
+                self.display_response(result)
+                
+                # If auto insights are enabled, try to generate an insight from the query
+                if self.auto_insights_mode and "answer" in result:
+                    docs = self.get_relevant_context(user_input)
+                    if docs:
+                        generated_insights = self.insight_generator.generate_insights(docs, top_k=1)
+                        if generated_insights:
+                            insight = generated_insights[0]
+                            self.insights.append(insight)
+                            result["insight"] = insight["description"]
+                
+            except KeyboardInterrupt:
+                print(f"\n{Colors.GREEN}Session interrupted. Goodbye!{Colors.ENDC}")
+                break
+            except Exception as e:
+                print(f"{Colors.RED}Error: {str(e)}{Colors.ENDC}")
+                import traceback
+                print(traceback.format_exc())
 
 
 if __name__ == "__main__":
