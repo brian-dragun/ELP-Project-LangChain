@@ -45,17 +45,102 @@ class ReasoningService:
                 collection_name="document_collection",
                 embedding_function=self.embeddings
             )
-            # Use a higher k value to ensure we retrieve enough context
-            self.retriever = self.vectorstore.as_retriever(search_kwargs={"k": 15})
+            
+            # Check if MMR is supported in this ChromaDB version
+            self.mmr_supported = self._check_mmr_compatibility()
+            
+            # Set up retrieval parameters from Config
+            search_kwargs = {
+                "k": Config.RETRIEVAL_DEFAULT_K
+            }
+            
+            # Only add MMR settings if supported by ChromaDB version
+            if self.mmr_supported and Config.RETRIEVAL_USE_MMR:
+                search_kwargs["search_type"] = "mmr"
+                search_kwargs["fetch_k"] = search_kwargs["k"] * 2  # Fetch more docs for MMR
+                search_kwargs["lambda_mult"] = 1 - Config.RETRIEVAL_MMR_DIVERSITY  # Convert diversity to lambda
+            
+            self.retriever = self.vectorstore.as_retriever(search_kwargs=search_kwargs)
+            logger.info(f"Initialized retriever with search_kwargs: {search_kwargs}")
         except Exception as e:
             logger.warning(f"Could not initialize ChromaDB: {e}")
             self.client = None
             self.vectorstore = None
             self.retriever = None
+            self.mmr_supported = False
+
+    def _check_mmr_compatibility(self):
+        """Check if the installed ChromaDB version supports MMR search"""
+        try:
+            # Try to create a test retriever with MMR
+            test_kwargs = {"k": 2, "search_type": "mmr", "fetch_k": 4, "lambda_mult": 0.5}
+            temp_retriever = self.vectorstore.as_retriever(search_kwargs=test_kwargs)
+            
+            # Try a simple query to test if MMR works
+            try:
+                _ = temp_retriever.invoke("test")
+                logger.info("MMR search is supported by this ChromaDB version")
+                return True
+            except Exception as e:
+                if "search_type" in str(e):
+                    logger.info("MMR not directly supported in this ChromaDB version")
+                    return False
+                # If it's another kind of error, we assume MMR is supported
+                return True
+                
+        except Exception:
+            logger.info("MMR search feature not supported in this ChromaDB version")
+            return False
     
+    def _classify_query_type(self, query: str) -> str:
+        """
+        Classify the query type to determine appropriate retrieval settings.
+        
+        Args:
+            query: The user query
+            
+        Returns:
+            Query type: "factual", "comparative", "analytical", or "default"
+        """
+        query_lower = query.lower()
+        
+        # Factual queries ask for specific facts or data
+        factual_indicators = [
+            "how many", "what is the", "where is", "when was", "who is",
+            "list the", "tell me the", "find the", "show me", "give me the",
+            "what are the", "is there a", "does the", "do the"
+        ]
+        
+        # Comparative queries ask to compare or contrast
+        comparative_indicators = [
+            "compare", "versus", "vs", "difference between", "similarities between",
+            "how does", "which one", "better than", "worse than", "higher than", "lower than",
+            "more than", "less than", "stronger", "weaker", "taller", "shorter"
+        ]
+        
+        # Analytical queries ask for reasoning, analysis, or multi-step thinking
+        analytical_indicators = [
+            "analyze", "evaluate", "explain why", "reason for", "implications of",
+            "impact of", "effect of", "cause of", "relationship between",
+            "how might", "what would happen if", "why does", "what can be inferred",
+            "what conclusions", "recommend", "suggest", "how should", "optimize",
+            "strategy for", "plan for"
+        ]
+        
+        # Check for indicators in the query
+        if any(indicator in query_lower for indicator in analytical_indicators):
+            return "analytical"
+        elif any(indicator in query_lower for indicator in comparative_indicators):
+            return "comparative"
+        elif any(indicator in query_lower for indicator in factual_indicators):
+            return "factual"
+        else:
+            return "default"
+            
     def retrieve_context(self, query: str) -> List[Document]:
         """
         Retrieve relevant documents for a query with adaptive search.
+        Uses different retrieval strategies based on query type.
         
         Args:
             query: The user query
@@ -68,16 +153,59 @@ class ReasoningService:
             return []
         
         try:
-            # First try to get specific matches with the exact query
-            docs = self.retriever.invoke(query)
+            # Determine the query type to adjust retrieval parameters
+            query_type = self._classify_query_type(query)
+            logger.info(f"Query classified as {query_type}: {query}")
             
-            # If query contains "all offices" but we didn't find the all-offices document,
-            # try a more explicit query to find it
+            # Configure retrieval settings based on query type
+            search_kwargs = {}
+            
+            # Set k value based on query type
+            if query_type == "factual":
+                search_kwargs["k"] = Config.RETRIEVAL_FACTUAL_K
+            elif query_type == "comparative":
+                search_kwargs["k"] = Config.RETRIEVAL_COMPARATIVE_K
+                # For comparative, we might want to fetch more but filter for diversity
+                if self.mmr_supported and Config.RETRIEVAL_USE_MMR:
+                    search_kwargs["search_type"] = "mmr"
+                    search_kwargs["fetch_k"] = Config.RETRIEVAL_COMPARATIVE_FETCH_K
+                    search_kwargs["lambda_mult"] = 1 - Config.RETRIEVAL_MMR_DIVERSITY
+            elif query_type == "analytical":
+                search_kwargs["k"] = Config.RETRIEVAL_ANALYTICAL_K
+                # For analytical, always use MMR with higher diversity
+                if self.mmr_supported and Config.RETRIEVAL_USE_MMR:
+                    search_kwargs["search_type"] = "mmr"
+                    search_kwargs["fetch_k"] = Config.RETRIEVAL_ANALYTICAL_K * 2
+                    # Use slightly higher diversity for analytical queries
+                    search_kwargs["lambda_mult"] = 1 - (Config.RETRIEVAL_MMR_DIVERSITY * 1.2)
+            else:
+                # Default case
+                search_kwargs["k"] = Config.RETRIEVAL_DEFAULT_K
+                if self.mmr_supported and Config.RETRIEVAL_USE_MMR:
+                    search_kwargs["search_type"] = "mmr"
+                    search_kwargs["fetch_k"] = Config.RETRIEVAL_DEFAULT_K * 2
+                    search_kwargs["lambda_mult"] = 1 - Config.RETRIEVAL_MMR_DIVERSITY
+            
+            # Create a temporary retriever with these settings
+            # First remove 'search_type' if MMR is not supported
+            if not self.mmr_supported:
+                search_kwargs.pop("search_type", None)
+                search_kwargs.pop("fetch_k", None)
+                search_kwargs.pop("lambda_mult", None)
+            
+            temp_retriever = self.vectorstore.as_retriever(search_kwargs=search_kwargs)
+            logger.info(f"Using retrieval settings for {query_type} query: {search_kwargs}")
+            
+            # Get documents with configured retriever
+            docs = temp_retriever.invoke(query)
+            
+            # Special case handling for queries about all offices
             if "all office" in query.lower() or "all location" in query.lower():
                 if not any("all_employee_counts" in doc.metadata.get("content_type", "") 
                           for doc in docs if hasattr(doc, "metadata")):
-                    # Try a more explicit query to find the all-offices document
-                    all_offices_docs = self.retriever.invoke("total employee count across all listed offices")
+                    # Use default settings for this supplementary query
+                    default_retriever = self.vectorstore.as_retriever(search_kwargs={"k": Config.RETRIEVAL_DEFAULT_K})
+                    all_offices_docs = default_retriever.invoke("total employee count across all listed offices")
                     # Add these documents to the results if they're not already included
                     doc_ids = set(id(doc) for doc in docs)
                     for doc in all_offices_docs:
